@@ -1,0 +1,170 @@
+@import 'maplibre-gl/dist/maplibre-gl.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #101116;
+  --panel: #17191f;
+  --panel2: #1c1e25;
+  --line: #292c35;
+  --muted: #858997;
+  --text: #f0f0f4;
+  --purple: #ad91ff;
+  --purple-primary: #b49aff;
+  --green: #8be0b3;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Manrope', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for sleek dark panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #121319;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b2e38;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b3f4d;
+}
+
+/* Van 3D Visual Scene - Preserved from original Autrail design */
+.van-scene {
+  position: absolute;
+  right: -3%;
+  top: 0;
+  width: 62%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 500px;
+  background: radial-gradient(ellipse at 55% 55%, #33313e 0, rgba(30, 30, 39, 0.45) 42%, transparent 72%);
+  pointer-events: none;
+}
+
+.van {
+  width: 245px;
+  height: 76px;
+  position: relative;
+  background: linear-gradient(160deg, #e8e8e7, #9da1a7 80%);
+  border-radius: 16px 31px 13px 11px;
+  transform: rotate(-8deg) skewX(-9deg);
+  box-shadow: inset 0 -7px 0 #777c85, 0 20px 25px #090a0e;
+  clip-path: polygon(5% 14%, 78% 0, 100% 17%, 100% 83%, 91% 96%, 8% 96%, 0 80%, 0 28%);
+}
+
+.van:before {
+  content: "";
+  position: absolute;
+  inset: 7px 22px 19px 90px;
+  background: linear-gradient(140deg, #17212b, #394550);
+  clip-path: polygon(0 0, 78% 0, 100% 100%, 0 100%);
+  border: 2px solid #7e858b;
+}
+
+.van-window {
+  position: absolute;
+  left: 102px;
+  top: 9px;
+  width: 70px;
+  height: 39px;
+  background: linear-gradient(130deg, #18232d, #59626a);
+  transform: skewY(-5deg);
+  border: 2px solid #82878c;
+}
+
+.van-side-window {
+  position: absolute;
+  left: 177px;
+  top: 7px;
+  width: 44px;
+  height: 42px;
+  background: #29343e;
+  transform: skewY(-7deg);
+  border: 2px solid #8b9095;
+}
+
+.van-line {
+  position: absolute;
+  left: 30px;
+  right: 15px;
+  bottom: 19px;
+  height: 1px;
+  background: #767b81;
+}
+
+.van-wheel {
+  position: absolute;
+  bottom: -7px;
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #89909a 0 20%, #25282d 22% 43%, #090a0d 45% 70%, #4a4e53 72%);
+  border: 3px solid #17191d;
+}
+
+.wheel-one {
+  left: 43px;
+}
+
+.wheel-two {
+  right: 37px;
+}
+
+.van-light {
+  position: absolute;
+  right: 2px;
+  top: 34px;
+  width: 6px;
+  height: 13px;
+  background: #f6d8a2;
+  border-radius: 3px;
+}
+
+.van-shadow {
+  position: absolute;
+  width: 250px;
+  height: 20px;
+  background: #050609;
+  filter: blur(13px);
+  bottom: 41px;
+  transform: rotate(-8deg);
+}
+
+/* Pulsing Beacon */
+@keyframes beaconPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 8px #75d5a2;
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.95);
+    box-shadow: 0 0 4px #75d5a2;
+  }
+}
+
+.beacon-pulse {
+  animation: beaconPulse 2.5s infinite ease-in-out;
+}
+
