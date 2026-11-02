@@ -4,6 +4,7 @@ import {
   LayoutGrid,
   Truck,
   Navigation,
+  ShieldAlert,
   TrendingUp,
   Wrench,
   Users,
@@ -47,6 +48,12 @@ export default function Sidebar({
       path: '/tracking',
       label: 'Live tracking',
       icon: Navigation,
+    },
+    {
+      id: 'geofencing',
+      path: '/geofencing',
+      label: 'Geofencing',
+      icon: ShieldAlert,
     },
     {
       id: 'analytics',

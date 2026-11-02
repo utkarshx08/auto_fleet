@@ -10,6 +10,7 @@ import {
   Maximize2
 } from 'lucide-react';
 import { TRACKING_CONFIG, initialGeofences } from '../../data/trackingMockData';
+import { createGeoJsonFeature, getGeofenceZones } from '../../services/geofenceService.js';
 
 // Carto Dark Matter Style Specification (Free, open-source, no API key required)
 const DARK_MAP_STYLE = {
@@ -43,13 +44,16 @@ export default function InteractiveTrackingMap({
   onSelectVehicle,
   historicalPath = [],
   showGeofences = true,
-  showRouteLine = true
+  showRouteLine = true,
+  geofences = null
 }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef({});
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
+
+  const activeZones = geofences || getGeofenceZones();
 
   // Initialize MapLibre GL Map Instance
   useEffect(() => {
@@ -78,6 +82,10 @@ export default function InteractiveTrackingMap({
       });
 
       return () => {
+        Object.keys(markersRef.current).forEach((k) => {
+          markersRef.current[k]?.remove();
+        });
+        markersRef.current = {};
         map.remove();
       };
     } catch (err) {
@@ -276,6 +284,62 @@ export default function InteractiveTrackingMap({
       });
     }
   }, [historicalPath, showRouteLine, mapLoaded]);
+
+  // Render Geofence Perimeters Layer
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+
+    activeZones.forEach((zone) => {
+      const sourceId = `trk-geo-src-${zone.id}`;
+      const fillId = `trk-geo-fill-${zone.id}`;
+      const lineId = `trk-geo-line-${zone.id}`;
+
+      if (map.getLayer(lineId)) map.removeLayer(lineId);
+      if (map.getLayer(fillId)) map.removeLayer(fillId);
+      if (map.getSource(sourceId)) map.removeSource(sourceId);
+    });
+
+    if (showGeofences) {
+      activeZones.forEach((zone) => {
+        if (!zone.isActive) return;
+        const feature = createGeoJsonFeature(zone);
+        if (!feature) return;
+
+        const sourceId = `trk-geo-src-${zone.id}`;
+        const fillId = `trk-geo-fill-${zone.id}`;
+        const lineId = `trk-geo-line-${zone.id}`;
+        const zoneColor = zone.color || (zone.zoneType === 'restricted' ? '#ef4444' : '#b49aff');
+
+        map.addSource(sourceId, {
+          type: 'geojson',
+          data: feature
+        });
+
+        map.addLayer({
+          id: fillId,
+          type: 'fill',
+          source: sourceId,
+          paint: {
+            'fill-color': zoneColor,
+            'fill-opacity': 0.12
+          }
+        });
+
+        map.addLayer({
+          id: lineId,
+          type: 'line',
+          source: sourceId,
+          paint: {
+            'line-color': zoneColor,
+            'line-width': 1.8,
+            'line-dasharray': [3, 2],
+            'line-opacity': 0.75
+          }
+        });
+      });
+    }
+  }, [showGeofences, activeZones, mapLoaded]);
 
   // Controls Handlers
   const handleZoomIn = () => {

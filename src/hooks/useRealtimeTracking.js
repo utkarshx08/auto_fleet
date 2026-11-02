@@ -7,15 +7,22 @@ import {
 } from '../data/trackingMockData';
 import { advanceVehicleTelemetry } from '../services/gpsSimulatorService';
 import { getHistoricalJourney } from '../services/trackingHistoryService';
-import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
+import { supabase, isSupabaseConfigured, getSupabaseStatus } from '../services/supabaseClient';
+import {
+  evaluateVehicleGeofences,
+  getGeofenceZones,
+  getGeofenceAlerts
+} from '../services/geofenceService';
 
 export default function useRealtimeTracking() {
   const [telemetryList, setTelemetryList] = useState(initialLiveTelemetry);
   const [selectedVehicleId, setSelectedVehicleId] = useState('RST-291');
   const [alerts, setAlerts] = useState(initialTrackingAlerts);
+  const [geofences, setGeofences] = useState(() => getGeofenceZones());
   const [isDemoMode, setIsDemoMode] = useState(true);
   const [liveSimulationActive, setLiveSimulationActive] = useState(true);
   const [speedLimit, setSpeedLimit] = useState(TRACKING_CONFIG.SPEED_LIMIT_KMH);
+  const [supabaseState, setSupabaseState] = useState(() => getSupabaseStatus());
 
   // Historical Journey Filter & Playback State
   const [isPlaybackMode, setIsPlaybackMode] = useState(false);
@@ -29,6 +36,16 @@ export default function useRealtimeTracking() {
   );
 
   const playbackTimerRef = useRef(null);
+  const telemetryListRef = useRef(telemetryList);
+  const geofencesRef = useRef(geofences);
+
+  useEffect(() => {
+    telemetryListRef.current = telemetryList;
+  }, [telemetryList]);
+
+  useEffect(() => {
+    geofencesRef.current = geofences;
+  }, [geofences]);
 
   // Selected vehicle object
   const selectedVehicle = telemetryList.find((v) => v.vehicleId === selectedVehicleId) || telemetryList[0];
@@ -48,19 +65,29 @@ export default function useRealtimeTracking() {
             if (!newLoc || !newLoc.vehicle_id) return;
 
             setTelemetryList((prev) =>
-              prev.map((v) =>
-                v.vehicleId === newLoc.vehicle_id
-                  ? {
-                      ...v,
-                      latitude: Number(newLoc.latitude),
-                      longitude: Number(newLoc.longitude),
-                      speed: Number(newLoc.speed),
-                      heading: Number(newLoc.heading),
-                      lastUpdated: 'Just now',
-                      status: Number(newLoc.speed) > 5 ? 'moving' : 'idle'
-                    }
-                  : v
-              )
+              prev.map((v) => {
+                if (v.vehicleId === newLoc.vehicle_id) {
+                  const updatedVehicle = {
+                    ...v,
+                    latitude: Number(newLoc.latitude),
+                    longitude: Number(newLoc.longitude),
+                    speed: Number(newLoc.speed),
+                    heading: Number(newLoc.heading),
+                    lastUpdated: 'Just now (Supabase Realtime)',
+                    status: Number(newLoc.speed) > 5 ? 'moving' : 'idle',
+                    source: 'supabase_realtime'
+                  };
+
+                  // Real-time geofence detection on live telemetry ping
+                  const geoAlerts = evaluateVehicleGeofences(updatedVehicle, geofences);
+                  if (geoAlerts.length > 0) {
+                    setAlerts((prevAlerts) => [...geoAlerts, ...prevAlerts]);
+                  }
+
+                  return updatedVehicle;
+                }
+                return v;
+              })
             );
           }
         )
@@ -72,23 +99,38 @@ export default function useRealtimeTracking() {
     } catch (err) {
       console.warn('Realtime subscription fallback to simulator:', err);
     }
-  }, []);
+  }, [geofences]);
 
   // 2. Demo Simulation Ticker (Advances moving vehicles every 3 seconds)
   useEffect(() => {
     if (!liveSimulationActive || isPlaybackMode) return;
 
     const interval = setInterval(() => {
-      const { telemetryList: updatedList, newAlerts } = advanceVehicleTelemetry(telemetryList, speedLimit);
+      const currentList = telemetryListRef.current;
+      const currentGeofences = geofencesRef.current;
+      const { telemetryList: updatedList, newAlerts } = advanceVehicleTelemetry(currentList, speedLimit);
+
+      // Check geofences for each moving vehicle
+      let allGeoAlerts = [];
+      updatedList.forEach((veh) => {
+        if (veh.status === 'moving') {
+          const breaches = evaluateVehicleGeofences(veh, currentGeofences);
+          if (breaches.length > 0) {
+            allGeoAlerts = [...allGeoAlerts, ...breaches];
+          }
+        }
+      });
+
       setTelemetryList(updatedList);
 
-      if (newAlerts.length > 0) {
-        setAlerts((prev) => [...newAlerts, ...prev]);
+      const combinedAlerts = [...newAlerts, ...allGeoAlerts];
+      if (combinedAlerts.length > 0) {
+        setAlerts((prev) => [...combinedAlerts, ...prev]);
       }
     }, TRACKING_CONFIG.UPDATE_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [liveSimulationActive, isPlaybackMode, telemetryList, speedLimit]);
+  }, [liveSimulationActive, isPlaybackMode, speedLimit]);
 
   // 3. Historical Playback Runner
   useEffect(() => {
@@ -178,6 +220,35 @@ export default function useRealtimeTracking() {
     );
   }, []);
 
+  const updateVehicleLocation = useCallback((data) => {
+    setTelemetryList((prev) =>
+      prev.map((v) => {
+        if (v.vehicleId === data.vehicle_id || v.plate === data.vehicle_id) {
+          const updatedVehicle = {
+            ...v,
+            latitude: Number(data.latitude),
+            longitude: Number(data.longitude),
+            speed: Number(data.speed),
+            heading: Number(data.heading),
+            headingText: `${Number(data.heading)}°`,
+            lastUpdated: 'Just now (Hardware API)',
+            status: Number(data.speed) > 5 ? 'moving' : 'idle',
+            source: data.source || 'api_push'
+          };
+
+          // Trigger immediate geofence evaluation for the updated vehicle
+          const breaches = evaluateVehicleGeofences(updatedVehicle, geofences);
+          if (breaches.length > 0) {
+            setAlerts((prevAlerts) => [...breaches, ...prevAlerts]);
+          }
+
+          return updatedVehicle;
+        }
+        return v;
+      })
+    );
+  }, [geofences]);
+
   // Compute active path coordinates for polyline rendering
   const activeHistoricalPath = isPlaybackMode
     ? currentHistoricalJourney.waypoints.slice(0, waypointIndex + 1)
@@ -189,6 +260,10 @@ export default function useRealtimeTracking() {
     selectedVehicleId,
     setSelectedVehicleId,
     alerts,
+    geofences,
+    setGeofences,
+    reloadGeofences: () => setGeofences(getGeofenceZones()),
+    supabaseState,
     isDemoMode,
     liveSimulationActive,
     setLiveSimulationActive,
@@ -217,6 +292,7 @@ export default function useRealtimeTracking() {
     resumePlayback,
     resetPlayback,
     exitPlayback,
-    resolveAlert
+    resolveAlert,
+    updateVehicleLocation
   };
 }

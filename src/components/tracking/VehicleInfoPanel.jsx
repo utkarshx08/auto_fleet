@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass,
   Gauge,
@@ -9,10 +9,12 @@ import {
   Crosshair,
   AlertTriangle,
   Clock,
-  Radio
+  Radio,
+  Globe
 } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import Button from '../common/Button';
+import { reverseGeocode } from '../../services/geocodingService';
 
 export default function VehicleInfoPanel({
   vehicle,
@@ -22,6 +24,30 @@ export default function VehicleInfoPanel({
   if (!vehicle) return null;
 
   const isOverspeed = vehicle.speed > 80;
+  const [resolvedAddress, setResolvedAddress] = useState(vehicle.locationName || '');
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [isOsmVerified, setIsOsmVerified] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (vehicle?.latitude && vehicle?.longitude) {
+      setIsGeocoding(true);
+      reverseGeocode(vehicle.latitude, vehicle.longitude)
+        .then((res) => {
+          if (isMounted) {
+            if (res.address) setResolvedAddress(res.address);
+            setIsOsmVerified(res.source === 'openstreetmap_nominatim');
+            setIsGeocoding(false);
+          }
+        })
+        .catch(() => {
+          if (isMounted) setIsGeocoding(false);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [vehicle?.latitude, vehicle?.longitude, vehicle?.plate]);
 
   return (
     <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-4 flex flex-col justify-between text-xs font-sans h-full">
@@ -113,15 +139,29 @@ export default function VehicleInfoPanel({
             </div>
           </div>
 
-          {/* GPS Coordinates */}
+          {/* GPS Coordinates & Reverse Geocoded Street Address */}
           <div className="bg-[#121319] border border-[#242630] p-2.5 rounded-lg">
-            <span className="font-mono text-[8px] text-[#747783] uppercase block flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-[#8be0b3]" /> Current Location Coordinates
-            </span>
-            <b className="text-xs text-[#d1d1da] block mt-0.5">{vehicle.locationName}</b>
-            <div className="flex items-center gap-3 text-[9px] text-[#747783] font-mono mt-1">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[8px] text-[#747783] uppercase flex items-center gap-1">
+                <MapPin className="w-3 h-3 text-[#8be0b3]" /> Physical Street Address
+              </span>
+              {isOsmVerified && (
+                <span className="text-[9px] font-mono text-[#8be0b3] bg-[#8be0b3]/10 px-1.5 py-0.5 rounded border border-[#8be0b3]/20 flex items-center gap-1">
+                  <Globe className="w-2.5 h-2.5" />
+                  <span>OSM Geocoded</span>
+                </span>
+              )}
+            </div>
+            <b className="text-xs text-[#d1d1da] block mt-1 leading-snug">
+              {resolvedAddress || vehicle.locationName}
+            </b>
+            <div className="flex items-center gap-3 text-[9px] text-[#747783] font-mono mt-2 pt-1.5 border-t border-[#20222a]">
               <span>LAT: {Number(vehicle.latitude).toFixed(4)}° N</span>
               <span>LNG: {Math.abs(Number(vehicle.longitude)).toFixed(4)}° W</span>
+              <span className="ml-auto text-[#8be0b3] font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8be0b3] beacon-pulse" />
+                {vehicle.gpsAccuracy || 'GPS: Optimal (0.8m)'}
+              </span>
             </div>
           </div>
 

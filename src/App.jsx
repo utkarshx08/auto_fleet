@@ -4,6 +4,7 @@ import MainLayout from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import Vehicles from './pages/Vehicles';
 import Tracking from './pages/Tracking';
+import Geofencing from './pages/Geofencing';
 import Analytics from './pages/Analytics';
 import Drivers from './pages/Drivers';
 import Maintenance from './pages/Maintenance';
@@ -18,7 +19,7 @@ import EditVehicleModal from './components/vehicles/EditVehicleModal';
 import VehicleDetailsModal from './components/vehicles/VehicleDetailsModal';
 import NotificationsModal from './components/common/NotificationsModal';
 import HelpCenterModal from './components/common/HelpCenterModal';
-import { initialVehicles, initialAlerts } from './data/mockData';
+import { initialVehicles, initialAlerts, initialDrivers } from './data/mockData';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -198,14 +199,23 @@ function AppContent() {
                     />
                   }
                 />
+                <Route
+                  path="/geofencing"
+                  element={
+                    <Geofencing
+                      onShowToast={showToast}
+                    />
+                  }
+                />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route
                   path="/maintenance"
                   element={
                     <Maintenance
+                      vehicles={vehicles}
                       alerts={alerts}
-                      onScheduleService={() => {
-                        showToast('Service ticket initialized for vehicle bay.', 'info');
+                      onScheduleService={(record) => {
+                        showToast(`Service order closed for ${record.vehicleId} ($${record.serviceCost}).`, 'success');
                       }}
                       onResolveAlert={handleResolveAlert}
                     />
@@ -231,7 +241,18 @@ function AppContent() {
                   }
                 />
                 <Route path="/routes" element={<RoutesPage />} />
-                <Route path="/fuel" element={<Fuel vehicles={vehicles} />} />
+                <Route
+                  path="/fuel"
+                  element={
+                    <Fuel
+                      vehicles={vehicles}
+                      drivers={initialDrivers}
+                      onAddFuelExpense={(rec) => {
+                        showToast(`Fuel purchase logged for ${rec.vehicleId} ($${rec.totalAmount}).`, 'success');
+                      }}
+                    />
+                  }
+                />
                 <Route
                   path="/settings"
                   element={

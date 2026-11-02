@@ -13,6 +13,17 @@ export const isSupabaseConfigured = () => {
   );
 };
 
+// Retrieve client connection diagnostic status
+export const getSupabaseStatus = () => {
+  const configured = isSupabaseConfigured();
+  return {
+    configured,
+    url: configured ? supabaseUrl.replace(/(https?:\/\/)(.*)/, '$1***') : 'None (Demo Mode)',
+    status: configured ? 'connected' : 'offline_fallback',
+    realtimeSupported: true
+  };
+};
+
 // Initialize Supabase Client with graceful fallback
 export const supabase = isSupabaseConfigured()
   ? createClient(supabaseUrl, supabaseAnonKey, {
@@ -23,4 +34,5 @@ export const supabase = isSupabaseConfigured()
       }
     })
   : null;
+
 

@@ -1,6 +1,6 @@
 -- ============================================================================
 -- AUTRAIL FLEET MANAGEMENT PLATFORM - SUPABASE POSTGRESQL SCHEMA
--- Advanced Fleet Analytics & Operational Telemetry Architecture
+-- Advanced Fleet Operations: Maintenance, Fuel, GPS Telemetry & Geofencing
 -- ============================================================================
 
 -- Enable UUID extension
@@ -45,20 +45,63 @@ CREATE TABLE IF NOT EXISTS public.drivers (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. FUEL RECORDS TABLE
+-- 3. MAINTENANCE SCHEDULES TABLE (Automated Maintenance Scheduling Engine)
+CREATE TABLE IF NOT EXISTS public.maintenance_schedules (
+    id VARCHAR(50) PRIMARY KEY,
+    vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
+    maintenance_type VARCHAR(100) NOT NULL, -- e.g. Engine oil replacement, Brake inspection, Tyre replacement, Battery inspection, General servicing, Engine inspection
+    interval_km INT NOT NULL CHECK (interval_km > 0),
+    interval_days INT NOT NULL CHECK (interval_days > 0),
+    last_service_date DATE NOT NULL,
+    last_service_odometer NUMERIC(12, 2) NOT NULL CHECK (last_service_odometer >= 0),
+    next_service_date DATE NOT NULL,
+    next_service_odometer NUMERIC(12, 2) NOT NULL CHECK (next_service_odometer >= last_service_odometer),
+    reminder_km INT DEFAULT 500,
+    reminder_days INT DEFAULT 7,
+    service_center VARCHAR(150),
+    priority VARCHAR(20) DEFAULT 'Medium' CHECK (priority IN ('Low', 'Medium', 'High', 'Critical')),
+    status VARCHAR(30) DEFAULT 'Active' CHECK (status IN ('Active', 'Due', 'Overdue', 'Completed', 'Paused')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. MAINTENANCE RECORDS TABLE (Historical & Completed Work Orders)
+CREATE TABLE IF NOT EXISTS public.maintenance_records (
+    id VARCHAR(50) PRIMARY KEY,
+    vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
+    schedule_id VARCHAR(50) REFERENCES public.maintenance_schedules(id) ON DELETE SET NULL,
+    service_type VARCHAR(150) NOT NULL,
+    service_date DATE NOT NULL,
+    odometer_reading NUMERIC(12, 2) DEFAULT 0 CHECK (odometer_reading >= 0),
+    service_cost NUMERIC(12, 2) NOT NULL DEFAULT 0 CHECK (service_cost >= 0),
+    service_provider VARCHAR(150),
+    technician VARCHAR(100),
+    description TEXT,
+    invoice_url TEXT,
+    status VARCHAR(30) DEFAULT 'Completed' CHECK (status IN ('Scheduled', 'In Progress', 'Completed', 'Cancelled')),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. FUEL RECORDS TABLE (Fuel Purchase Management & Anomaly Detection)
 CREATE TABLE IF NOT EXISTS public.fuel_records (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
+    driver_id VARCHAR(50) REFERENCES public.drivers(id) ON DELETE SET NULL,
     fuel_type VARCHAR(30) NOT NULL DEFAULT 'Diesel' CHECK (fuel_type IN ('Diesel', 'Gasoline', 'Electric', 'Hybrid')),
     quantity NUMERIC(10, 2) NOT NULL CHECK (quantity > 0), -- Liters or kWh
     price_per_litre NUMERIC(10, 2) NOT NULL CHECK (price_per_litre > 0),
-    total_cost NUMERIC(12, 2) NOT NULL CHECK (total_cost > 0),
+    total_amount NUMERIC(12, 2) GENERATED ALWAYS AS (quantity * price_per_litre) STORED,
     odometer_reading NUMERIC(12, 2) NOT NULL CHECK (odometer_reading >= 0),
-    vendor_location VARCHAR(150),
-    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    fuel_station VARCHAR(150) NOT NULL,
+    payment_method VARCHAR(50) DEFAULT 'Company Card' CHECK (payment_method IN ('Company Card', 'Fuel Card', 'Cash', 'PetroCard', 'Credit Card')),
+    receipt_url TEXT,
+    purchase_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    is_anomaly BOOLEAN DEFAULT FALSE,
+    anomaly_reason VARCHAR(255),
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. MILEAGE RECORDS TABLE
+-- 6. MILEAGE RECORDS TABLE
 CREATE TABLE IF NOT EXISTS public.mileage_records (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
@@ -69,7 +112,7 @@ CREATE TABLE IF NOT EXISTS public.mileage_records (
     recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 5. VEHICLE USAGE LOGS TABLE
+-- 7. VEHICLE USAGE LOGS TABLE
 CREATE TABLE IF NOT EXISTS public.vehicle_usage_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
@@ -82,7 +125,7 @@ CREATE TABLE IF NOT EXISTS public.vehicle_usage_logs (
     CONSTRAINT unique_vehicle_usage_date UNIQUE (vehicle_id, usage_date)
 );
 
--- 6. OPERATIONAL EXPENSES TABLE
+-- 8. OPERATIONAL EXPENSES TABLE
 CREATE TABLE IF NOT EXISTS public.operational_expenses (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) REFERENCES public.vehicles(id) ON DELETE SET NULL,
@@ -94,24 +137,11 @@ CREATE TABLE IF NOT EXISTS public.operational_expenses (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 7. MAINTENANCE RECORDS TABLE
-CREATE TABLE IF NOT EXISTS public.maintenance_records (
-    id VARCHAR(50) PRIMARY KEY,
-    vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
-    service_type VARCHAR(150) NOT NULL,
-    service_date DATE NOT NULL,
-    provider VARCHAR(150),
-    cost NUMERIC(10, 2) NOT NULL DEFAULT 0,
-    technician VARCHAR(100),
-    status VARCHAR(30) DEFAULT 'Completed' CHECK (status IN ('Scheduled', 'In Progress', 'Completed', 'Cancelled')),
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
 -- ============================================================================
 -- GPS REAL-TIME TELEMETRY & TRACKING TABLES
 -- ============================================================================
 
--- 8. VEHICLE LOCATIONS TABLE (High-frequency GPS telemetry breadcrumbs)
+-- 9. VEHICLE LOCATIONS TABLE (High-frequency GPS telemetry breadcrumbs)
 CREATE TABLE IF NOT EXISTS public.vehicle_locations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
@@ -125,7 +155,7 @@ CREATE TABLE IF NOT EXISTS public.vehicle_locations (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. TRACKING SESSIONS TABLE (Aggregated journey trips)
+-- 10. TRACKING SESSIONS TABLE (Aggregated journey trips)
 CREATE TABLE IF NOT EXISTS public.tracking_sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
@@ -139,11 +169,11 @@ CREATE TABLE IF NOT EXISTS public.tracking_sessions (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 10. TRACKING ALERTS TABLE (Overspeed, Geofence violation, GPS disconnection)
+-- 11. TRACKING ALERTS TABLE (Overspeed, Geofence violation, GPS disconnection)
 CREATE TABLE IF NOT EXISTS public.tracking_alerts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
-    alert_type VARCHAR(50) NOT NULL CHECK (alert_type IN ('overspeed', 'geofence_exit', 'geofence_entry', 'offline', 'low_fuel', 'panic_button')),
+    alert_type VARCHAR(50) NOT NULL CHECK (alert_type IN ('overspeed', 'geofence_exit', 'geofence_entry', 'restricted_violation', 'offline', 'low_fuel', 'panic_button')),
     message TEXT NOT NULL,
     latitude NUMERIC(10, 6),
     longitude NUMERIC(10, 6),
@@ -154,20 +184,50 @@ CREATE TABLE IF NOT EXISTS public.tracking_alerts (
     resolved_at TIMESTAMPTZ
 );
 
--- 11. GEOFENCES TABLE (Operational boundary zones)
+-- ============================================================================
+-- GEOFENCING & RESTRICTED-ZONE ALERTS TABLES
+-- ============================================================================
+
+-- 12. GEOFENCES TABLE (Circular & Polygon boundaries)
 CREATE TABLE IF NOT EXISTS public.geofences (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
     description TEXT,
+    zone_type VARCHAR(30) DEFAULT 'depot' CHECK (zone_type IN ('depot', 'client', 'warehouse', 'delivery', 'restricted')),
+    boundary_type VARCHAR(20) DEFAULT 'circle' CHECK (boundary_type IN ('circle', 'polygon')),
+    center_lat NUMERIC(10, 6),
+    center_lng NUMERIC(10, 6),
+    radius_meters NUMERIC(8, 2) CHECK (radius_meters > 0),
+    polygon_coordinates JSONB, -- Array of [lat, lng] pairs for polygon vertices
+    color VARCHAR(20) DEFAULT '#b49aff',
+    is_active BOOLEAN DEFAULT TRUE,
+    alert_settings JSONB DEFAULT '{"on_entry": true, "on_exit": true, "speed_limit": 60, "max_dwell_minutes": 120}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 13. GEOFENCE EVENTS TABLE (Breach, Entry, Exit & Dwell records)
+CREATE TABLE IF NOT EXISTS public.geofence_events (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    vehicle_id VARCHAR(50) NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
+    geofence_id UUID NOT NULL REFERENCES public.geofences(id) ON DELETE CASCADE,
+    event_type VARCHAR(50) NOT NULL CHECK (event_type IN ('entry', 'exit', 'restricted_violation', 'dwell_exceeded')),
     latitude NUMERIC(10, 6) NOT NULL,
     longitude NUMERIC(10, 6) NOT NULL,
-    radius NUMERIC(8, 2) NOT NULL CHECK (radius > 0), -- radius in meters
-    zone_type VARCHAR(30) DEFAULT 'depot' CHECK (zone_type IN ('depot', 'client', 'maintenance', 'restricted')),
+    speed NUMERIC(6, 2) DEFAULT 0,
+    severity VARCHAR(20) DEFAULT 'info' CHECK (severity IN ('info', 'warning', 'critical')),
+    occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    is_resolved BOOLEAN DEFAULT FALSE,
+    resolved_at TIMESTAMPTZ,
+    notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- INDEXES FOR HIGH-PERFORMANCE ANALYTICS & GPS TELEMETRY QUERIES
-CREATE INDEX IF NOT EXISTS idx_fuel_records_vehicle_date ON public.fuel_records(vehicle_id, recorded_at);
+CREATE INDEX IF NOT EXISTS idx_schedules_vehicle ON public.maintenance_schedules(vehicle_id, status);
+CREATE INDEX IF NOT EXISTS idx_maintenance_records_vehicle ON public.maintenance_records(vehicle_id, service_date DESC);
+CREATE INDEX IF NOT EXISTS idx_fuel_records_vehicle_date ON public.fuel_records(vehicle_id, purchase_date DESC);
+CREATE INDEX IF NOT EXISTS idx_fuel_records_anomaly ON public.fuel_records(is_anomaly);
 CREATE INDEX IF NOT EXISTS idx_mileage_records_vehicle_date ON public.mileage_records(vehicle_id, recorded_at);
 CREATE INDEX IF NOT EXISTS idx_usage_logs_vehicle_date ON public.vehicle_usage_logs(vehicle_id, usage_date);
 CREATE INDEX IF NOT EXISTS idx_expenses_category_date ON public.operational_expenses(expense_category, expense_date);
@@ -175,34 +235,41 @@ CREATE INDEX IF NOT EXISTS idx_expenses_vehicle_date ON public.operational_expen
 CREATE INDEX IF NOT EXISTS idx_vehicle_locations_vehicle_time ON public.vehicle_locations(vehicle_id, recorded_at DESC);
 CREATE INDEX IF NOT EXISTS idx_tracking_sessions_vehicle ON public.tracking_sessions(vehicle_id, started_at DESC);
 CREATE INDEX IF NOT EXISTS idx_tracking_alerts_unresolved ON public.tracking_alerts(is_resolved, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_geofences_active ON public.geofences(is_active, zone_type);
+CREATE INDEX IF NOT EXISTS idx_geofence_events_vehicle ON public.geofence_events(vehicle_id, occurred_at DESC);
+CREATE INDEX IF NOT EXISTS idx_geofence_events_unresolved ON public.geofence_events(is_resolved, severity);
 
 -- ROW LEVEL SECURITY (RLS) POLICIES
 ALTER TABLE public.vehicles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.drivers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.maintenance_schedules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.maintenance_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.fuel_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mileage_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vehicle_usage_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.operational_expenses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.maintenance_records ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vehicle_locations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tracking_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tracking_alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.geofences ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.geofence_events ENABLE ROW LEVEL SECURITY;
 
 -- Read policies for authenticated fleet operators
 CREATE POLICY "Allow authenticated read vehicles" ON public.vehicles FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read drivers" ON public.drivers FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read maintenance_schedules" ON public.maintenance_schedules FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read maintenance_records" ON public.maintenance_records FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read fuel_records" ON public.fuel_records FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read mileage_records" ON public.mileage_records FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read vehicle_usage_logs" ON public.vehicle_usage_logs FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read operational_expenses" ON public.operational_expenses FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY "Allow authenticated read maintenance_records" ON public.maintenance_records FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read vehicle_locations" ON public.vehicle_locations FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read tracking_sessions" ON public.tracking_sessions FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read tracking_alerts" ON public.tracking_alerts FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated read geofences" ON public.geofences FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read geofence_events" ON public.geofence_events FOR SELECT USING (auth.role() = 'authenticated');
 
--- Secure insert policy for authorized GPS ingestion service
+-- Secure insert/update policies for authenticated operators & service roles
 CREATE POLICY "Allow service role insert vehicle_locations" ON public.vehicle_locations FOR INSERT WITH CHECK (auth.role() IN ('authenticated', 'service_role'));
 CREATE POLICY "Allow service role insert tracking_alerts" ON public.tracking_alerts FOR INSERT WITH CHECK (auth.role() IN ('authenticated', 'service_role'));
-
+CREATE POLICY "Allow service role insert geofence_events" ON public.geofence_events FOR INSERT WITH CHECK (auth.role() IN ('authenticated', 'service_role'));
