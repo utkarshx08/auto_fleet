@@ -273,3 +273,96 @@ CREATE POLICY "Allow authenticated read geofence_events" ON public.geofence_even
 CREATE POLICY "Allow service role insert vehicle_locations" ON public.vehicle_locations FOR INSERT WITH CHECK (auth.role() IN ('authenticated', 'service_role'));
 CREATE POLICY "Allow service role insert tracking_alerts" ON public.tracking_alerts FOR INSERT WITH CHECK (auth.role() IN ('authenticated', 'service_role'));
 CREATE POLICY "Allow service role insert geofence_events" ON public.geofence_events FOR INSERT WITH CHECK (auth.role() IN ('authenticated', 'service_role'));
+
+-- ============================================================================
+-- TRIP & DISPATCH MANAGEMENT TABLES
+-- ============================================================================
+
+-- 14. TRIPS TABLE
+CREATE TABLE IF NOT EXISTS public.trips (
+    id VARCHAR(50) PRIMARY KEY,
+    trip_name VARCHAR(150) NOT NULL,
+    customer_name VARCHAR(150) NOT NULL,
+    pickup_location VARCHAR(200) NOT NULL,
+    pickup_lat NUMERIC(10, 6),
+    pickup_lng NUMERIC(10, 6),
+    destination_location VARCHAR(200) NOT NULL,
+    destination_lat NUMERIC(10, 6),
+    destination_lng NUMERIC(10, 6),
+    scheduled_departure TIMESTAMPTZ NOT NULL,
+    actual_departure TIMESTAMPTZ,
+    scheduled_arrival TIMESTAMPTZ NOT NULL,
+    actual_arrival TIMESTAMPTZ,
+    assigned_vehicle_id VARCHAR(50) REFERENCES public.vehicles(id) ON DELETE SET NULL,
+    assigned_driver_id VARCHAR(50) REFERENCES public.drivers(id) ON DELETE SET NULL,
+    status VARCHAR(30) NOT NULL DEFAULT 'Draft' CHECK (status IN ('Draft', 'Scheduled', 'Assigned', 'In Progress', 'Completed', 'Delayed', 'Cancelled')),
+    priority VARCHAR(20) NOT NULL DEFAULT 'Medium' CHECK (priority IN ('Low', 'Medium', 'High')),
+    cargo_details TEXT,
+    estimated_distance_km NUMERIC(10, 2) NOT NULL DEFAULT 0 CHECK (estimated_distance_km >= 0),
+    actual_distance_km NUMERIC(10, 2) DEFAULT 0 CHECK (actual_distance_km >= 0),
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 15. TRIP STOPS TABLE (Multi-leg waypoint navigation)
+CREATE TABLE IF NOT EXISTS public.trip_stops (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    trip_id VARCHAR(50) NOT NULL REFERENCES public.trips(id) ON DELETE CASCADE,
+    stop_order INT NOT NULL CHECK (stop_order >= 1),
+    location_name VARCHAR(200) NOT NULL,
+    latitude NUMERIC(10, 6),
+    longitude NUMERIC(10, 6),
+    planned_arrival TIMESTAMPTZ,
+    actual_arrival TIMESTAMPTZ,
+    status VARCHAR(30) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Reached', 'Departed', 'Skipped')),
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 16. TRIP EXPENSES TABLE (Expense tracking & cost-per-km accounting)
+CREATE TABLE IF NOT EXISTS public.trip_expenses (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    trip_id VARCHAR(50) NOT NULL REFERENCES public.trips(id) ON DELETE CASCADE,
+    expense_type VARCHAR(50) NOT NULL CHECK (expense_type IN ('Fuel', 'Toll', 'Parking', 'Driver Allowance', 'Loading/Unloading', 'Other')),
+    amount NUMERIC(12, 2) NOT NULL CHECK (amount > 0),
+    description TEXT,
+    receipt_url TEXT,
+    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 17. TRIP STATUS HISTORY TABLE (Audit trail of journey lifecycle changes)
+CREATE TABLE IF NOT EXISTS public.trip_status_history (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    trip_id VARCHAR(50) NOT NULL REFERENCES public.trips(id) ON DELETE CASCADE,
+    from_status VARCHAR(30),
+    to_status VARCHAR(30) NOT NULL,
+    changed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    changed_by VARCHAR(100) DEFAULT 'System Operator',
+    notes TEXT
+);
+
+-- INDEXES FOR TRIP & DISPATCH TABLES
+CREATE INDEX IF NOT EXISTS idx_trips_vehicle_status ON public.trips(assigned_vehicle_id, status);
+CREATE INDEX IF NOT EXISTS idx_trips_driver_status ON public.trips(assigned_driver_id, status);
+CREATE INDEX IF NOT EXISTS idx_trips_schedule ON public.trips(scheduled_departure, scheduled_arrival);
+CREATE INDEX IF NOT EXISTS idx_trip_stops_trip_order ON public.trip_stops(trip_id, stop_order);
+CREATE INDEX IF NOT EXISTS idx_trip_expenses_trip ON public.trip_expenses(trip_id, expense_type);
+CREATE INDEX IF NOT EXISTS idx_trip_status_history_trip ON public.trip_status_history(trip_id, changed_at DESC);
+
+-- ROW LEVEL SECURITY FOR TRIP TABLES
+ALTER TABLE public.trips ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trip_stops ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trip_expenses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trip_status_history ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow authenticated read trips" ON public.trips FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read trip_stops" ON public.trip_stops FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read trip_expenses" ON public.trip_expenses FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read trip_status_history" ON public.trip_status_history FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated modify trips" ON public.trips FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
+CREATE POLICY "Allow authenticated modify trip_stops" ON public.trip_stops FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
+CREATE POLICY "Allow authenticated modify trip_expenses" ON public.trip_expenses FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
+CREATE POLICY "Allow authenticated modify trip_status_history" ON public.trip_status_history FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
