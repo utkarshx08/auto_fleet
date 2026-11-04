@@ -667,3 +667,4 @@ export const resetTripsToMock = () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTrips));
   return initialTrips;
 };
+

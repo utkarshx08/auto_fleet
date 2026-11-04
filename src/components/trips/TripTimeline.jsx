@@ -116,3 +116,4 @@ export default function TripTimeline({ history = [], currentStatus, className = 
     </div>
   );
 }
+

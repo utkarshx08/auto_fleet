@@ -478,3 +478,4 @@ export const initialTrips = [
     updatedAt: '2026-11-03T12:15:00Z'
   }
 ];
+

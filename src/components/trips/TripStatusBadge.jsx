@@ -99,3 +99,4 @@ export default function TripStatusBadge({ status, size = 'md', className = '' })
     </span>
   );
 }
+
