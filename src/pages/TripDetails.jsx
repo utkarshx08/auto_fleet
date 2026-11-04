@@ -24,6 +24,7 @@ import {
 import Button from '../components/common/Button';
 import TripStatusBadge from '../components/trips/TripStatusBadge';
 import TripTimeline from '../components/trips/TripTimeline';
+import TripMap from '../components/trips/TripMap';
 import CreateTripModal from '../components/trips/CreateTripModal';
 import {
   getTripById,
@@ -281,8 +282,20 @@ export default function TripDetails({
 
       {/* Main Grid: 2 Columns */}
       <div className="grid grid-cols-3 gap-6 max-xl:grid-cols-1">
-        {/* Left Column (2 Cols wide): Route Waypoints, Vehicle & Driver */}
+        {/* Left Column (2 Cols wide): Route Waypoints, Map & Fleet Profiles */}
         <div className="col-span-2 space-y-6">
+          {/* Live Route & Tracking Map */}
+          <div className="bg-[#17191f] border border-[#292c35] p-5 rounded-[10px] space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#b49aff] m-0 flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>Live Route & GPS Telemetry Tracking</span>
+              </h3>
+              <span className="font-mono text-[10px] text-[#858894]">MapLibre Vector Engine</span>
+            </div>
+            <TripMap trip={trip} vehicle={assignedVehicle} height="360px" />
+          </div>
+
           {/* Route & Waypoint Navigation */}
           <div className="bg-[#17191f] border border-[#292c35] p-5 rounded-[10px] space-y-4">
             <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#b49aff] m-0 flex items-center gap-2">
