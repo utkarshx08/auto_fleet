@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutGrid,
@@ -14,7 +14,11 @@ import {
   Settings,
   ArrowUpRight,
   ChevronDown,
-  MoreHorizontal
+  ChevronRight,
+  MoreHorizontal,
+  Compass,
+  PlusCircle,
+  Clock
 } from 'lucide-react';
 
 export default function Sidebar({
@@ -27,6 +31,10 @@ export default function Sidebar({
   const location = useLocation();
 
   const currentPath = location.pathname.replace('/', '') || 'overview';
+  const isTripsActive = location.pathname.startsWith('/trips');
+  const activeTripTab = new URLSearchParams(location.search).get('tab') || 'dashboard';
+
+  const [isTripsExpanded, setIsTripsExpanded] = useState(isTripsActive || true);
 
   const workspaceLinks = [
     {
@@ -82,18 +90,27 @@ export default function Sidebar({
     },
   ];
 
+  const tripSubLinks = [
+    { id: 'dashboard', label: 'Trip Dashboard', tab: 'dashboard' },
+    { id: 'all', label: 'All Trips', tab: 'all' },
+    { id: 'create', label: 'Create New Trip', tab: 'create' },
+    { id: 'active', label: 'Active Trips', tab: 'active' },
+    { id: 'history', label: 'Trip History', tab: 'history' },
+    { id: 'reports', label: 'Trip Reports', tab: 'reports' }
+  ];
+
   const managementLinks = [
-    {
-      id: 'routes',
-      path: '/routes',
-      label: 'Routes',
-      icon: Route,
-    },
     {
       id: 'fuel',
       path: '/fuel',
       label: 'Fuel & energy',
       icon: Zap,
+    },
+    {
+      id: 'routes',
+      path: '/routes',
+      label: 'Routes',
+      icon: Compass,
     },
     {
       id: 'settings',
@@ -173,8 +190,76 @@ export default function Sidebar({
         })}
       </nav>
 
+      {/* Section: TRIP MANAGEMENT */}
+      <div className="mt-6 mb-2">
+        <div className="flex items-center justify-between px-2 mb-1.5">
+          <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase m-0">
+            Trip Management
+          </p>
+          <button
+            type="button"
+            onClick={() => setIsTripsExpanded(!isTripsExpanded)}
+            className="max-md:hidden text-[#747683] hover:text-[#d4d4dc] p-0.5"
+            title={isTripsExpanded ? 'Collapse Trip Management' : 'Expand Trip Management'}
+          >
+            {isTripsExpanded ? (
+              <ChevronDown className="w-3 h-3" />
+            ) : (
+              <ChevronRight className="w-3 h-3" />
+            )}
+          </button>
+        </div>
+
+        {/* Main Trip Nav Button */}
+        <button
+          type="button"
+          onClick={() => {
+            navigate('/trips');
+            setIsTripsExpanded(true);
+          }}
+          className={`h-[41px] flex items-center gap-3 px-2.5 max-md:px-0 max-md:justify-center rounded-[7px] text-[12px] transition-all cursor-pointer text-left w-full ${
+            isTripsActive
+              ? 'bg-[#24212f] text-[#e9e2ff] shadow-[inset_2px_0_#b69cff] font-medium'
+              : 'text-[#9b9da8] hover:bg-[#1a1b24] hover:text-[#e9e2ff]'
+          }`}
+          title="Trip & Dispatch Management"
+        >
+          <Route className="w-4 h-4 shrink-0 text-[#ad91ff]" />
+          <span className="max-md:hidden truncate">Trip & Dispatch</span>
+          <span className="max-md:hidden ml-auto w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+        </button>
+
+        {/* Sub-navigation Links */}
+        {isTripsExpanded && (
+          <div className="max-md:hidden pl-4 pr-1 mt-1 flex flex-col gap-0.5 border-l border-[#272935] ml-4">
+            {tripSubLinks.map((sub) => {
+              const isSubActive = isTripsActive && activeTripTab === sub.tab;
+              return (
+                <button
+                  key={sub.id}
+                  type="button"
+                  onClick={() => navigate(`/trips?tab=${sub.tab}`)}
+                  className={`h-[30px] flex items-center gap-2 px-2.5 rounded-[5px] text-[11px] transition-all cursor-pointer text-left w-full ${
+                    isSubActive
+                      ? 'bg-[#2c273a] text-[#f0ebff] font-medium'
+                      : 'text-[#8b8e9a] hover:bg-[#1a1b24] hover:text-[#d4d4dc]'
+                  }`}
+                >
+                  <span
+                    className={`w-1 h-1 rounded-full ${
+                      isSubActive ? 'bg-[#b49aff]' : 'bg-[#4e5160]'
+                    }`}
+                  />
+                  <span className="truncate">{sub.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       {/* Section: MANAGEMENT */}
-      <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#858894] px-2 mt-7 mb-2 uppercase">
+      <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#858894] px-2 mt-4 mb-2 uppercase">
         Management
       </p>
       <nav className="flex flex-col gap-0.5 max-md:mt-4">

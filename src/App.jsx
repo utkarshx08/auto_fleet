@@ -11,6 +11,7 @@ import Maintenance from './pages/Maintenance';
 import Reports from './pages/Reports';
 import RoutesPage from './pages/RoutesPage';
 import Fuel from './pages/Fuel';
+import Trips from './pages/Trips';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Toast from './components/common/Toast';
@@ -241,6 +242,16 @@ function AppContent() {
                   }
                 />
                 <Route path="/routes" element={<RoutesPage />} />
+                <Route
+                  path="/trips"
+                  element={
+                    <Trips
+                      vehicles={vehicles}
+                      drivers={initialDrivers}
+                      onShowToast={showToast}
+                    />
+                  }
+                />
                 <Route
                   path="/fuel"
                   element={
