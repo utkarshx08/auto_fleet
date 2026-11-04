@@ -25,6 +25,7 @@ import TripTable from '../components/trips/TripTable';
 import TripStatusBadge from '../components/trips/TripStatusBadge';
 import TripForm from '../components/trips/TripForm';
 import CreateTripModal from '../components/trips/CreateTripModal';
+import TripReportModal from '../components/trips/TripReportModal';
 import {
   getTrips,
   getTripMetrics,
@@ -57,6 +58,7 @@ export default function Trips({
   const [refreshKey, setRefreshKey] = useState(0);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState(null);
+  const [selectedReportTrip, setSelectedReportTrip] = useState(null);
 
   // Load Trips
   useEffect(() => {
@@ -740,7 +742,7 @@ export default function Trips({
 
           <TripTable
             trips={trips.filter((t) => t.status === 'Completed')}
-            onViewDetails={handleViewDetails}
+            onViewDetails={(trip) => setSelectedReportTrip(trip)}
             onEditTrip={handleEditTrip}
             onDeleteTrip={handleDeleteTrip}
             onStatusTransition={handleStatusTransition}
@@ -759,6 +761,15 @@ export default function Trips({
         vehicles={vehicles}
         drivers={drivers}
         onTripSaved={handleTripSaved}
+      />
+
+      {/* Trip Completion Report Manifest Modal */}
+      <TripReportModal
+        isOpen={Boolean(selectedReportTrip)}
+        onClose={() => setSelectedReportTrip(null)}
+        trip={selectedReportTrip}
+        vehicle={vehicles.find((v) => v.id === selectedReportTrip?.assignedVehicleId || v.plate === selectedReportTrip?.assignedVehicleId)}
+        driver={drivers.find((d) => d.id === selectedReportTrip?.assignedDriverId || d.name === selectedReportTrip?.assignedDriverId)}
       />
     </div>
   );

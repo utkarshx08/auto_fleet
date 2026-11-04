@@ -27,6 +27,7 @@ import TripTimeline from '../components/trips/TripTimeline';
 import TripMap from '../components/trips/TripMap';
 import CreateTripModal from '../components/trips/CreateTripModal';
 import TripExpenseModal from '../components/trips/TripExpenseModal';
+import TripReportModal from '../components/trips/TripReportModal';
 import {
   getTripById,
   updateTripStatus,
@@ -50,6 +51,7 @@ export default function TripDetails({
   const [refreshKey, setRefreshKey] = useState(0);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [statusNote, setStatusNote] = useState('');
   const [targetStatus, setTargetStatus] = useState('');
   const [isTransitionModalOpen, setIsTransitionModalOpen] = useState(false);
@@ -186,6 +188,14 @@ export default function TripDetails({
         </button>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            onClick={() => setIsReportModalOpen(true)}
+            icon={FileText}
+          >
+            Completion Manifest
+          </Button>
+
           {trip.status !== 'Completed' && trip.status !== 'Cancelled' && (
             <Button
               variant="quiet"
@@ -647,6 +657,16 @@ export default function TripDetails({
           setRefreshKey((p) => p + 1);
           if (onShowToast) onShowToast('Expense item recorded successfully.', 'success');
         }}
+      />
+
+      {/* Completion Manifest Report Modal */}
+      <TripReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        trip={trip}
+        vehicle={assignedVehicle}
+        driver={assignedDriver}
+        geofenceEvents={correlatedGeofenceEvents}
       />
     </div>
   );
