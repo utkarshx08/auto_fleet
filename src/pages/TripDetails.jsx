@@ -26,10 +26,12 @@ import TripStatusBadge from '../components/trips/TripStatusBadge';
 import TripTimeline from '../components/trips/TripTimeline';
 import TripMap from '../components/trips/TripMap';
 import CreateTripModal from '../components/trips/CreateTripModal';
+import TripExpenseModal from '../components/trips/TripExpenseModal';
 import {
   getTripById,
   updateTripStatus,
   deleteTrip,
+  deleteTripExpense,
   calculateTripExpenses,
   canTransitionTripStatus,
   TRIP_STATUSES
@@ -47,9 +49,21 @@ export default function TripDetails({
   const [trip, setTrip] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [statusNote, setStatusNote] = useState('');
   const [targetStatus, setTargetStatus] = useState('');
   const [isTransitionModalOpen, setIsTransitionModalOpen] = useState(false);
+
+  const handleDeleteExpense = (expenseId) => {
+    try {
+      const updated = deleteTripExpense(trip.id, expenseId);
+      setTrip(updated);
+      setRefreshKey((p) => p + 1);
+      if (onShowToast) onShowToast('Expense item removed.', 'info');
+    } catch (err) {
+      if (onShowToast) onShowToast(err.message, 'error');
+    }
+  };
 
   // Load Trip
   useEffect(() => {
@@ -470,35 +484,70 @@ export default function TripDetails({
                 <DollarSign className="w-3.5 h-3.5 text-[#6ee7b7]" />
                 <span>Recorded Expenses</span>
               </h3>
-              <span className="font-mono text-sm font-bold text-[#6ee7b7]">
-                ${totalExpense.toFixed(2)}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-sm font-bold text-[#6ee7b7]">
+                  ${totalExpense.toFixed(2)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsExpenseModalOpen(true)}
+                  className="p-1 rounded bg-[#24212f] hover:bg-[#322c42] text-[#c4b3ff] border border-[#3f3558] transition-colors"
+                  title="Add Expense"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
             {Array.isArray(trip.expenses) && trip.expenses.length > 0 ? (
               <div className="divide-y divide-[#242631] text-xs">
                 {trip.expenses.map((exp, idx) => (
-                  <div key={exp.id || idx} className="py-2 flex items-center justify-between gap-2">
-                    <div>
-                      <b className="text-[#f0f0f4] block text-[11px]">{exp.type}</b>
-                      <span className="text-[10px] text-[#858894] truncate block max-w-[160px]">
-                        {exp.description || 'Receipt logged'}
+                  <div key={exp.id || idx} className="py-2 flex items-center justify-between gap-2 group">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[9px] px-1.5 py-0.2 rounded bg-[#20232e] text-[#a0a3b1] border border-[#313544]">
+                          {exp.type}
+                        </span>
+                        <b className="text-[#f0f0f4] text-[11px] truncate">{exp.description || 'Receipt logged'}</b>
+                      </div>
+                      <span className="text-[10px] text-[#747683] font-mono">
+                        {new Date(exp.recordedAt).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <span className="font-mono text-xs text-[#e0e0e7] shrink-0">
-                      ${Number(exp.amount).toFixed(2)}
-                    </span>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-mono text-xs font-semibold text-[#e0e0e7]">
+                        ${Number(exp.amount).toFixed(2)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteExpense(exp.id)}
+                        className="text-[#686a77] hover:text-[#f87171] p-1 transition-colors"
+                        title="Delete Expense"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#747683] italic">No expenses recorded for this trip.</p>
+              <div className="py-3 text-center">
+                <p className="text-xs text-[#747683] italic mb-2">No expenses recorded for this trip.</p>
+                <button
+                  type="button"
+                  onClick={() => setIsExpenseModalOpen(true)}
+                  className="text-xs text-[#ad91ff] hover:text-[#c4b3ff] font-medium"
+                >
+                  + Add First Expense
+                </button>
+              </div>
             )}
 
             <div className="pt-2 border-t border-[#252834] font-mono text-[11px] flex justify-between text-[#858894]">
               <span>Cost Per Kilometer:</span>
               <span className="text-[#6ee7b7] font-bold">
-                {costPerKm > 0 ? `$${costPerKm}/km` : 'N/A'}
+                {costPerKm > 0 ? `$${costPerKm} / km` : 'N/A'}
               </span>
             </div>
           </div>
@@ -585,6 +634,18 @@ export default function TripDetails({
         onTripSaved={(updated) => {
           setTrip(updated);
           setRefreshKey((p) => p + 1);
+        }}
+      />
+
+      {/* Record Expense Modal */}
+      <TripExpenseModal
+        isOpen={isExpenseModalOpen}
+        onClose={() => setIsExpenseModalOpen(false)}
+        tripId={trip.id}
+        onExpenseAdded={(updatedTrip) => {
+          setTrip(updatedTrip);
+          setRefreshKey((p) => p + 1);
+          if (onShowToast) onShowToast('Expense item recorded successfully.', 'success');
         }}
       />
     </div>
