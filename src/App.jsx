@@ -13,6 +13,7 @@ import RoutesPage from './pages/RoutesPage';
 import Fuel from './pages/Fuel';
 import Trips from './pages/Trips';
 import TripDetails from './pages/TripDetails';
+import DriverPortal from './pages/DriverPortal';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Toast from './components/common/Toast';
@@ -259,6 +260,14 @@ function AppContent() {
                     <TripDetails
                       vehicles={vehicles}
                       drivers={initialDrivers}
+                      onShowToast={showToast}
+                    />
+                  }
+                />
+                <Route
+                  path="/driver"
+                  element={
+                    <DriverPortal
                       onShowToast={showToast}
                     />
                   }

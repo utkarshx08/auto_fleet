@@ -434,6 +434,43 @@ export const updateTripStatus = (tripId, targetStatus, notes = '', actor = 'Flee
 };
 
 /**
+ * Updates an intermediate waypoint's status (e.g. 'Reached', 'Departed', 'Pending', 'Skipped')
+ */
+export const updateTripStopStatus = (tripId, stopId, newStatus, notes = '') => {
+  const trips = getTrips();
+  const tripIndex = trips.findIndex((t) => t.id === tripId);
+  if (tripIndex === -1) {
+    throw new Error(`Trip with ID ${tripId} not found.`);
+  }
+
+  const trip = trips[tripIndex];
+  const now = new Date().toISOString();
+  const stops = Array.isArray(trip.stops) ? [...trip.stops] : [];
+  const stopIndex = stops.findIndex((s) => s.id === stopId);
+  if (stopIndex === -1) {
+    throw new Error(`Stop with ID ${stopId} not found.`);
+  }
+
+  const prevStop = stops[stopIndex];
+  stops[stopIndex] = {
+    ...prevStop,
+    status: newStatus,
+    actualArrival: newStatus === 'Reached' ? (prevStop.actualArrival || now) : prevStop.actualArrival,
+    notes: notes || prevStop.notes
+  };
+
+  const updatedTrip = {
+    ...trip,
+    stops,
+    updatedAt: now
+  };
+
+  trips[tripIndex] = updatedTrip;
+  persistTrips(trips);
+  return updatedTrip;
+};
+
+/**
  * Deletes a trip with confirmation safety
  */
 export const deleteTrip = (tripId) => {

@@ -18,7 +18,8 @@ import {
   MoreHorizontal,
   Compass,
   PlusCircle,
-  Clock
+  Clock,
+  Smartphone
 } from 'lucide-react';
 
 export default function Sidebar({
@@ -100,6 +101,12 @@ export default function Sidebar({
   ];
 
   const managementLinks = [
+    {
+      id: 'driver',
+      path: '/driver',
+      label: 'Driver portal',
+      icon: Smartphone,
+    },
     {
       id: 'fuel',
       path: '/fuel',
