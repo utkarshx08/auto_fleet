@@ -12,6 +12,7 @@ import Reports from './pages/Reports';
 import RoutesPage from './pages/RoutesPage';
 import Fuel from './pages/Fuel';
 import Trips from './pages/Trips';
+import TripDetails from './pages/TripDetails';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Toast from './components/common/Toast';
@@ -246,6 +247,16 @@ function AppContent() {
                   path="/trips"
                   element={
                     <Trips
+                      vehicles={vehicles}
+                      drivers={initialDrivers}
+                      onShowToast={showToast}
+                    />
+                  }
+                />
+                <Route
+                  path="/trips/:tripId"
+                  element={
+                    <TripDetails
                       vehicles={vehicles}
                       drivers={initialDrivers}
                       onShowToast={showToast}
