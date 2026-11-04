@@ -23,6 +23,8 @@ import Button from '../components/common/Button';
 import TripCard from '../components/trips/TripCard';
 import TripTable from '../components/trips/TripTable';
 import TripStatusBadge from '../components/trips/TripStatusBadge';
+import TripForm from '../components/trips/TripForm';
+import CreateTripModal from '../components/trips/CreateTripModal';
 import {
   getTrips,
   getTripMetrics,
@@ -53,12 +55,31 @@ export default function Trips({
   // Operational State
   const [trips, setTrips] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingTrip, setEditingTrip] = useState(null);
 
   // Load Trips
   useEffect(() => {
     const loaded = getTrips();
     setTrips(loaded);
   }, [refreshKey]);
+
+  const handleOpenCreate = () => {
+    setEditingTrip(null);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleEditTrip = (trip) => {
+    setEditingTrip(trip);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleTripSaved = (savedTrip) => {
+    setRefreshKey((prev) => prev + 1);
+    if (onShowToast) {
+      onShowToast(`Trip ${savedTrip.id} (${savedTrip.tripName}) saved successfully.`, 'success');
+    }
+  };
 
   // Derived Metrics & Alerts (Calculated 100% from actual data!)
   const metrics = useMemo(() => {
@@ -207,7 +228,7 @@ export default function Trips({
           </Button>
           <Button
             variant="primary"
-            onClick={() => onOpenCreateTrip ? onOpenCreateTrip() : setTab('create')}
+            onClick={handleOpenCreate}
             icon={Plus}
             className="max-md:flex-1"
           >
@@ -441,6 +462,7 @@ export default function Trips({
                     key={trip.id}
                     trip={trip}
                     onViewDetails={handleViewDetails}
+                    onEdit={handleEditTrip}
                     onStatusTransition={handleStatusTransition}
                   />
                 ))}
@@ -579,9 +601,33 @@ export default function Trips({
         <TripTable
           trips={trips}
           onViewDetails={handleViewDetails}
+          onEditTrip={handleEditTrip}
           onDeleteTrip={handleDeleteTrip}
           onStatusTransition={handleStatusTransition}
         />
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB: CREATE NEW TRIP (IN-PAGE WORKFLOW) */}
+      {/* ========================================================================= */}
+      {activeTab === 'create' && (
+        <div className="bg-[#17191f] border border-[#292c35] p-6 rounded-[10px] space-y-4">
+          <div className="border-b border-[#252834] pb-4">
+            <h2 className="text-lg font-semibold text-[#f0f0f4] m-0">Create New Fleet Trip Manifest</h2>
+            <p className="text-xs text-[#858894] mt-1">
+              Configure route waypoints, departure windows, vehicle assignment & conflict verification.
+            </p>
+          </div>
+          <TripForm
+            vehicles={vehicles}
+            drivers={drivers}
+            onSave={(saved) => {
+              handleTripSaved(saved);
+              setTab('all');
+            }}
+            onCancel={() => setTab('dashboard')}
+          />
+        </div>
       )}
 
       {/* ========================================================================= */}
@@ -612,6 +658,7 @@ export default function Trips({
                   key={trip.id}
                   trip={trip}
                   onViewDetails={handleViewDetails}
+                  onEdit={handleEditTrip}
                   onStatusTransition={handleStatusTransition}
                 />
               ))}
@@ -638,6 +685,7 @@ export default function Trips({
           <TripTable
             trips={historyTrips}
             onViewDetails={handleViewDetails}
+            onEditTrip={handleEditTrip}
             onDeleteTrip={handleDeleteTrip}
             onStatusTransition={handleStatusTransition}
           />
@@ -693,11 +741,25 @@ export default function Trips({
           <TripTable
             trips={trips.filter((t) => t.status === 'Completed')}
             onViewDetails={handleViewDetails}
+            onEditTrip={handleEditTrip}
             onDeleteTrip={handleDeleteTrip}
             onStatusTransition={handleStatusTransition}
           />
         </div>
       )}
+
+      {/* Global Interactive Create / Edit Modal */}
+      <CreateTripModal
+        isOpen={isCreateModalOpen}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          setEditingTrip(null);
+        }}
+        initialTrip={editingTrip}
+        vehicles={vehicles}
+        drivers={drivers}
+        onTripSaved={handleTripSaved}
+      />
     </div>
   );
 }
