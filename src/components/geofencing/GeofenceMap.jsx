@@ -55,6 +55,7 @@ export default function GeofenceMap({
   // Initialize MapLibre
   useEffect(() => {
     if (!mapContainerRef.current) return;
+    let isMounted = true;
 
     try {
       const map = new maplibregl.Map({
@@ -66,22 +67,36 @@ export default function GeofenceMap({
         pitchWithRotate: true
       });
 
+      mapRef.current = map;
+
       map.on('load', () => {
-        mapRef.current = map;
+        if (!isMounted) return;
         setMapLoaded(true);
         map.resize();
       });
 
+      const ro = new ResizeObserver(() => {
+        if (mapRef.current && isMounted) {
+          try {
+            mapRef.current.resize();
+          } catch (e) {}
+        }
+      });
+      ro.observe(mapContainerRef.current);
+
       return () => {
+        isMounted = false;
+        ro.disconnect();
         if (popupRef.current) {
-          popupRef.current.remove();
+          try { popupRef.current.remove(); } catch (e) {}
           popupRef.current = null;
         }
         Object.keys(markersRef.current).forEach((k) => {
-          markersRef.current[k]?.remove();
+          try { markersRef.current[k]?.remove(); } catch (e) {}
         });
         markersRef.current = {};
-        map.remove();
+        try { map.remove(); } catch (e) {}
+        mapRef.current = null;
       };
     } catch (err) {
       console.error('Failed to initialize Geofence MapLibre instance:', err);

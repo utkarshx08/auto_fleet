@@ -1,5 +1,6 @@
 import React from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Command, Wifi, WifiOff } from 'lucide-react';
+import useNetworkStatus from '../../hooks/useNetworkStatus';
 
 export default function Navbar({
   currentSection = 'Overview',
@@ -7,6 +8,8 @@ export default function Navbar({
   onNotificationsClick,
   onProfileClick
 }) {
+  const { isOnline } = useNetworkStatus();
+
   return (
     <header className="h-[70px] max-md:h-[58px] flex items-center justify-between border-b border-[#252730] px-0 select-none">
       {/* Breadcrumb */}
@@ -17,11 +20,33 @@ export default function Navbar({
       </div>
 
       {/* Top Actions */}
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-4">
+        {/* Quick Command Hint */}
+        <button
+          onClick={() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true }));
+          }}
+          className="hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-bg-surface hover:bg-bg-hover border border-border-default text-text-muted hover:text-text-primary text-[11px] font-mono transition-colors"
+          title="Press Ctrl+K or ⌘K to open command search"
+        >
+          <Command className="w-3 h-3 text-primary" />
+          <span>Quick Jump</span>
+          <kbd className="px-1.5 py-0.2 bg-bg-primary rounded text-[9px] border border-border-default/60">⌘K</kbd>
+        </button>
+
         {/* Live System Status Beacon */}
-        <div className="max-md:hidden flex items-center text-[10px] text-[#9ca19f] font-mono">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#75d5a2] shadow-[0_0_8px_#75d5a2] mr-2 beacon-pulse"></span>
-          All systems operational
+        <div className="max-md:hidden flex items-center text-[10px] font-mono">
+          {isOnline ? (
+            <div className="flex items-center text-[#9ca19f]">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#75d5a2] shadow-[0_0_8px_#75d5a2] mr-2 beacon-pulse"></span>
+              All systems operational
+            </div>
+          ) : (
+            <div className="flex items-center text-status-warning bg-status-warning/10 px-2 py-0.5 rounded border border-status-warning/30">
+              <WifiOff className="w-3 h-3 mr-1.5 text-status-warning animate-pulse" />
+              Gateway Offline
+            </div>
+          )}
         </div>
 
         {/* Notifications Icon Button */}

@@ -62,6 +62,7 @@ export default function TripMap({
   // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
+    let isMounted = true;
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -71,16 +72,38 @@ export default function TripMap({
       attributionControl: false
     });
 
+    mapRef.current = map;
+
     map.on('load', () => {
-      mapRef.current = map;
+      if (!isMounted) return;
       setMapLoaded(true);
       map.resize();
     });
 
+    // Auto-resize observer
+    const ro = new ResizeObserver(() => {
+      if (mapRef.current && isMounted) {
+        try {
+          mapRef.current.resize();
+        } catch (e) {
+          // Ignore resize errors during unmount
+        }
+      }
+    });
+    ro.observe(mapContainerRef.current);
+
     return () => {
-      markersRef.current.forEach((m) => m.remove());
+      isMounted = false;
+      ro.disconnect();
+      markersRef.current.forEach((m) => {
+        try { m.remove(); } catch (e) {}
+      });
       markersRef.current = [];
-      map.remove();
+      try {
+        map.remove();
+      } catch (e) {
+        // Safe disposal
+      }
       mapRef.current = null;
     };
   }, []);

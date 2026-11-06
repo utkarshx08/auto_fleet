@@ -29,11 +29,12 @@ import {
   calculateTripExpenses
 } from '../services/tripService';
 import { initialDrivers, initialVehicles } from '../data/mockData';
+import storageService from '../services/storageService';
 
 export default function DriverPortal({ onShowToast }) {
   // Driver selection (defaults to drv-1 Alex Morgan)
   const [selectedDriverId, setSelectedDriverId] = useState(() => {
-    return localStorage.getItem('autrail_active_driver_id') || 'drv-1';
+    return storageService.getItem('autrail_active_driver_id', 'drv-1');
   });
 
   const [dutyStatus, setDutyStatus] = useState('On Duty');
@@ -56,7 +57,7 @@ export default function DriverPortal({ onShowToast }) {
   // Persist selected driver
   const handleDriverChange = (id) => {
     setSelectedDriverId(id);
-    localStorage.setItem('autrail_active_driver_id', id);
+    storageService.setItem('autrail_active_driver_id', id);
   };
 
   // Find Driver & Assigned Vehicle

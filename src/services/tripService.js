@@ -5,6 +5,7 @@
 
 import { initialTrips } from '../data/tripMockData.js';
 import { initialVehicles, initialDrivers } from '../data/mockData.js';
+import storageService from './storageService.js';
 
 const STORAGE_KEY = 'autrail_trips_store';
 
@@ -59,38 +60,22 @@ export const canTransitionTripStatus = (currentStatus, targetStatus) => {
 };
 
 /**
- * Loads all trips from localStorage with fallback to initial mock dataset
+ * Loads all trips from storageService with fallback to initial mock dataset
  */
 export const getTrips = () => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTrips));
-      return initialTrips;
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTrips));
-      return initialTrips;
-    }
-    return parsed;
-  } catch (error) {
-    console.error('Failed to parse trips from localStorage, fallback to initial mock data:', error);
+  const parsed = storageService.getItem(STORAGE_KEY, null);
+  if (!parsed || !Array.isArray(parsed) || parsed.length === 0) {
+    storageService.setItem(STORAGE_KEY, initialTrips);
     return initialTrips;
   }
+  return parsed;
 };
 
 /**
- * Saves current trips array to localStorage
+ * Saves current trips array to storageService
  */
 export const persistTrips = (trips) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(trips));
-    return true;
-  } catch (error) {
-    console.error('Failed to save trips to localStorage:', error);
-    return false;
-  }
+  return storageService.setItem(STORAGE_KEY, trips);
 };
 
 /**
@@ -701,7 +686,7 @@ export const generateTripAlerts = (trips = null) => {
  * Resets local trip storage to default initial mock dataset
  */
 export const resetTripsToMock = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTrips));
+  storageService.setItem(STORAGE_KEY, initialTrips);
   return initialTrips;
 };
 

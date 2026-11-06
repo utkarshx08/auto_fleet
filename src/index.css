@@ -168,3 +168,46 @@ body {
   animation: beaconPulse 2.5s infinite ease-in-out;
 }
 
+/* ==========================================================================
+   Print Optimization for Trip Manifests, Work Orders & Fleet Reports
+   ========================================================================== */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+  }
+
+  /* Hide interactive cockpit navigation and floating elements */
+  nav,
+  aside,
+  header,
+  .no-print,
+  [role="region"],
+  button:not(.print-include) {
+    display: none !important;
+  }
+
+  /* Ensure printed tables and cards don't split awkwardly across pages */
+  table, tr, td, th, .print-card {
+    page-break-inside: avoid !important;
+  }
+
+  /* Invert dark cards to crisp bordered print boxes */
+  .bg-bg-surface,
+  .bg-bg-primary,
+  .bg-\[\#17191f\],
+  .bg-\[\#101116\] {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+    box-shadow: none !important;
+  }
+
+  .text-text-primary,
+  .text-text-secondary,
+  .text-text-muted {
+    color: #1f2937 !important;
+  }
+}
+

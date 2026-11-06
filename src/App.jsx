@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
-import Dashboard from './pages/Dashboard';
-import Vehicles from './pages/Vehicles';
-import Tracking from './pages/Tracking';
-import Geofencing from './pages/Geofencing';
-import Analytics from './pages/Analytics';
-import Drivers from './pages/Drivers';
-import Maintenance from './pages/Maintenance';
-import Reports from './pages/Reports';
-import RoutesPage from './pages/RoutesPage';
-import Fuel from './pages/Fuel';
-import Trips from './pages/Trips';
-import TripDetails from './pages/TripDetails';
-import DriverPortal from './pages/DriverPortal';
-import Settings from './pages/Settings';
-import Login from './pages/Login';
+import PageLoader from './components/common/PageLoader';
+
+// Lazy-loaded route views for optimal bundle splitting and performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Vehicles = lazy(() => import('./pages/Vehicles'));
+const Tracking = lazy(() => import('./pages/Tracking'));
+const Geofencing = lazy(() => import('./pages/Geofencing'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Drivers = lazy(() => import('./pages/Drivers'));
+const Maintenance = lazy(() => import('./pages/Maintenance'));
+const Reports = lazy(() => import('./pages/Reports'));
+const RoutesPage = lazy(() => import('./pages/RoutesPage'));
+const Fuel = lazy(() => import('./pages/Fuel'));
+const Trips = lazy(() => import('./pages/Trips'));
+const TripDetails = lazy(() => import('./pages/TripDetails'));
+const DriverPortal = lazy(() => import('./pages/DriverPortal'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Login = lazy(() => import('./pages/Login'));
+
 import Toast from './components/common/Toast';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import AddVehicleModal from './components/vehicles/AddVehicleModal';
 import EditVehicleModal from './components/vehicles/EditVehicleModal';
 import VehicleDetailsModal from './components/vehicles/VehicleDetailsModal';
 import NotificationsModal from './components/common/NotificationsModal';
 import HelpCenterModal from './components/common/HelpCenterModal';
+import CommandPalette from './components/common/CommandPalette';
 import { initialVehicles, initialAlerts, initialDrivers } from './data/mockData';
 
 function AppContent() {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState(initialVehicles);
   const [alerts, setAlerts] = useState(initialAlerts);
-  const [toast, setToast] = useState({ visible: false, message: '', type: 'info' });
+  const [toasts, setToasts] = useState([]);
 
   // Modals state
   const [isAddVehicleOpen, setIsAddVehicleOpen] = useState(false);
@@ -36,22 +42,32 @@ function AppContent() {
   const [isVehicleDetailsOpen, setIsVehicleDetailsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isHelpCenterOpen, setIsHelpCenterOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [activeVehicle, setActiveVehicle] = useState(null);
 
   const showToast = (message, type = 'info') => {
-    setToast({ visible: true, message, type });
+    const id = Date.now() + Math.random().toString(36).substring(2, 6);
+    const newToast = { id, message, type };
+    setToasts((prev) => [...prev.slice(-4), newToast]);
     setTimeout(() => {
-      setToast((prev) => ({ ...prev, visible: false }));
-    }, 2800);
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3200);
   };
 
-  // Keyboard shortcut listener for ⌘1 / Ctrl+1 -> Overview
+  const handleDismissToast = (id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // Keyboard shortcut listener for ⌘1 / Ctrl+1 -> Overview and ⌘K / Ctrl+K -> Command Palette
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === '1') {
         e.preventDefault();
         navigate('/overview');
         showToast('Shortcut triggered: Navigated to Overview (⌘1).', 'info');
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -128,176 +144,178 @@ function AppContent() {
 
   return (
     <>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            <Login
-              onLoginSuccess={() => {
-                showToast('Authentication confirmed. Welcome, Jordan.', 'success');
-                navigate('/overview');
-              }}
-            />
-          }
-        />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <Login
+                onLoginSuccess={() => {
+                  showToast('Authentication confirmed. Welcome, Jordan.', 'success');
+                  navigate('/overview');
+                }}
+              />
+            }
+          />
 
-        <Route
-          path="/*"
-          element={
-            <MainLayout
-              unreadAlertsCount={alerts.filter((a) => !a.read).length}
-              vehicleCount={vehicles.length}
-              maintenanceAlert={alerts.length > 0}
-              onOpenNotifications={() => setIsNotificationsOpen(true)}
-              onOpenHelp={() => setIsHelpCenterOpen(true)}
-            >
-              <Routes>
-                <Route path="/" element={<Navigate to="/overview" replace />} />
-                <Route
-                  path="/overview"
-                  element={
-                    <Dashboard
-                      vehicles={vehicles}
-                      alerts={alerts}
-                      onAddVehicle={() => setIsAddVehicleOpen(true)}
-                      onExportReport={handleExportReport}
-                      onViewVehicleDetails={(veh) => {
-                        setActiveVehicle(veh || vehicles[0]);
-                        setIsVehicleDetailsOpen(true);
-                      }}
-                      onViewAllVehicles={() => navigate('/vehicles')}
-                      onViewAllAlerts={() => navigate('/maintenance')}
-                      onSelectVehicle={handleSelectVehicleOrAlert}
-                      onPeriodChange={handlePeriodChange}
-                    />
-                  }
-                />
-                <Route
-                  path="/vehicles"
-                  element={
-                    <Vehicles
-                      vehicles={vehicles}
-                      onAddVehicle={() => setIsAddVehicleOpen(true)}
-                      onEditVehicle={(v) => {
-                        setActiveVehicle(v);
-                        setIsEditVehicleOpen(true);
-                      }}
-                      onDeleteVehicle={handleDeleteVehicle}
-                      onViewDetails={(v) => {
-                        setActiveVehicle(v);
-                        setIsVehicleDetailsOpen(true);
-                      }}
-                    />
-                  }
-                />
-                <Route
-                  path="/tracking"
-                  element={
-                    <Tracking
-                      vehicles={vehicles}
-                      onSelectVehicle={(v) => {
-                        setActiveVehicle(v);
-                        showToast(`Tracking transponder locked: ${v.plate}`, 'info');
-                      }}
-                    />
-                  }
-                />
-                <Route
-                  path="/geofencing"
-                  element={
-                    <Geofencing
-                      onShowToast={showToast}
-                    />
-                  }
-                />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route
-                  path="/maintenance"
-                  element={
-                    <Maintenance
-                      vehicles={vehicles}
-                      alerts={alerts}
-                      onScheduleService={(record) => {
-                        showToast(`Service order closed for ${record.vehicleId} ($${record.serviceCost}).`, 'success');
-                      }}
-                      onResolveAlert={handleResolveAlert}
-                    />
-                  }
-                />
-                <Route
-                  path="/drivers"
-                  element={
-                    <Drivers
-                      onAddDriver={() => showToast('Driver onboarding modal ready.', 'info')}
-                      onViewDriver={(d) => showToast(`Managing operator file for ${d.name}.`, 'info')}
-                      onAssignVehicle={(d) => showToast(`Reassigned vehicle for ${d.name}.`, 'info')}
-                    />
-                  }
-                />
-                <Route
-                  path="/reports"
-                  element={
-                    <Reports
-                      vehicles={vehicles}
-                      onExportCSV={handleExportReport}
-                    />
-                  }
-                />
-                <Route path="/routes" element={<RoutesPage />} />
-                <Route
-                  path="/trips"
-                  element={
-                    <Trips
-                      vehicles={vehicles}
-                      drivers={initialDrivers}
-                      onShowToast={showToast}
-                    />
-                  }
-                />
-                <Route
-                  path="/trips/:tripId"
-                  element={
-                    <TripDetails
-                      vehicles={vehicles}
-                      drivers={initialDrivers}
-                      onShowToast={showToast}
-                    />
-                  }
-                />
-                <Route
-                  path="/driver"
-                  element={
-                    <DriverPortal
-                      onShowToast={showToast}
-                    />
-                  }
-                />
-                <Route
-                  path="/fuel"
-                  element={
-                    <Fuel
-                      vehicles={vehicles}
-                      drivers={initialDrivers}
-                      onAddFuelExpense={(rec) => {
-                        showToast(`Fuel purchase logged for ${rec.vehicleId} ($${rec.totalAmount}).`, 'success');
-                      }}
-                    />
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <Settings
-                      onSaveSettings={() => showToast('System preferences updated.', 'success')}
-                    />
-                  }
-                />
-                <Route path="*" element={<Navigate to="/overview" replace />} />
-              </Routes>
-            </MainLayout>
-          }
-        />
-      </Routes>
+          <Route
+            path="/*"
+            element={
+              <MainLayout
+                unreadAlertsCount={alerts.filter((a) => !a.read).length}
+                vehicleCount={vehicles.length}
+                maintenanceAlert={alerts.length > 0}
+                onOpenNotifications={() => setIsNotificationsOpen(true)}
+                onOpenHelp={() => setIsHelpCenterOpen(true)}
+              >
+                <Routes>
+                  <Route path="/" element={<Navigate to="/overview" replace />} />
+                  <Route
+                    path="/overview"
+                    element={
+                      <Dashboard
+                        vehicles={vehicles}
+                        alerts={alerts}
+                        onAddVehicle={() => setIsAddVehicleOpen(true)}
+                        onExportReport={handleExportReport}
+                        onViewVehicleDetails={(veh) => {
+                          setActiveVehicle(veh || vehicles[0]);
+                          setIsVehicleDetailsOpen(true);
+                        }}
+                        onViewAllVehicles={() => navigate('/vehicles')}
+                        onViewAllAlerts={() => navigate('/maintenance')}
+                        onSelectVehicle={handleSelectVehicleOrAlert}
+                        onPeriodChange={handlePeriodChange}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/vehicles"
+                    element={
+                      <Vehicles
+                        vehicles={vehicles}
+                        onAddVehicle={() => setIsAddVehicleOpen(true)}
+                        onEditVehicle={(v) => {
+                          setActiveVehicle(v);
+                          setIsEditVehicleOpen(true);
+                        }}
+                        onDeleteVehicle={handleDeleteVehicle}
+                        onViewDetails={(v) => {
+                          setActiveVehicle(v);
+                          setIsVehicleDetailsOpen(true);
+                        }}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/tracking"
+                    element={
+                      <Tracking
+                        vehicles={vehicles}
+                        onSelectVehicle={(v) => {
+                          setActiveVehicle(v);
+                          showToast(`Tracking transponder locked: ${v.plate}`, 'info');
+                        }}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/geofencing"
+                    element={
+                      <Geofencing
+                        onShowToast={showToast}
+                      />
+                    }
+                  />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route
+                    path="/maintenance"
+                    element={
+                      <Maintenance
+                        vehicles={vehicles}
+                        alerts={alerts}
+                        onScheduleService={(record) => {
+                          showToast(`Service order closed for ${record.vehicleId} ($${record.serviceCost}).`, 'success');
+                        }}
+                        onResolveAlert={handleResolveAlert}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/drivers"
+                    element={
+                      <Drivers
+                        onAddDriver={() => showToast('Driver onboarding modal ready.', 'info')}
+                        onViewDriver={(d) => showToast(`Managing operator file for ${d.name}.`, 'info')}
+                        onAssignVehicle={(d) => showToast(`Reassigned vehicle for ${d.name}.`, 'info')}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/reports"
+                    element={
+                      <Reports
+                        vehicles={vehicles}
+                        onExportCSV={handleExportReport}
+                      />
+                    }
+                  />
+                  <Route path="/routes" element={<RoutesPage />} />
+                  <Route
+                    path="/trips"
+                    element={
+                      <Trips
+                        vehicles={vehicles}
+                        drivers={initialDrivers}
+                        onShowToast={showToast}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/trips/:tripId"
+                    element={
+                      <TripDetails
+                        vehicles={vehicles}
+                        drivers={initialDrivers}
+                        onShowToast={showToast}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/driver"
+                    element={
+                      <DriverPortal
+                        onShowToast={showToast}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/fuel"
+                    element={
+                      <Fuel
+                        vehicles={vehicles}
+                        drivers={initialDrivers}
+                        onAddFuelExpense={(rec) => {
+                          showToast(`Fuel purchase logged for ${rec.vehicleId} ($${rec.totalAmount}).`, 'success');
+                        }}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <Settings
+                        onSaveSettings={() => showToast('System preferences updated.', 'success')}
+                      />
+                    }
+                  />
+                  <Route path="*" element={<Navigate to="/overview" replace />} />
+                </Routes>
+              </MainLayout>
+            }
+          />
+        </Routes>
+      </Suspense>
 
       {/* Global Interactive Modals */}
       <AddVehicleModal
@@ -344,12 +362,19 @@ function AppContent() {
         onClose={() => setIsHelpCenterOpen(false)}
       />
 
+      {/* Global Quick Command Palette (⌘K / Ctrl+K) */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        vehicles={vehicles}
+        onAddVehicle={() => setIsAddVehicleOpen(true)}
+        onExportReport={handleExportReport}
+      />
+
       {/* Real-time Toast Feedback Stack */}
       <Toast
-        message={toast.message}
-        type={toast.type}
-        visible={toast.visible}
-        onClose={() => setToast((prev) => ({ ...prev, visible: false }))}
+        toasts={toasts}
+        onDismiss={handleDismissToast}
       />
     </>
   );
@@ -357,8 +382,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

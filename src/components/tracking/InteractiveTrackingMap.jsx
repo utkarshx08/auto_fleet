@@ -58,6 +58,7 @@ export default function InteractiveTrackingMap({
   // Initialize MapLibre GL Map Instance
   useEffect(() => {
     if (!mapContainerRef.current) return;
+    let isMounted = true;
 
     try {
       const map = new maplibregl.Map({
@@ -69,11 +70,11 @@ export default function InteractiveTrackingMap({
         pitchWithRotate: true
       });
 
-      map.on('load', () => {
-        mapRef.current = map;
-        setMapLoaded(true);
+      mapRef.current = map;
 
-        // Resize observer support for clean responsive layout
+      map.on('load', () => {
+        if (!isMounted) return;
+        setMapLoaded(true);
         map.resize();
       });
 
@@ -81,12 +82,28 @@ export default function InteractiveTrackingMap({
         console.warn('MapLibre GL tile fallback triggered:', e);
       });
 
+      const ro = new ResizeObserver(() => {
+        if (mapRef.current && isMounted) {
+          try {
+            mapRef.current.resize();
+          } catch (e) {}
+        }
+      });
+      ro.observe(mapContainerRef.current);
+
       return () => {
+        isMounted = false;
+        ro.disconnect();
         Object.keys(markersRef.current).forEach((k) => {
-          markersRef.current[k]?.remove();
+          try {
+            markersRef.current[k]?.remove();
+          } catch (e) {}
         });
         markersRef.current = {};
-        map.remove();
+        try {
+          map.remove();
+        } catch (e) {}
+        mapRef.current = null;
       };
     } catch (err) {
       console.error('Failed to initialize WebGL map:', err);
