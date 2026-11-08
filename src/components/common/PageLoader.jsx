@@ -16,3 +16,4 @@ export default function PageLoader({ text = 'Initializing Telemetry...' }) {
     </div>
   );
 }
+

@@ -104,3 +104,4 @@ export function formatRelativeTime(dateVal) {
   const diffDays = Math.floor(diffHours / 24);
   return `${diffDays}d ago`;
 }
+
