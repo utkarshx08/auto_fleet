@@ -115,7 +115,9 @@ export default function Fuel({
     const link = document.createElement('a');
     link.href = url;
     link.download = `autrail-fuel-purchases-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 

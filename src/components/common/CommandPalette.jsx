@@ -22,6 +22,7 @@ export default function CommandPalette({
   isOpen,
   onClose,
   vehicles = [],
+  onSelectVehicle,
   onAddVehicle,
   onExportReport
 }) {
@@ -30,6 +31,26 @@ export default function CommandPalette({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+  const itemRefs = useRef([]);
+
+  // Auto-scroll selected item into view
+  useEffect(() => {
+    if (itemRefs.current[selectedIndex]) {
+      itemRefs.current[selectedIndex].scrollIntoView({ block: 'nearest' });
+    }
+  }, [selectedIndex]);
+
+  // Global escape key listener
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleGlobalKey = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKey);
+    return () => window.removeEventListener('keydown', handleGlobalKey);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -83,7 +104,14 @@ export default function CommandPalette({
     subtitle: `Status: ${v.status} • Fuel: ${v.fuel}% • Location: ${v.location || 'NYC'}`,
     category: 'Vehicles',
     icon: Truck,
-    path: '/vehicles'
+    action: () => {
+      onClose();
+      if (onSelectVehicle) {
+        onSelectVehicle(v);
+      } else {
+        navigate('/vehicles');
+      }
+    }
   }));
 
   const allItems = [...quickActions, ...defaultRoutes, ...vehicleItems];
@@ -173,6 +201,7 @@ export default function CommandPalette({
               return (
                 <div
                   key={item.id}
+                  ref={(el) => (itemRefs.current[idx] = el)}
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl cursor-pointer transition-all ${

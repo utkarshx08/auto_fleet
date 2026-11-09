@@ -139,6 +139,9 @@ export default function FuelPurchaseModal({
     e.preventDefault();
     if (!validate()) return;
 
+    const pDate = formData.purchaseDate ? new Date(formData.purchaseDate) : new Date();
+    const safePurchaseDate = !isNaN(pDate.getTime()) ? pDate.toISOString() : new Date().toISOString();
+
     const payload = {
       id: isEditing ? recordToEdit.id : `FUEL-${Math.floor(1000 + Math.random() * 8999)}`,
       vehicleId: formData.vehicleId,
@@ -152,7 +155,7 @@ export default function FuelPurchaseModal({
       fuelStation: formData.fuelStation,
       paymentMethod: formData.paymentMethod,
       receiptUrl: formData.receiptFileName,
-      purchaseDate: new Date(formData.purchaseDate).toISOString(),
+      purchaseDate: safePurchaseDate,
       isAnomaly: anomalyCheck.isAnomaly,
       anomalyReason: anomalyCheck.anomalyReason
     };
@@ -246,7 +249,7 @@ export default function FuelPurchaseModal({
                 min="0.1"
                 required
                 value={formData.quantity}
-                onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute right-2 top-2 text-[10px] text-[#717480] font-mono">L</span>
@@ -264,7 +267,7 @@ export default function FuelPurchaseModal({
                 min="0.01"
                 required
                 value={formData.pricePerLitre}
-                onChange={(e) => setFormData({ ...formData, pricePerLitre: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, pricePerLitre: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] pl-5 pr-2 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute left-2 top-2 text-[10px] text-[#717480] font-mono">$</span>

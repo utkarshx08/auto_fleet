@@ -23,10 +23,16 @@ export default function VehicleInfoPanel({
 }) {
   if (!vehicle) return null;
 
-  const isOverspeed = vehicle.speed > 80;
-  const [resolvedAddress, setResolvedAddress] = useState(vehicle.locationName || '');
+  const isOverspeed = (vehicle?.speed || 0) > 80;
+  const [resolvedAddress, setResolvedAddress] = useState(vehicle?.locationName || '');
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isOsmVerified, setIsOsmVerified] = useState(false);
+
+  // Synchronize location name immediately when vehicle transponder selection changes
+  useEffect(() => {
+    setResolvedAddress(vehicle?.locationName || '');
+    setIsOsmVerified(false);
+  }, [vehicle?.plate, vehicle?.locationName]);
 
   useEffect(() => {
     let isMounted = true;
@@ -156,8 +162,16 @@ export default function VehicleInfoPanel({
               {resolvedAddress || vehicle.locationName}
             </b>
             <div className="flex items-center gap-3 text-[9px] text-[#747783] font-mono mt-2 pt-1.5 border-t border-[#20222a]">
-              <span>LAT: {Number(vehicle.latitude).toFixed(4)}° N</span>
-              <span>LNG: {Math.abs(Number(vehicle.longitude)).toFixed(4)}° W</span>
+              <span>
+                LAT: {!isNaN(Number(vehicle.latitude)) && Number(vehicle.latitude) !== 0
+                  ? `${Math.abs(Number(vehicle.latitude)).toFixed(4)}° ${Number(vehicle.latitude) >= 0 ? 'N' : 'S'}`
+                  : '—'}
+              </span>
+              <span>
+                LNG: {!isNaN(Number(vehicle.longitude)) && Number(vehicle.longitude) !== 0
+                  ? `${Math.abs(Number(vehicle.longitude)).toFixed(4)}° ${Number(vehicle.longitude) >= 0 ? 'E' : 'W'}`
+                  : '—'}
+              </span>
               <span className="ml-auto text-[#8be0b3] font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#8be0b3] beacon-pulse" />
                 {vehicle.gpsAccuracy || 'GPS: Optimal (0.8m)'}

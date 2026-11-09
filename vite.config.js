@@ -135,16 +135,23 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+            const normalized = id.replace(/\\/g, '/');
+            if (
+              normalized.includes('/react/') ||
+              normalized.includes('/react-dom/') ||
+              normalized.includes('/react-router/') ||
+              normalized.includes('/react-router-dom/') ||
+              normalized.includes('/scheduler/')
+            ) {
               return 'vendor';
             }
-            if (id.includes('maplibre-gl')) {
+            if (normalized.includes('maplibre-gl')) {
               return 'maps';
             }
-            if (id.includes('recharts')) {
+            if (normalized.includes('recharts')) {
               return 'charts';
             }
-            if (id.includes('lucide-react')) {
+            if (normalized.includes('lucide-react')) {
               return 'icons';
             }
           }

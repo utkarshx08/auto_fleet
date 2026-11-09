@@ -38,11 +38,14 @@ export default function TripExpenseModal({
 
     setIsSubmitting(true);
     try {
+      const recDate = formData.recordedAt ? new Date(formData.recordedAt) : new Date();
+      const safeRecordedAt = !isNaN(recDate.getTime()) ? recDate.toISOString() : new Date().toISOString();
+
       const { updatedTrip, newExpense } = addTripExpense(tripId, {
         type: formData.type,
         amount: amt,
         description: formData.description.trim(),
-        recordedAt: new Date(formData.recordedAt).toISOString(),
+        recordedAt: safeRecordedAt,
         receiptUrl: formData.receiptUrl || null
       });
 

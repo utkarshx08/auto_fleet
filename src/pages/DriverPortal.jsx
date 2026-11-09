@@ -31,6 +31,12 @@ import {
 import { initialDrivers, initialVehicles } from '../data/mockData';
 import storageService from '../services/storageService';
 
+const formatTimeSafe = (dateVal) => {
+  if (!dateVal) return '--:--';
+  const d = new Date(dateVal);
+  return isNaN(d.getTime()) ? '--:--' : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 export default function DriverPortal({ onShowToast }) {
   // Driver selection (defaults to drv-1 Alex Morgan)
   const [selectedDriverId, setSelectedDriverId] = useState(() => {
@@ -280,7 +286,7 @@ export default function DriverPortal({ onShowToast }) {
                     <span className="text-[10px] font-mono text-[#747683] uppercase block">Origin Pickup</span>
                     <p className="text-xs font-semibold text-[#f0f0f4] truncate m-0">{activeTrip.pickupLocation}</p>
                     <span className="text-[10px] text-[#858894] font-mono">
-                      Dep: {new Date(activeTrip.scheduledDeparture).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      Dep: {formatTimeSafe(activeTrip.scheduledDeparture)}
                     </span>
                   </div>
                 </div>
@@ -354,7 +360,7 @@ export default function DriverPortal({ onShowToast }) {
                     <span className="text-[10px] font-mono text-[#747683] uppercase block">Final Destination</span>
                     <p className="text-xs font-semibold text-[#f0f0f4] truncate m-0">{activeTrip.destinationLocation}</p>
                     <span className="text-[10px] text-[#858894] font-mono">
-                      Arr: {new Date(activeTrip.scheduledArrival).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      Arr: {formatTimeSafe(activeTrip.scheduledArrival)}
                     </span>
                   </div>
                 </div>

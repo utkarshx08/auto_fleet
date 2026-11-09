@@ -17,16 +17,17 @@ export default function VehicleTable({
 
   // Filtered vehicles
   const filteredVehicles = useMemo(() => {
+    const term = searchTerm.toLowerCase();
     return vehicles.filter((v) => {
       const matchesSearch =
-        v.plate.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        v.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        v.driver.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        v.location.toLowerCase().includes(searchTerm.toLowerCase());
+        (v.plate || '').toLowerCase().includes(term) ||
+        (v.model || v.type || '').toLowerCase().includes(term) ||
+        (v.driver || '').toLowerCase().includes(term) ||
+        (v.location || '').toLowerCase().includes(term);
 
       const matchesStatus =
         statusFilter === 'ALL' ||
-        v.status.toLowerCase() === statusFilter.toLowerCase();
+        (v.status || '').toLowerCase() === statusFilter.toLowerCase();
 
       return matchesSearch && matchesStatus;
     });

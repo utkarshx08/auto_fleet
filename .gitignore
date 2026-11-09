@@ -9,7 +9,6 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.git
 node_modules_backup
 node_modules_backup_2
 node_modules_backup_3

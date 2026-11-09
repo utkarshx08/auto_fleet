@@ -37,9 +37,11 @@ export const detectFuelAnomalies = (record, existingRecords = [], vehicle = null
     if (existing.vehicleId !== record.vehicleId) return false;
 
     const existingDate = new Date(existing.purchaseDate);
+    if (isNaN(recordDate.getTime()) || isNaN(existingDate.getTime())) return false;
     const timeDiff = Math.abs(recordDate.getTime() - existingDate.getTime());
     const sameStation =
-      existing.fuelStation?.toLowerCase() === record.fuelStation?.toLowerCase();
+      Boolean(existing.fuelStation && record.fuelStation) &&
+      existing.fuelStation.trim().toLowerCase() === record.fuelStation.trim().toLowerCase();
 
     return timeDiff <= DUPLICATE_WINDOW_MS && sameStation;
   });

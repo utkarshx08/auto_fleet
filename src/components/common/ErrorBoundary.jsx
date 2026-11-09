@@ -48,10 +48,35 @@ export default class ErrorBoundary extends React.Component {
       `Component Stack: ${this.state.errorInfo?.componentStack || 'No component stack'}`
     ].join('\n\n');
 
-    navigator.clipboard.writeText(diagnosticReport).then(() => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(diagnosticReport)
+        .then(() => {
+          this.setState({ copied: true });
+          setTimeout(() => this.setState({ copied: false }), 2000);
+        })
+        .catch(() => {
+          this.fallbackCopy(diagnosticReport);
+        });
+    } else {
+      this.fallbackCopy(diagnosticReport);
+    }
+  };
+
+  fallbackCopy = (text) => {
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
       this.setState({ copied: true });
       setTimeout(() => this.setState({ copied: false }), 2000);
-    });
+    } catch (e) {
+      console.warn('Fallback clipboard copy failed:', e);
+    }
   };
 
   render() {

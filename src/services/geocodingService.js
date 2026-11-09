@@ -5,6 +5,7 @@
 // ============================================================================
 
 const geocodeCache = new Map();
+const inFlightRequests = new Map();
 
 /**
  * Perform reverse geocoding via OpenStreetMap Nominatim
@@ -24,62 +25,76 @@ export async function reverseGeocode(lat, lng) {
     return geocodeCache.get(cacheKey);
   }
 
-  try {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
-    const response = await fetch(url, {
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'Autrail-Fleet-Management-System/1.0'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Nominatim HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-    const addr = data.address || {};
-
-    const road = addr.road || addr.pedestrian || addr.street || '';
-    const houseNumber = addr.house_number ? `${addr.house_number} ` : '';
-    const suburb = addr.suburb || addr.neighbourhood || addr.city_district || '';
-    const city = addr.city || addr.town || addr.municipality || 'New York';
-    const state = addr.state || 'NY';
-
-    let formatted = '';
-    if (road) {
-      formatted = `${houseNumber}${road}, ${suburb || city}, ${state}`.trim();
-    } else {
-      formatted = data.display_name?.split(',').slice(0, 3).join(',') || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-    }
-
-    const result = {
-      address: formatted,
-      road: road || 'Commercial Thoroughfare',
-      city,
-      displayName: data.display_name || formatted,
-      source: 'openstreetmap_nominatim'
-    };
-
-    // Store in cache (limit to 100 entries)
-    if (geocodeCache.size > 100) {
-      const oldestKey = geocodeCache.keys().next().value;
-      geocodeCache.delete(oldestKey);
-    }
-    geocodeCache.set(cacheKey, result);
-
-    return result;
-  } catch (err) {
-    console.warn('Nominatim reverse geocode fallback to coordinate tag:', err.message);
-    const fallback = {
-      address: `${Number(lat).toFixed(4)}° N, ${Math.abs(Number(lng)).toFixed(4)}° W`,
-      road: 'Metropolitan Corridor',
-      city: 'Metro NY',
-      displayName: 'Coordinate Position',
-      source: 'offline_fallback'
-    };
-    geocodeCache.set(cacheKey, fallback);
-    return fallback;
+  if (inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey);
   }
+
+  const fetchPromise = (async () => {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Nominatim HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      const addr = data.address || {};
+
+      const road = addr.road || addr.pedestrian || addr.street || '';
+      const houseNumber = addr.house_number ? `${addr.house_number} ` : '';
+      const suburb = addr.suburb || addr.neighbourhood || addr.city_district || '';
+      const city = addr.city || addr.town || addr.municipality || 'New York';
+      const state = addr.state || 'NY';
+
+      let formatted = '';
+      if (road) {
+        formatted = `${houseNumber}${road}, ${suburb || city}, ${state}`.trim();
+      } else {
+        formatted = data.display_name?.split(',').slice(0, 3).join(',') || `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}`;
+      }
+
+      const result = {
+        address: formatted,
+        road: road || 'Commercial Thoroughfare',
+        city,
+        displayName: data.display_name || formatted,
+        source: 'openstreetmap_nominatim'
+      };
+
+      // Store in cache (limit to 100 entries)
+      if (geocodeCache.size > 100) {
+        const oldestKey = geocodeCache.keys().next().value;
+        geocodeCache.delete(oldestKey);
+      }
+      geocodeCache.set(cacheKey, result);
+
+      return result;
+    } catch (err) {
+      console.warn('Nominatim reverse geocode fallback to coordinate tag:', err.message);
+      const latNum = Number(lat);
+      const lngNum = Number(lng);
+      const latDir = latNum >= 0 ? 'N' : 'S';
+      const lngDir = lngNum >= 0 ? 'E' : 'W';
+      const fallback = {
+        address: `${Math.abs(latNum).toFixed(4)}° ${latDir}, ${Math.abs(lngNum).toFixed(4)}° ${lngDir}`,
+        road: 'Metropolitan Corridor',
+        city: 'Metro NY',
+        displayName: 'Coordinate Position',
+        source: 'offline_fallback'
+      };
+      geocodeCache.set(cacheKey, fallback);
+      return fallback;
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+  })();
+
+  inFlightRequests.set(cacheKey, fetchPromise);
+  return fetchPromise;
 }
 

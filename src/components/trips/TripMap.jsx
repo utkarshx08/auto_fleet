@@ -125,7 +125,7 @@ export default function TripMap({
     const originEl = document.createElement('div');
     originEl.className = 'w-7 h-7 rounded-full bg-[#122822] border-2 border-[#10b981] text-[#6ee7b7] flex items-center justify-center font-mono text-xs font-bold shadow-lg';
     originEl.innerText = 'A';
-    originEl.title = `Pickup: ${trip.pickupLocation}`;
+    originEl.title = `Pickup: ${trip?.pickupLocation || 'Origin'}`;
     const originMarker = new maplibregl.Marker({ element: originEl })
       .setLngLat([pickup.lng, pickup.lat])
       .addTo(map);
@@ -142,7 +142,7 @@ export default function TripMap({
       const stopEl = document.createElement('div');
       stopEl.className = 'w-6 h-6 rounded-full bg-[#24212f] border-2 border-[#b49aff] text-[#c4b3ff] flex items-center justify-center font-mono text-[10px] font-bold shadow-lg';
       stopEl.innerText = String(stop.order || i + 1);
-      stopEl.title = `Stop ${stop.order || i + 1}: ${stop.locationName}`;
+      stopEl.title = `Stop ${stop.order || i + 1}: ${stop.locationName || 'Waypoint'}`;
       const stopMarker = new maplibregl.Marker({ element: stopEl })
         .setLngLat([stopCoords.lng, stopCoords.lat])
         .addTo(map);
@@ -154,14 +154,14 @@ export default function TripMap({
     const destEl = document.createElement('div');
     destEl.className = 'w-7 h-7 rounded-full bg-[#321719] border-2 border-[#ef4444] text-[#fca5a5] flex items-center justify-center font-mono text-xs font-bold shadow-lg';
     destEl.innerText = 'B';
-    destEl.title = `Destination: ${trip.destinationLocation}`;
+    destEl.title = `Destination: ${trip?.destinationLocation || 'Destination'}`;
     const destMarker = new maplibregl.Marker({ element: destEl })
       .setLngLat([destination.lng, destination.lat])
       .addTo(map);
     markersRef.current.push(destMarker);
 
     // 4. Vehicle Position Marker (if active)
-    if (vehicleCoords && (trip.status === 'In Progress' || trip.status === 'Delayed')) {
+    if (vehicleCoords && (trip?.status === 'In Progress' || trip?.status === 'Delayed')) {
       const vehEl = document.createElement('div');
       vehEl.className = 'relative flex items-center justify-center';
       vehEl.innerHTML = `
@@ -256,7 +256,7 @@ export default function TripMap({
 
         <span className="font-mono text-[10px] px-2 py-1 rounded bg-[#17191f]/90 backdrop-blur-md text-[#d4d4dc] border border-[#2b2e38] shadow-lg flex items-center gap-1.5">
           <Radio className="w-3 h-3 text-[#10b981]" />
-          <span>Telemetry: {trip.status === 'In Progress' ? 'Broadcasting' : 'Standby'}</span>
+          <span>Telemetry: {trip?.status === 'In Progress' ? 'Broadcasting' : 'Standby'}</span>
         </span>
       </div>
 
@@ -264,7 +264,7 @@ export default function TripMap({
       <div className="absolute bottom-3 right-3 z-10 bg-[#121319]/90 backdrop-blur-md border border-[#272935] p-2.5 rounded-[8px] text-[11px] font-mono text-[#a0a3b1] space-y-1 shadow-xl">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-          <span>Pickup: {trip.pickupLocation}</span>
+          <span>Pickup: {trip?.pickupLocation || 'Origin'}</span>
         </div>
         {stops.length > 0 && (
           <div className="flex items-center gap-2 text-[#c4b3ff]">
@@ -274,7 +274,7 @@ export default function TripMap({
         )}
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#ef4444]" />
-          <span>Destination: {trip.destinationLocation}</span>
+          <span>Destination: {trip?.destinationLocation || 'Destination'}</span>
         </div>
       </div>
     </div>

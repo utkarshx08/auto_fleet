@@ -63,12 +63,24 @@ export default function TripForm({
     destinationLocation: initialTrip?.destinationLocation || '',
     destinationLat: initialTrip?.destinationCoords?.lat || 40.7589,
     destinationLng: initialTrip?.destinationCoords?.lng || -73.9851,
-    scheduledDeparture: initialTrip?.scheduledDeparture
-      ? new Date(new Date(initialTrip.scheduledDeparture).getTime() - new Date(initialTrip.scheduledDeparture).getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-      : defaultDates.dep,
-    scheduledArrival: initialTrip?.scheduledArrival
-      ? new Date(new Date(initialTrip.scheduledArrival).getTime() - new Date(initialTrip.scheduledArrival).getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-      : defaultDates.arr,
+    scheduledDeparture:
+      initialTrip?.scheduledDeparture && !isNaN(new Date(initialTrip.scheduledDeparture).getTime())
+        ? new Date(
+            new Date(initialTrip.scheduledDeparture).getTime() -
+              new Date(initialTrip.scheduledDeparture).getTimezoneOffset() * 60000
+          )
+            .toISOString()
+            .slice(0, 16)
+        : defaultDates.dep,
+    scheduledArrival:
+      initialTrip?.scheduledArrival && !isNaN(new Date(initialTrip.scheduledArrival).getTime())
+        ? new Date(
+            new Date(initialTrip.scheduledArrival).getTime() -
+              new Date(initialTrip.scheduledArrival).getTimezoneOffset() * 60000
+          )
+            .toISOString()
+            .slice(0, 16)
+        : defaultDates.arr,
     assignedVehicleId: initialTrip?.assignedVehicleId || '',
     assignedDriverId: initialTrip?.assignedDriverId || '',
     estimatedDistanceKm: initialTrip?.estimatedDistanceKm || 35,
@@ -84,17 +96,24 @@ export default function TripForm({
   // Live validation on assignment & timeframe change
   useEffect(() => {
     if (formData.scheduledDeparture && formData.scheduledArrival) {
-      const check = validateTripAssignment({
-        vehicleId: formData.assignedVehicleId || null,
-        driverId: formData.assignedDriverId || null,
-        departureTime: new Date(formData.scheduledDeparture).toISOString(),
-        arrivalTime: new Date(formData.scheduledArrival).toISOString(),
-        excludeTripId: isEditing ? formData.id : null,
-        vehiclesList: vehicles
-      });
+      const depDate = new Date(formData.scheduledDeparture);
+      const arrDate = new Date(formData.scheduledArrival);
 
-      if (!check.isValid) {
-        setConflictWarnings(check.errors);
+      if (!isNaN(depDate.getTime()) && !isNaN(arrDate.getTime())) {
+        const check = validateTripAssignment({
+          vehicleId: formData.assignedVehicleId || null,
+          driverId: formData.assignedDriverId || null,
+          departureTime: depDate.toISOString(),
+          arrivalTime: arrDate.toISOString(),
+          excludeTripId: isEditing ? formData.id : null,
+          vehiclesList: vehicles
+        });
+
+        if (!check.isValid) {
+          setConflictWarnings(check.errors);
+        } else {
+          setConflictWarnings([]);
+        }
       } else {
         setConflictWarnings([]);
       }
@@ -147,29 +166,32 @@ export default function TripForm({
   const validateForm = () => {
     const errs = {};
 
-    if (!formData.tripName.trim() || formData.tripName.trim().length < 3) {
+    if (!formData.tripName?.trim() || formData.tripName.trim().length < 3) {
       errs.tripName = 'Trip name is required (min 3 characters).';
     }
 
-    if (!formData.customerName.trim()) {
+    if (!formData.customerName?.trim()) {
       errs.customerName = 'Customer/client name is required.';
     }
 
-    if (!formData.pickupLocation.trim()) {
+    if (!formData.pickupLocation?.trim()) {
       errs.pickupLocation = 'Starting pickup location is required.';
     }
 
-    if (!formData.destinationLocation.trim()) {
+    if (!formData.destinationLocation?.trim()) {
       errs.destinationLocation = 'Final destination location is required.';
     }
 
-    if (!formData.scheduledDeparture) {
-      errs.scheduledDeparture = 'Scheduled departure is required.';
+    const depDate = formData.scheduledDeparture ? new Date(formData.scheduledDeparture) : null;
+    const arrDate = formData.scheduledArrival ? new Date(formData.scheduledArrival) : null;
+
+    if (!formData.scheduledDeparture || !depDate || isNaN(depDate.getTime())) {
+      errs.scheduledDeparture = 'A valid scheduled departure is required.';
     }
 
-    if (!formData.scheduledArrival) {
-      errs.scheduledArrival = 'Scheduled arrival is required.';
-    } else if (new Date(formData.scheduledArrival) <= new Date(formData.scheduledDeparture)) {
+    if (!formData.scheduledArrival || !arrDate || isNaN(arrDate.getTime())) {
+      errs.scheduledArrival = 'A valid scheduled arrival is required.';
+    } else if (depDate && !isNaN(depDate.getTime()) && arrDate <= depDate) {
       errs.scheduledArrival = 'Arrival must be after scheduled departure.';
     }
 
@@ -194,19 +216,22 @@ export default function TripForm({
 
     setIsSubmitting(true);
     try {
+      const depDate = new Date(formData.scheduledDeparture);
+      const arrDate = new Date(formData.scheduledArrival);
+
       const payload = {
         id: formData.id,
-        tripName: formData.tripName,
-        customerName: formData.customerName,
+        tripName: formData.tripName.trim(),
+        customerName: formData.customerName.trim(),
         priority: formData.priority,
         status: formData.status,
-        pickupLocation: formData.pickupLocation,
+        pickupLocation: formData.pickupLocation.trim(),
         pickupCoords: { lat: Number(formData.pickupLat), lng: Number(formData.pickupLng) },
-        destinationLocation: formData.destinationLocation,
+        destinationLocation: formData.destinationLocation.trim(),
         destinationCoords: { lat: Number(formData.destinationLat), lng: Number(formData.destinationLng) },
-        stops: formData.stops.filter((s) => s.locationName.trim().length > 0),
-        scheduledDeparture: new Date(formData.scheduledDeparture).toISOString(),
-        scheduledArrival: new Date(formData.scheduledArrival).toISOString(),
+        stops: formData.stops.filter((s) => (s.locationName || '').trim().length > 0),
+        scheduledDeparture: !isNaN(depDate.getTime()) ? depDate.toISOString() : new Date().toISOString(),
+        scheduledArrival: !isNaN(arrDate.getTime()) ? arrDate.toISOString() : new Date().toISOString(),
         assignedVehicleId: formData.assignedVehicleId || null,
         assignedDriverId: formData.assignedDriverId || null,
         estimatedDistanceKm: Number(formData.estimatedDistanceKm) || 25,

@@ -84,16 +84,17 @@ export default function RoutesPage() {
   };
 
   const filteredRoutes = useMemo(() => {
+    const term = searchTerm.toLowerCase();
     return routes.filter((rt) => {
       const matchSearch =
-        rt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rt.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rt.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rt.assignedVehicle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rt.assignedDriver.toLowerCase().includes(searchTerm.toLowerCase());
+        (rt.name || '').toLowerCase().includes(term) ||
+        (rt.origin || '').toLowerCase().includes(term) ||
+        (rt.destination || '').toLowerCase().includes(term) ||
+        (rt.assignedVehicle || '').toLowerCase().includes(term) ||
+        (rt.assignedDriver || '').toLowerCase().includes(term);
 
       const matchStatus =
-        statusFilter === 'ALL' || rt.status.toLowerCase() === statusFilter.toLowerCase();
+        statusFilter === 'ALL' || (rt.status || '').toLowerCase() === statusFilter.toLowerCase();
       return matchSearch && matchStatus;
     });
   }, [routes, searchTerm, statusFilter]);

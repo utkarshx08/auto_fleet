@@ -61,7 +61,8 @@ function AppContent() {
   // Keyboard shortcut listener for ⌘1 / Ctrl+1 -> Overview and ⌘K / Ctrl+K -> Command Palette
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === '1') {
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName) || e.target?.isContentEditable;
+      if (!isInput && (e.metaKey || e.ctrlKey) && e.key === '1') {
         e.preventDefault();
         navigate('/overview');
         showToast('Shortcut triggered: Navigated to Overview (⌘1).', 'info');
@@ -167,6 +168,7 @@ function AppContent() {
                 maintenanceAlert={alerts.length > 0}
                 onOpenNotifications={() => setIsNotificationsOpen(true)}
                 onOpenHelp={() => setIsHelpCenterOpen(true)}
+                onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
               >
                 <Routes>
                   <Route path="/" element={<Navigate to="/overview" replace />} />
@@ -367,6 +369,7 @@ function AppContent() {
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
         vehicles={vehicles}
+        onSelectVehicle={handleSelectVehicleOrAlert}
         onAddVehicle={() => setIsAddVehicleOpen(true)}
         onExportReport={handleExportReport}
       />

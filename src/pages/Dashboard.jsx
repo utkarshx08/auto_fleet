@@ -22,13 +22,27 @@ export default function Dashboard({
   const totalCount = vehicles.length;
   const spotlightVehicle = vehicles[0];
 
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(new Date()).toUpperCase();
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'GOOD MORNING';
+    if (hour < 18) return 'GOOD AFTERNOON';
+    return 'GOOD EVENING';
+  };
+
   return (
     <div className="space-y-4">
       {/* Page Heading */}
       <section className="flex items-end justify-between py-6 max-md:flex-col max-md:items-start max-md:gap-4 max-md:py-4">
         <div>
           <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-2">
-            FRIDAY, 24 OCTOBER 2025 <span className="text-[#ad91ff] px-1">•</span> GOOD MORNING, JORDAN
+            {formattedDate} <span className="text-[#ad91ff] px-1">•</span> {getGreeting()}, JORDAN
           </p>
           <h1 className="text-[30px] tracking-[-1.2px] font-bold text-[#f0f0f4] m-0 leading-tight">
             Fleet overview<span className="text-[#ad91ff]">.</span>

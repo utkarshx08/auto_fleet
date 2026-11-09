@@ -26,14 +26,15 @@ export default function Vehicles({
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
 
   const filteredVehicles = useMemo(() => {
+    const term = searchTerm.toLowerCase();
     return vehicles.filter((v) => {
       const matchSearch =
-        v.plate.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        v.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        v.driver.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        v.location.toLowerCase().includes(searchTerm.toLowerCase());
+        (v.plate || '').toLowerCase().includes(term) ||
+        (v.model || v.type || '').toLowerCase().includes(term) ||
+        (v.driver || '').toLowerCase().includes(term) ||
+        (v.location || '').toLowerCase().includes(term);
       const matchStatus =
-        statusFilter === 'ALL' || v.status.toLowerCase() === statusFilter.toLowerCase();
+        statusFilter === 'ALL' || (v.status || '').toLowerCase() === statusFilter.toLowerCase();
       return matchSearch && matchStatus;
     });
   }, [vehicles, searchTerm, statusFilter]);

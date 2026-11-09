@@ -6,7 +6,8 @@ export default function Navbar({
   currentSection = 'Overview',
   unreadAlertsCount = 3,
   onNotificationsClick,
-  onProfileClick
+  onProfileClick,
+  onOpenCommandPalette
 }) {
   const { isOnline } = useNetworkStatus();
 
@@ -23,9 +24,8 @@ export default function Navbar({
       <div className="flex items-center gap-4">
         {/* Quick Command Hint */}
         <button
-          onClick={() => {
-            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true }));
-          }}
+          type="button"
+          onClick={onOpenCommandPalette}
           className="hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-bg-surface hover:bg-bg-hover border border-border-default text-text-muted hover:text-text-primary text-[11px] font-mono transition-colors"
           title="Press Ctrl+K or ⌘K to open command search"
         >

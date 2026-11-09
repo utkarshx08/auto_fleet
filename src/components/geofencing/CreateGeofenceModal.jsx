@@ -122,12 +122,12 @@ export default function CreateGeofenceModal({
 
   const handleAddVertex = () => {
     const last = coordinates[coordinates.length - 1] || { lat: 40.735, lng: -73.985 };
-    setCoordinates([...coordinates, { lat: last.lat + 0.005, lng: last.lng + 0.005 }]);
+    setCoordinates([...coordinates, { lat: Number(last.lat) + 0.005, lng: Number(last.lng) + 0.005 }]);
   };
 
   const handleUpdateVertex = (index, field, value) => {
     const next = [...coordinates];
-    next[index] = { ...next[index], [field]: Number(value) };
+    next[index] = { ...next[index], [field]: value };
     setCoordinates(next);
   };
 
@@ -149,21 +149,37 @@ export default function CreateGeofenceModal({
     }
 
     if (geometryType === 'circle') {
-      if (isNaN(centerLat) || centerLat < -90 || centerLat > 90) {
+      const parsedLat = parseFloat(centerLat);
+      const parsedLng = parseFloat(centerLng);
+      const parsedRadius = parseFloat(radius);
+      if (isNaN(parsedLat) || parsedLat < -90 || parsedLat > 90) {
         setValidationError('Invalid center latitude (must be between -90 and 90).');
         return;
       }
-      if (isNaN(centerLng) || centerLng < -180 || centerLng > 180) {
+      if (isNaN(parsedLng) || parsedLng < -180 || parsedLng > 180) {
         setValidationError('Invalid center longitude (must be between -180 and 180).');
         return;
       }
-      if (radius < 100 || radius > 15000) {
+      if (isNaN(parsedRadius) || parsedRadius < 100 || parsedRadius > 15000) {
         setValidationError('Radius must be between 100m and 15,000m.');
         return;
       }
     } else {
       if (coordinates.length < 3) {
         setValidationError('Polygon requires at least 3 valid coordinate vertices.');
+        return;
+      }
+      const hasInvalid = coordinates.some(
+        (c) =>
+          isNaN(parseFloat(c.lat)) ||
+          isNaN(parseFloat(c.lng)) ||
+          parseFloat(c.lat) < -90 ||
+          parseFloat(c.lat) > 90 ||
+          parseFloat(c.lng) < -180 ||
+          parseFloat(c.lng) > 180
+      );
+      if (hasInvalid) {
+        setValidationError('All polygon vertices must have valid numeric coordinates.');
         return;
       }
     }
@@ -175,11 +191,17 @@ export default function CreateGeofenceModal({
       zoneType,
       geometryType,
       color,
-      center: geometryType === 'circle' ? { lat: Number(centerLat), lng: Number(centerLng) } : null,
-      radius: geometryType === 'circle' ? Number(radius) : null,
-      coordinates: geometryType === 'polygon' ? coordinates : null,
-      speedLimit: Number(speedLimit),
-      maxDwellMinutes: Number(maxDwellMinutes),
+      center:
+        geometryType === 'circle'
+          ? { lat: parseFloat(centerLat), lng: parseFloat(centerLng) }
+          : null,
+      radius: geometryType === 'circle' ? parseFloat(radius) : null,
+      coordinates:
+        geometryType === 'polygon'
+          ? coordinates.map((c) => ({ lat: parseFloat(c.lat), lng: parseFloat(c.lng) }))
+          : null,
+      speedLimit: Number(speedLimit) || 30,
+      maxDwellMinutes: Number(maxDwellMinutes) || 60,
       entryAlert,
       exitAlert,
       isActive
@@ -324,7 +346,7 @@ export default function CreateGeofenceModal({
                     type="number"
                     step="0.0001"
                     value={centerLat}
-                    onChange={(e) => setCenterLat(Number(e.target.value))}
+                    onChange={(e) => setCenterLat(e.target.value)}
                     className="w-full bg-[#17191f] border border-[#2b2e38] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
                   />
                 </div>
@@ -336,7 +358,7 @@ export default function CreateGeofenceModal({
                     type="number"
                     step="0.0001"
                     value={centerLng}
-                    onChange={(e) => setCenterLng(Number(e.target.value))}
+                    onChange={(e) => setCenterLng(e.target.value)}
                     className="w-full bg-[#17191f] border border-[#2b2e38] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
                   />
                 </div>
@@ -345,7 +367,7 @@ export default function CreateGeofenceModal({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[11px] font-mono text-[#8b8d98]">
-                    PERIMETER RADIUS: <span className="text-[#b49aff] font-bold">{radius} METERS</span> ({Math.round(radius / 100) / 10} km)
+                    PERIMETER RADIUS: <span className="text-[#b49aff] font-bold">{Number(radius) || 0} METERS</span> ({Math.round((Number(radius) || 0) / 100) / 10} km)
                   </label>
                   <div className="flex gap-1.5">
                     {[500, 1000, 1500, 2500].map((r) => (
@@ -365,8 +387,8 @@ export default function CreateGeofenceModal({
                   min="200"
                   max="5000"
                   step="50"
-                  value={radius}
-                  onChange={(e) => setRadius(Number(e.target.value))}
+                  value={Number(radius) || 1200}
+                  onChange={(e) => setRadius(e.target.value)}
                   className="w-full accent-[#b49aff] bg-[#17191f] cursor-pointer"
                 />
               </div>
@@ -448,7 +470,7 @@ export default function CreateGeofenceModal({
                 min="5"
                 max="120"
                 value={speedLimit}
-                onChange={(e) => setSpeedLimit(Number(e.target.value))}
+                onChange={(e) => setSpeedLimit(e.target.value)}
                 className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
               />
             </div>
@@ -462,7 +484,7 @@ export default function CreateGeofenceModal({
                 min="0"
                 max="600"
                 value={maxDwellMinutes}
-                onChange={(e) => setMaxDwellMinutes(Number(e.target.value))}
+                onChange={(e) => setMaxDwellMinutes(e.target.value)}
                 className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
               />
             </div>

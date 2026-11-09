@@ -43,14 +43,15 @@ export default function Drivers({
   };
 
   const filteredDrivers = useMemo(() => {
+    const term = searchTerm.toLowerCase();
     return drivers.filter((d) => {
       const matchSearch =
-        d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        d.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        d.license.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        d.vehicleAssigned.toLowerCase().includes(searchTerm.toLowerCase());
+        (d.name || '').toLowerCase().includes(term) ||
+        (d.email || '').toLowerCase().includes(term) ||
+        (d.license || '').toLowerCase().includes(term) ||
+        (d.vehicleAssigned || '').toLowerCase().includes(term);
       const matchStatus =
-        statusFilter === 'ALL' || d.status.toLowerCase() === statusFilter.toLowerCase();
+        statusFilter === 'ALL' || (d.status || '').toLowerCase() === statusFilter.toLowerCase();
       return matchSearch && matchStatus;
     });
   }, [drivers, searchTerm, statusFilter]);

@@ -32,7 +32,9 @@ export default function AddDriverModal({ isOpen, onClose, onAddDriver, available
     if (!validate()) return;
 
     const initials = formData.name
-      .split(' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
       .map((n) => n[0])
       .join('')
       .toUpperCase()

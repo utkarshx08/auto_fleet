@@ -35,17 +35,22 @@ export const storageService = {
    */
   getItem(key, defaultValue = null) {
     try {
+      let raw = null;
       if (hasLocalStorage) {
-        const raw = window.localStorage.getItem(key);
-        if (raw === null) {
-          return memoryStore.has(key) ? memoryStore.get(key) : defaultValue;
-        }
-        return JSON.parse(raw);
+        raw = window.localStorage.getItem(key);
       }
-      return memoryStore.has(key) ? memoryStore.get(key) : defaultValue;
+      if (raw === null || raw === 'undefined') {
+        return memoryStore.has(key) ? memoryStore.get(key) : defaultValue;
+      }
+      try {
+        return JSON.parse(raw);
+      } catch (parseErr) {
+        // Plain string fallback (handles raw string values like 'drv-1', 'active')
+        return raw;
+      }
     } catch (err) {
-      console.warn(`[storageService] Failed to parse key "${key}", falling back to default:`, err);
-      return defaultValue;
+      console.warn(`[storageService] Failed to read key "${key}", falling back to default:`, err);
+      return memoryStore.has(key) ? memoryStore.get(key) : defaultValue;
     }
   },
 

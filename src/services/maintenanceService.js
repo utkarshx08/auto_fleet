@@ -16,7 +16,8 @@ export const calculateNextOdometer = (lastOdometer, intervalKm) => {
  * Calculates next service date milestone from interval days
  */
 export const calculateNextDate = (lastDateStr, intervalDays) => {
-  const base = lastDateStr ? new Date(lastDateStr) : new Date();
+  const parsed = lastDateStr ? new Date(lastDateStr) : new Date();
+  const base = isNaN(parsed.getTime()) ? new Date() : parsed;
   const days = Number(intervalDays) || 180;
   const target = new Date(base.getTime() + days * 24 * 60 * 60 * 1000);
   return target.toISOString().split('T')[0];

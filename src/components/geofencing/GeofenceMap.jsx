@@ -109,15 +109,21 @@ export default function GeofenceMap({
     const map = mapRef.current;
 
     // Remove any previously added geofence layers and sources
-    geofences.forEach((zone) => {
-      const sourceId = `source-${zone.id}`;
-      const fillLayerId = `fill-${zone.id}`;
-      const outlineLayerId = `outline-${zone.id}`;
-
-      if (map.getLayer(outlineLayerId)) map.removeLayer(outlineLayerId);
-      if (map.getLayer(fillLayerId)) map.removeLayer(fillLayerId);
-      if (map.getSource(sourceId)) map.removeSource(sourceId);
-    });
+    const style = map.getStyle();
+    if (style && style.layers) {
+      style.layers.forEach((layer) => {
+        if (layer.id.startsWith('fill-') || layer.id.startsWith('outline-')) {
+          try { map.removeLayer(layer.id); } catch (e) {}
+        }
+      });
+    }
+    if (style && style.sources) {
+      Object.keys(style.sources).forEach((sourceId) => {
+        if (sourceId.startsWith('source-')) {
+          try { map.removeSource(sourceId); } catch (e) {}
+        }
+      });
+    }
 
     // Add each geofence as GeoJSON feature
     geofences.forEach((zone) => {

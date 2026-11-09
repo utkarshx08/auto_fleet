@@ -9,36 +9,28 @@ export default function MainLayout({
   maintenanceAlert = true,
   onOpenNotifications,
   onOpenHelp,
+  onOpenCommandPalette,
   children
 }) {
   const location = useLocation();
   const navigate = useNavigate();
 
   const getSectionTitle = () => {
-    const path = location.pathname.replace('/', '');
-    switch (path) {
-      case 'vehicles':
-        return 'Vehicles';
-      case 'tracking':
-        return 'Live Tracking';
-      case 'analytics':
-        return 'Fleet Analytics';
-      case 'maintenance':
-        return 'Maintenance';
-      case 'drivers':
-        return 'Drivers';
-      case 'reports':
-        return 'Reports';
-      case 'routes':
-        return 'Routes';
-      case 'fuel':
-        return 'Fuel & Energy';
-      case 'settings':
-        return 'Settings';
-      case 'overview':
-      default:
-        return 'Overview';
-    }
+    const pathname = location.pathname;
+    if (pathname.startsWith('/trips/')) return 'Trip Details';
+    if (pathname.startsWith('/trips')) return 'Trip Operations';
+    if (pathname.startsWith('/driver')) return 'Driver Portal';
+    if (pathname.startsWith('/geofencing')) return 'Geofencing & Alerts';
+    if (pathname.startsWith('/vehicles')) return 'Vehicles';
+    if (pathname.startsWith('/tracking')) return 'Live Tracking';
+    if (pathname.startsWith('/analytics')) return 'Fleet Analytics';
+    if (pathname.startsWith('/maintenance')) return 'Maintenance';
+    if (pathname.startsWith('/drivers')) return 'Drivers';
+    if (pathname.startsWith('/reports')) return 'Reports';
+    if (pathname.startsWith('/routes')) return 'Routes';
+    if (pathname.startsWith('/fuel')) return 'Fuel & Energy';
+    if (pathname.startsWith('/settings')) return 'Settings';
+    return 'Overview';
   };
 
   return (
@@ -59,6 +51,7 @@ export default function MainLayout({
             unreadAlertsCount={unreadAlertsCount}
             onNotificationsClick={onOpenNotifications}
             onProfileClick={() => navigate('/settings')}
+            onOpenCommandPalette={onOpenCommandPalette}
           />
 
           {/* Page Body */}

@@ -92,6 +92,9 @@ export default function MaintenanceScheduleModal({
 
     const payload = {
       ...formData,
+      intervalKm: Number(formData.intervalKm),
+      intervalDays: Number(formData.intervalDays),
+      lastServiceOdometer: Number(formData.lastServiceOdometer),
       id: isEditing ? scheduleToEdit.id : `SCH-${Math.floor(100 + Math.random() * 899)}`,
       nextServiceOdometer: computedNextOdo,
       nextServiceDate: computedNextDate,
@@ -162,7 +165,7 @@ export default function MaintenanceScheduleModal({
                 step={500}
                 required
                 value={formData.intervalKm}
-                onChange={(e) => setFormData({ ...formData, intervalKm: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, intervalKm: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">km</span>
@@ -181,7 +184,7 @@ export default function MaintenanceScheduleModal({
                 step={30}
                 required
                 value={formData.intervalDays}
-                onChange={(e) => setFormData({ ...formData, intervalDays: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, intervalDays: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">days</span>
@@ -202,7 +205,7 @@ export default function MaintenanceScheduleModal({
                 min={0}
                 required
                 value={formData.lastServiceOdometer}
-                onChange={(e) => setFormData({ ...formData, lastServiceOdometer: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, lastServiceOdometer: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">km</span>

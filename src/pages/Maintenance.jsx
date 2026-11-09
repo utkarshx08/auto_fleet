@@ -152,7 +152,9 @@ export default function Maintenance({
     const link = document.createElement('a');
     link.href = url;
     link.download = `autrail-maintenance-records-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 

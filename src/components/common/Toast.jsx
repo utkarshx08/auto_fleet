@@ -21,7 +21,7 @@ export default function Toast({
       <div
         role="region"
         aria-live="polite"
-        className="fixed right-6 bottom-6 z-50 flex flex-col-reverse gap-2.5 max-w-sm pointer-events-none"
+        className="fixed right-6 bottom-6 z-[70] flex flex-col-reverse gap-2.5 max-w-sm pointer-events-none"
       >
         {toasts.map((t) => {
           const toastType = t.type || 'info';
@@ -38,7 +38,7 @@ export default function Toast({
                   <AlertOctagon className="w-4 h-4 text-[#ef4444] shrink-0" />
                 )}
                 {toastType === 'info' && <Info className="w-4 h-4 text-[#b49aff] shrink-0" />}
-                <span className="font-medium text-text-primary truncate">{t.message}</span>
+                <span className="font-medium text-text-primary break-words">{t.message}</span>
               </div>
               {onDismiss && (
                 <button
@@ -62,7 +62,7 @@ export default function Toast({
   return (
     <div
       role="status"
-      className="fixed right-6 bottom-6 z-50 flex items-center gap-2.5 bg-[#24212f]/95 border border-[#3f3b52] hover:border-primary/50 text-[#e8ddff] px-4 py-3 rounded-xl shadow-2xl shadow-black/60 backdrop-blur-md transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
+      className="fixed right-6 bottom-6 z-[70] flex items-center gap-2.5 bg-[#24212f]/95 border border-[#3f3b52] hover:border-primary/50 text-[#e8ddff] px-4 py-3 rounded-xl shadow-2xl shadow-black/60 backdrop-blur-md transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
     >
       {type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#8be0b3] shrink-0" />}
       {type === 'warning' && <AlertCircle className="w-4 h-4 text-[#e5a46e] shrink-0" />}
@@ -70,7 +70,7 @@ export default function Toast({
         <AlertOctagon className="w-4 h-4 text-[#ef4444] shrink-0" />
       )}
       {type === 'info' && <Info className="w-4 h-4 text-[#b49aff] shrink-0" />}
-      <span className="font-medium text-text-primary">{message}</span>
+      <span className="font-medium text-text-primary break-words">{message}</span>
       {onClose && (
         <button
           onClick={onClose}
