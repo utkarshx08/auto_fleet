@@ -18,7 +18,7 @@ import {
   Gauge
 } from 'lucide-react';
 import { initialVehicles, initialDrivers } from '../data/mockData';
-import { initialFuelRecords } from '../data/fuelMockData';
+import { getFuelRecords, persistFuelRecords } from '../services/fuelStorageService';
 import { calculateFuelKPIs } from '../services/fuelService';
 
 export default function Fuel({
@@ -29,8 +29,8 @@ export default function Fuel({
   // Navigation Sub-tabs: 'dashboard' | 'history' | 'analytics'
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  // Operational State
-  const [fuelRecords, setFuelRecords] = useState(initialFuelRecords);
+  // Operational State — loaded from persistent storage
+  const [fuelRecords, setFuelRecords] = useState(() => getFuelRecords());
 
   // Modals state
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
@@ -55,13 +55,13 @@ export default function Fuel({
 
   // Handlers
   const handleSavePurchase = (recordData) => {
-    if (editingRecord) {
-      setFuelRecords((prev) =>
-        prev.map((r) => (r.id === recordData.id ? recordData : r))
-      );
-    } else {
-      setFuelRecords((prev) => [recordData, ...prev]);
-    }
+    setFuelRecords((prev) => {
+      const updated = editingRecord
+        ? prev.map((r) => (r.id === recordData.id ? recordData : r))
+        : [recordData, ...prev];
+      persistFuelRecords(updated);
+      return updated;
+    });
     setEditingRecord(null);
 
     // Cross-module hook: update operational expenses if provided
@@ -79,18 +79,24 @@ export default function Fuel({
   };
 
   const handleConfirmDelete = (recordId) => {
-    setFuelRecords((prev) => prev.filter((r) => r.id !== recordId));
+    setFuelRecords((prev) => {
+      const updated = prev.filter((r) => r.id !== recordId);
+      persistFuelRecords(updated);
+      return updated;
+    });
     setDeletingRecord(null);
   };
 
   const handleClearAnomaly = (recordId) => {
-    setFuelRecords((prev) =>
-      prev.map((r) =>
+    setFuelRecords((prev) => {
+      const updated = prev.map((r) =>
         r.id === recordId
           ? { ...r, isAnomaly: false, anomalyReason: 'Verified by fleet manager.' }
           : r
-      )
-    );
+      );
+      persistFuelRecords(updated);
+      return updated;
+    });
   };
 
   const handleExportCSV = () => {

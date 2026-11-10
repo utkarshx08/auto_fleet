@@ -13,9 +13,16 @@ import {
   TrendingUp,
   FastForward,
   ChevronRight,
-  ShieldAlert
+  ShieldAlert,
+  CheckCircle2,
+  Check
 } from 'lucide-react';
 import { getHistoricalJourney } from '../../services/trackingHistoryService';
+import {
+  getTrackByName,
+  getTrackByVehicle,
+  markTrackCompleted
+} from '../../services/trackService';
 
 export default function JourneyHistoryView({
   vehicles = [],
@@ -36,8 +43,29 @@ export default function JourneyHistoryView({
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [waypointIndex, setWaypointIndex] = useState(0);
+  const [trackRefreshKey, setTrackRefreshKey] = useState(0);
 
   const timerRef = useRef(null);
+
+  // Subscribe to track updates
+  useEffect(() => {
+    const handleUpdate = () => setTrackRefreshKey((p) => p + 1);
+    window.addEventListener('autrail_track_updated', handleUpdate);
+    return () => window.removeEventListener('autrail_track_updated', handleUpdate);
+  }, []);
+
+  // Correlate with persistent track system
+  const assignedTrack = getTrackByName(journeyData?.routeName) || getTrackByVehicle(vehicleId);
+
+  const handleMarkTrackCompleted = async () => {
+    if (!assignedTrack) return;
+    try {
+      await markTrackCompleted(assignedTrack.id, `Fleet Dispatcher (${vehicleId})`);
+      setTrackRefreshKey((p) => p + 1);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
 
   // When vehicle or date changes, refresh journey data
   useEffect(() => {
@@ -158,10 +186,37 @@ export default function JourneyHistoryView({
           </div>
         </div>
 
-        {/* Quick route badge */}
-        <div className="text-right max-md:text-left">
+        {/* Quick route badge & Persistent Track Completion */}
+        <div className="flex flex-col items-end max-md:items-start gap-1">
           <span className="font-mono text-[9px] text-[#858894] uppercase block">Assigned Corridor</span>
           <b className="font-mono text-xs text-[#b49aff]">{journeyData.routeName}</b>
+
+          {assignedTrack && (
+            <div className="flex items-center gap-2 mt-1">
+              {assignedTrack.status === 'Completed' ? (
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#142921] text-[#70cbb7] border border-[#20493b] flex items-center gap-1 font-semibold">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-[#34d399]" />
+                    <span>Track Completed</span>
+                  </span>
+                  {assignedTrack.completedAt && (
+                    <span className="font-mono text-[8px] text-[#747783]">
+                      ({new Date(assignedTrack.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleMarkTrackCompleted}
+                  className="text-[10px] font-mono text-[#8be0b3] hover:text-white bg-[#142921] hover:bg-[#1a3830] border border-[#20493b] px-2.5 py-1 rounded transition-colors cursor-pointer flex items-center gap-1"
+                >
+                  <Check className="w-3 h-3" />
+                  <span>Mark Track as Completed</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

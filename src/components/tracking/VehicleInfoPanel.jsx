@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Compass,
   Gauge,
@@ -10,11 +10,18 @@ import {
   AlertTriangle,
   Clock,
   Radio,
-  Globe
+  Globe,
+  CheckCircle2,
+  Check
 } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import Button from '../common/Button';
 import { reverseGeocode } from '../../services/geocodingService';
+import {
+  getTrackByName,
+  getTrackByVehicle,
+  markTrackCompleted
+} from '../../services/trackService';
 
 export default function VehicleInfoPanel({
   vehicle,
@@ -27,6 +34,28 @@ export default function VehicleInfoPanel({
   const [resolvedAddress, setResolvedAddress] = useState(vehicle?.locationName || '');
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isOsmVerified, setIsOsmVerified] = useState(false);
+  const [trackRefreshKey, setTrackRefreshKey] = useState(0);
+
+  // Subscribe to track updates across app
+  useEffect(() => {
+    const handleUpdate = () => setTrackRefreshKey((p) => p + 1);
+    window.addEventListener('autrail_track_updated', handleUpdate);
+    return () => window.removeEventListener('autrail_track_updated', handleUpdate);
+  }, []);
+
+  const assignedTrack = useMemo(() => {
+    return getTrackByName(vehicle?.assignedRoute) || getTrackByVehicle(vehicle?.plate);
+  }, [vehicle?.assignedRoute, vehicle?.plate, trackRefreshKey]);
+
+  const handleMarkTrackComplete = async () => {
+    if (!assignedTrack) return;
+    try {
+      await markTrackCompleted(assignedTrack.id, `Transponder Operator (${vehicle.plate})`);
+      setTrackRefreshKey((p) => p + 1);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
 
   // Synchronize location name immediately when vehicle transponder selection changes
   useEffect(() => {
@@ -180,7 +209,7 @@ export default function VehicleInfoPanel({
           </div>
 
           {/* Route & Distance Today */}
-          <div className="bg-[#121319] border border-[#242630] p-2.5 rounded-lg">
+          <div className="bg-[#121319] border border-[#242630] p-2.5 rounded-lg space-y-2">
             <div className="flex items-center justify-between">
               <div>
                 <span className="font-mono text-[8px] text-[#747783] uppercase block flex items-center gap-1">
@@ -197,6 +226,49 @@ export default function VehicleInfoPanel({
                 </span>
               </div>
             </div>
+
+            {/* Persistent Track Status Badge & Action */}
+            {assignedTrack && (
+              <div className="pt-2 border-t border-[#1e2029] flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  {assignedTrack.status === 'Completed' ? (
+                    <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#142921] text-[#70cbb7] border border-[#20493b] flex items-center gap-1 font-semibold">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-[#34d399]" />
+                      <span>Track Completed</span>
+                    </span>
+                  ) : assignedTrack.status === 'In Progress' ? (
+                    <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#1c302a] text-[#83d7a9] border border-[#2c493d] flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                      <span>In Progress</span>
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#382c25] text-[#e5a46e] border border-[#523d30]">
+                      ● {assignedTrack.status}
+                    </span>
+                  )}
+                  {assignedTrack.completedAt && (
+                    <span className="font-mono text-[8px] text-[#747783]">
+                      {new Date(assignedTrack.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  )}
+                </div>
+
+                {assignedTrack.status === 'Completed' ? (
+                  <span className="font-mono text-[9px] text-[#747783] italic">
+                    Saved in DB
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleMarkTrackComplete}
+                    className="text-[10px] font-mono text-[#8be0b3] hover:text-white bg-[#142921] hover:bg-[#1a3830] border border-[#20493b] px-2 py-0.5 rounded transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    <Check className="w-2.5 h-2.5" />
+                    <span>Complete Track</span>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

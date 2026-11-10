@@ -20,9 +20,11 @@ import {
 } from 'lucide-react';
 import { initialVehicles } from '../data/mockData';
 import {
-  initialMaintenanceSchedules,
-  initialMaintenanceRecords
-} from '../data/maintenanceMockData';
+  getSchedules,
+  persistSchedules,
+  getRecords,
+  persistRecords
+} from '../services/maintenanceStorageService';
 import {
   calculateMaintenanceKPIs,
   generateMaintenanceAlerts,
@@ -39,9 +41,9 @@ export default function Maintenance({
   // Navigation Sub-tabs: 'dashboard' | 'schedules' | 'history' | 'calendar'
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  // Operational State
-  const [schedules, setSchedules] = useState(initialMaintenanceSchedules);
-  const [records, setRecords] = useState(initialMaintenanceRecords);
+  // Operational State — loaded from persistent storage
+  const [schedules, setSchedules] = useState(() => getSchedules());
+  const [records, setRecords] = useState(() => getRecords());
 
   // Modals state
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -71,13 +73,13 @@ export default function Maintenance({
 
   // Handlers
   const handleSaveSchedule = (scheduleData) => {
-    if (editingSchedule) {
-      setSchedules((prev) =>
-        prev.map((s) => (s.id === scheduleData.id ? scheduleData : s))
-      );
-    } else {
-      setSchedules((prev) => [scheduleData, ...prev]);
-    }
+    setSchedules((prev) => {
+      const updated = editingSchedule
+        ? prev.map((s) => (s.id === scheduleData.id ? scheduleData : s))
+        : [scheduleData, ...prev];
+      persistSchedules(updated);
+      return updated;
+    });
     setEditingSchedule(null);
   };
 
@@ -92,7 +94,11 @@ export default function Maintenance({
   };
 
   const handleConfirmDelete = (scheduleId) => {
-    setSchedules((prev) => prev.filter((s) => s.id !== scheduleId));
+    setSchedules((prev) => {
+      const updated = prev.filter((s) => s.id !== scheduleId);
+      persistSchedules(updated);
+      return updated;
+    });
     setDeletingSchedule(null);
   };
 
@@ -103,11 +109,15 @@ export default function Maintenance({
 
   const handleConfirmCompletion = (completedRecord, originalSchedule) => {
     // 1. Add record to maintenance history
-    setRecords((prev) => [completedRecord, ...prev]);
+    setRecords((prev) => {
+      const updated = [completedRecord, ...prev];
+      persistRecords(updated);
+      return updated;
+    });
 
     // 2. Automatically advance the schedule to next interval
-    setSchedules((prev) =>
-      prev.map((sch) => {
+    setSchedules((prev) => {
+      const updated = prev.map((sch) => {
         if (sch.id === originalSchedule.id) {
           const nextOdo = calculateNextOdometer(
             completedRecord.odometerReading,
@@ -127,8 +137,10 @@ export default function Maintenance({
           };
         }
         return sch;
-      })
-    );
+      });
+      persistSchedules(updated);
+      return updated;
+    });
 
     if (onScheduleService) onScheduleService(completedRecord);
     setCompletingSchedule(null);

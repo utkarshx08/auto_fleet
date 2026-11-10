@@ -366,3 +366,30 @@ CREATE POLICY "Allow authenticated modify trips" ON public.trips FOR ALL USING (
 CREATE POLICY "Allow authenticated modify trip_stops" ON public.trip_stops FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
 CREATE POLICY "Allow authenticated modify trip_expenses" ON public.trip_expenses FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
 CREATE POLICY "Allow authenticated modify trip_status_history" ON public.trip_status_history FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));
+
+-- ============================================================================
+-- 18. TRACKS & CORRIDORS TABLE (Persistent Track & Task Completion System)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS public.tracks (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    origin VARCHAR(200) NOT NULL,
+    destination VARCHAR(200) NOT NULL,
+    stops INT NOT NULL DEFAULT 1 CHECK (stops >= 1),
+    distance VARCHAR(50),
+    eta VARCHAR(50),
+    assigned_vehicle_id VARCHAR(50) REFERENCES public.vehicles(id) ON DELETE SET NULL,
+    assigned_driver_name VARCHAR(100),
+    status VARCHAR(30) NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'In Progress', 'Completed')),
+    completed_at TIMESTAMPTZ,
+    completed_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_tracks_vehicle ON public.tracks(assigned_vehicle_id);
+CREATE INDEX IF NOT EXISTS idx_tracks_status ON public.tracks(status);
+
+ALTER TABLE public.tracks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow authenticated read tracks" ON public.tracks FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated modify tracks" ON public.tracks FOR ALL USING (auth.role() IN ('authenticated', 'service_role'));

@@ -6,6 +6,7 @@
 import { initialTrips } from '../data/tripMockData.js';
 import { initialVehicles, initialDrivers } from '../data/mockData.js';
 import storageService from './storageService.js';
+import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 
 const STORAGE_KEY = 'autrail_trips_store';
 
@@ -415,6 +416,30 @@ export const updateTripStatus = (tripId, targetStatus, notes = '', actor = 'Flee
 
   trips[tripIndex] = updatedTrip;
   persistTrips(trips);
+
+  // Sync status to database if Supabase is configured
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      supabase
+        .from('trips')
+        .upsert(
+          {
+            id: updatedTrip.id,
+            status: updatedTrip.status,
+            actual_departure: updatedTrip.actualDeparture,
+            actual_arrival: updatedTrip.actualArrival,
+            actual_distance_km: updatedTrip.actualDistanceKm,
+            updated_at: updatedTrip.updatedAt
+          },
+          { onConflict: 'id' }
+        )
+        .then(() => {})
+        .catch((e) => console.warn('[tripService] Supabase sync warning:', e));
+    } catch (e) {
+      // offline fallback
+    }
+  }
+
   return updatedTrip;
 };
 
@@ -452,6 +477,30 @@ export const updateTripStopStatus = (tripId, stopId, newStatus, notes = '') => {
 
   trips[tripIndex] = updatedTrip;
   persistTrips(trips);
+
+  // Sync status to database if Supabase is configured
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      supabase
+        .from('trips')
+        .upsert(
+          {
+            id: updatedTrip.id,
+            status: updatedTrip.status,
+            actual_departure: updatedTrip.actualDeparture,
+            actual_arrival: updatedTrip.actualArrival,
+            actual_distance_km: updatedTrip.actualDistanceKm,
+            updated_at: updatedTrip.updatedAt
+          },
+          { onConflict: 'id' }
+        )
+        .then(() => {})
+        .catch((e) => console.warn('[tripService] Supabase sync warning:', e));
+    } catch (e) {
+      // offline fallback
+    }
+  }
+
   return updatedTrip;
 };
 

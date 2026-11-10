@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Button from '../components/common/Button';
 import SearchBar from '../components/common/SearchBar';
 import CreateRouteModal from '../components/routes/CreateRouteModal';
@@ -11,76 +11,109 @@ import {
   CheckCircle2,
   Trash2,
   Play,
-  Check
+  Check,
+  RotateCcw
 } from 'lucide-react';
+import {
+  getTracks,
+  markTrackCompleted,
+  updateTrackStatus,
+  createTrack,
+  deleteTrack,
+  syncWithRemoteDatabase
+} from '../services/trackService';
 
-export default function RoutesPage() {
-  const [routes, setRoutes] = useState([
-    {
-      id: 'RT-401',
-      name: 'Midtown Express Loop',
-      origin: 'Queens Terminal Hub',
-      destination: 'Manhattan Financial District',
-      stops: 8,
-      distance: '34.2 km',
-      eta: '45 mins',
-      assignedVehicle: 'RST-291',
-      assignedDriver: 'Alex Morgan',
-      status: 'In Progress'
-    },
-    {
-      id: 'RT-402',
-      name: 'Brooklyn River Corridor',
-      origin: 'Greenpoint Distribution Depot',
-      destination: 'Coney Island Fulfillment',
-      stops: 12,
-      distance: '48.6 km',
-      eta: '1 hr 15 mins',
-      assignedVehicle: 'RST-284',
-      assignedDriver: 'Sarah Chen',
-      status: 'In Progress'
-    },
-    {
-      id: 'RT-403',
-      name: 'Bronx Cross-County Freight',
-      origin: 'Hunts Point Logistics Center',
-      destination: 'White Plains Hub',
-      stops: 5,
-      distance: '29.1 km',
-      eta: '35 mins',
-      assignedVehicle: 'RST-263',
-      assignedDriver: 'David Kim',
-      status: 'Scheduled'
-    }
-  ]);
-
+export default function RoutesPage({ onShowToast }) {
+  // Operational State — loaded directly from persistent database store
+  const [routes, setRoutes] = useState(() => getTracks());
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const handleCreateRoute = (newRoute) => {
-    setRoutes((prev) => [newRoute, ...prev]);
+  // Synchronize with remote database (Supabase) if connected and subscribe to cross-tab updates
+  useEffect(() => {
+    let isMounted = true;
+    syncWithRemoteDatabase().then((latest) => {
+      if (isMounted && latest) {
+        setRoutes(latest);
+      }
+    });
+
+    const handleTrackUpdate = (e) => {
+      if (isMounted) {
+        setRoutes(getTracks());
+      }
+    };
+
+    window.addEventListener('autrail_track_updated', handleTrackUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('autrail_track_updated', handleTrackUpdate);
+    };
+  }, []);
+
+  const handleCreateRoute = async (newRoute) => {
+    try {
+      const created = await createTrack(newRoute, 'Dispatch Coordinator');
+      setRoutes(getTracks());
+      if (onShowToast) {
+        onShowToast(`Track "${created.name}" (${created.id}) created successfully.`, 'success');
+      }
+    } catch (err) {
+      if (onShowToast) onShowToast(err.message, 'error');
+    }
   };
 
-  const handleToggleStatus = (routeId) => {
-    setRoutes((prev) =>
-      prev.map((r) => {
-        if (r.id === routeId) {
-          const nextStatus =
-            r.status === 'Scheduled'
-              ? 'In Progress'
-              : r.status === 'In Progress'
-              ? 'Completed'
-              : 'Scheduled';
-          return { ...r, status: nextStatus };
-        }
-        return r;
-      })
-    );
+  const handleMarkCompleted = async (routeId) => {
+    try {
+      const res = await markTrackCompleted(routeId, 'Fleet Dispatcher');
+      // Immediate UI update
+      setRoutes(getTracks());
+
+      if (onShowToast) {
+        onShowToast(res.message, 'success');
+      }
+    } catch (err) {
+      if (onShowToast) {
+        onShowToast(err.message, 'error');
+      }
+    }
   };
 
-  const handleDeleteRoute = (routeId) => {
-    setRoutes((prev) => prev.filter((r) => r.id !== routeId));
+  const handleStartTrack = async (routeId) => {
+    try {
+      const res = await updateTrackStatus(routeId, 'In Progress', 'Fleet Dispatcher');
+      setRoutes(getTracks());
+      if (onShowToast) {
+        onShowToast(res.message, 'info');
+      }
+    } catch (err) {
+      if (onShowToast) onShowToast(err.message, 'error');
+    }
+  };
+
+  const handleResetTrack = async (routeId) => {
+    try {
+      const res = await updateTrackStatus(routeId, 'In Progress', 'Fleet Dispatcher');
+      setRoutes(getTracks());
+      if (onShowToast) {
+        onShowToast(`Track reset to "In Progress".`, 'info');
+      }
+    } catch (err) {
+      if (onShowToast) onShowToast(err.message, 'error');
+    }
+  };
+
+  const handleDeleteRoute = async (routeId) => {
+    try {
+      await deleteTrack(routeId);
+      setRoutes(getTracks());
+      if (onShowToast) {
+        onShowToast(`Track ${routeId} removed from fleet schedule.`, 'warning');
+      }
+    } catch (err) {
+      if (onShowToast) onShowToast(err.message, 'error');
+    }
   };
 
   const filteredRoutes = useMemo(() => {
@@ -130,7 +163,7 @@ export default function RoutesPage() {
         />
 
         <div className="flex items-center bg-[#20222a] border border-[#30333d] rounded-[6px] p-0.5 text-[10px] font-mono">
-          {['ALL', 'In Progress', 'Scheduled', 'Completed'].map((st) => (
+          {['ALL', 'In Progress', 'Pending', 'Completed'].map((st) => (
             <button
               key={st}
               type="button"
@@ -167,17 +200,23 @@ export default function RoutesPage() {
                     {rt.id}
                   </span>
                   <div className="flex items-center gap-1.5">
-                    <span
-                      className={`font-mono text-[9px] px-2 py-0.5 rounded-full ${
-                        rt.status === 'In Progress'
-                          ? 'bg-[#1c302a] text-[#83d7a9] border border-[#2c493d]'
-                          : rt.status === 'Completed'
-                          ? 'bg-[#20222a] text-[#717480] border border-[#30333d]'
-                          : 'bg-[#382c25] text-[#e5a46e] border border-[#523d30]'
-                      }`}
-                    >
-                      ● {rt.status}
-                    </span>
+                    {rt.status === 'Completed' ? (
+                      <span className="font-mono text-[9px] px-2.5 py-0.5 rounded-full bg-[#142921] text-[#70cbb7] border border-[#20493b] flex items-center gap-1 font-semibold">
+                        <CheckCircle2 className="w-3 h-3 text-[#34d399]" />
+                        <span>Completed</span>
+                      </span>
+                    ) : rt.status === 'In Progress' ? (
+                      <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#1c302a] text-[#83d7a9] border border-[#2c493d] flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                        <span>In Progress</span>
+                      </span>
+                    ) : (
+                      <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#382c25] text-[#e5a46e] border border-[#523d30] flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#e5a46e]" />
+                        <span>{rt.status || 'Pending'}</span>
+                      </span>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => handleDeleteRoute(rt.id)}
@@ -190,6 +229,19 @@ export default function RoutesPage() {
                 </div>
 
                 <h3 className="text-sm font-bold text-[#f0f0f4] mt-2">{rt.name}</h3>
+
+                {rt.completedAt && (
+                  <div className="mt-1 flex items-center gap-1 text-[10px] font-mono text-[#70cbb7]">
+                    <Clock className="w-3 h-3 text-[#34d399]" />
+                    <span>
+                      Completed:{' '}
+                      {new Date(rt.completedAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  </div>
+                )}
 
                 <div className="mt-3 space-y-2 text-xs">
                   <div className="flex items-center gap-2 text-[#aeb0ba]">
@@ -213,23 +265,54 @@ export default function RoutesPage() {
                   <span className="font-mono text-[#d1d1da]">{rt.assignedVehicle} · {rt.assignedDriver}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="quiet"
-                    size="sm"
-                    onClick={() => handleToggleStatus(rt.id)}
-                  >
-                    {rt.status === 'Scheduled' ? (
-                      <>
-                        <Play className="w-3 h-3 mr-1 text-[#83d7a9]" /> Dispatch
-                      </>
-                    ) : rt.status === 'In Progress' ? (
-                      <>
-                        <Check className="w-3 h-3 mr-1 text-[#b49aff]" /> Complete
-                      </>
-                    ) : (
-                      'Restart'
-                    )}
-                  </Button>
+                  {rt.status === 'Completed' ? (
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        variant="quiet"
+                        size="sm"
+                        disabled
+                        className="opacity-60 cursor-not-allowed bg-[#142921] text-[#70cbb7] border border-[#20493b]"
+                      >
+                        <Check className="w-3 h-3 mr-1 text-[#34d399]" /> Completed
+                      </Button>
+                      <button
+                        type="button"
+                        onClick={() => handleResetTrack(rt.id)}
+                        className="text-[9px] font-mono text-[#858894] hover:text-[#c4b3ff] underline transition-colors cursor-pointer"
+                        title="Reset track to In Progress"
+                      >
+                        Reopen
+                      </button>
+                    </div>
+                  ) : rt.status === 'In Progress' ? (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => handleMarkCompleted(rt.id)}
+                      icon={CheckCircle2}
+                    >
+                      Mark as Completed
+                    </Button>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => handleStartTrack(rt.id)}
+                        icon={Play}
+                      >
+                        Dispatch
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleMarkCompleted(rt.id)}
+                        icon={CheckCircle2}
+                      >
+                        Mark as Completed
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

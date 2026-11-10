@@ -262,7 +262,7 @@ function AppContent() {
                       />
                     }
                   />
-                  <Route path="/routes" element={<RoutesPage />} />
+                  <Route path="/routes" element={<RoutesPage onShowToast={showToast} />} />
                   <Route
                     path="/trips"
                     element={
