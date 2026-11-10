@@ -45,17 +45,18 @@ export default function MaintenanceScheduleTable({
 
   // Filter schedules
   const filteredSchedules = useMemo(() => {
+    const term = (search || '').toLowerCase();
     return enrichedSchedules.filter((sch) => {
       const matchSearch =
-        sch.vehicleId.toLowerCase().includes(search.toLowerCase()) ||
-        sch.maintenanceType.toLowerCase().includes(search.toLowerCase()) ||
-        (sch.serviceCenter && sch.serviceCenter.toLowerCase().includes(search.toLowerCase()));
+        (sch.vehicleId || '').toLowerCase().includes(term) ||
+        (sch.maintenanceType || '').toLowerCase().includes(term) ||
+        (sch.serviceCenter || '').toLowerCase().includes(term);
 
       const matchStatus =
-        statusFilter === 'ALL' || sch.liveStatus.toLowerCase() === statusFilter.toLowerCase();
+        statusFilter === 'ALL' || (sch.liveStatus || '').toLowerCase() === statusFilter.toLowerCase();
 
       const matchPriority =
-        priorityFilter === 'ALL' || sch.priority.toLowerCase() === priorityFilter.toLowerCase();
+        priorityFilter === 'ALL' || (sch.priority || '').toLowerCase() === priorityFilter.toLowerCase();
 
       return matchSearch && matchStatus && matchPriority;
     });

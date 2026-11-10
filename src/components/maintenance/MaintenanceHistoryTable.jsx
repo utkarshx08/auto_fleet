@@ -17,13 +17,14 @@ export default function MaintenanceHistoryTable({ records = [], vehicles = [] })
   const [selectedVehicle, setSelectedVehicle] = useState('ALL');
 
   const filteredRecords = useMemo(() => {
+    const term = (search || '').toLowerCase();
     return records.filter((rec) => {
       const matchSearch =
-        rec.id.toLowerCase().includes(search.toLowerCase()) ||
-        rec.vehicleId.toLowerCase().includes(search.toLowerCase()) ||
-        rec.serviceType.toLowerCase().includes(search.toLowerCase()) ||
-        (rec.technician && rec.technician.toLowerCase().includes(search.toLowerCase())) ||
-        (rec.serviceProvider && rec.serviceProvider.toLowerCase().includes(search.toLowerCase()));
+        (rec.id || '').toLowerCase().includes(term) ||
+        (rec.vehicleId || '').toLowerCase().includes(term) ||
+        (rec.serviceType || '').toLowerCase().includes(term) ||
+        (rec.technician || '').toLowerCase().includes(term) ||
+        (rec.serviceProvider || '').toLowerCase().includes(term);
 
       const matchVehicle =
         selectedVehicle === 'ALL' || rec.vehicleId === selectedVehicle;
@@ -41,7 +42,7 @@ Invoice ID: ${rec.id}
 Vehicle: ${rec.vehicleId}
 Service Type: ${rec.serviceType}
 Service Date: ${rec.serviceDate}
-Odometer Reading: ${rec.odometerReading ? rec.odometerReading.toLocaleString() : 'N/A'} km
+Odometer Reading: ${rec.odometerReading != null ? Number(rec.odometerReading).toLocaleString() : 'N/A'} km
 Service Provider: ${rec.serviceProvider || 'Fleet Bay'}
 Technician: ${rec.technician || 'Certified Tech'}
 Cost: $${Number(rec.serviceCost).toFixed(2)}
@@ -54,7 +55,9 @@ Verification: Signed & Archived in Autrail Telemetry Cloud.`;
     const link = document.createElement('a');
     link.href = url;
     link.download = rec.invoiceUrl || `${rec.id}-invoice.txt`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 

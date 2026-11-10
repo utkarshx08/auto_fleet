@@ -30,12 +30,13 @@ export default function FuelHistoryTable({
   const [anomalyOnly, setAnomalyOnly] = useState(false);
 
   const filteredRecords = useMemo(() => {
+    const term = (search || '').toLowerCase();
     return records.filter((rec) => {
       const matchSearch =
-        rec.id.toLowerCase().includes(search.toLowerCase()) ||
-        rec.vehicleId.toLowerCase().includes(search.toLowerCase()) ||
-        (rec.driverName && rec.driverName.toLowerCase().includes(search.toLowerCase())) ||
-        (rec.fuelStation && rec.fuelStation.toLowerCase().includes(search.toLowerCase()));
+        (rec.id || '').toLowerCase().includes(term) ||
+        (rec.vehicleId || '').toLowerCase().includes(term) ||
+        (rec.driverName || '').toLowerCase().includes(term) ||
+        (rec.fuelStation || '').toLowerCase().includes(term);
 
       const matchVehicle = vehicleFilter === 'ALL' || rec.vehicleId === vehicleFilter;
       const matchDriver = driverFilter === 'ALL' || rec.driverName === driverFilter;
@@ -59,7 +60,7 @@ Fuel Type: ${rec.fuelType}
 Volume: ${rec.quantity} Litres
 Price per Litre: $${Number(rec.pricePerLitre).toFixed(2)}
 Total Amount: $${Number(rec.totalAmount).toFixed(2)}
-Odometer at Pump: ${rec.odometerReading ? rec.odometerReading.toLocaleString() : 'N/A'} km
+Odometer at Pump: ${rec.odometerReading != null ? Number(rec.odometerReading).toLocaleString() : 'N/A'} km
 Station: ${rec.fuelStation}
 Payment Method: ${rec.paymentMethod}
 Timestamp: ${rec.purchaseDate}
@@ -71,7 +72,9 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
     const link = document.createElement('a');
     link.href = url;
     link.download = rec.receiptUrl || `${rec.id}-receipt.txt`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 

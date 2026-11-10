@@ -307,15 +307,22 @@ export default function InteractiveTrackingMap({
     if (!mapRef.current || !mapLoaded) return;
     const map = mapRef.current;
 
-    activeZones.forEach((zone) => {
-      const sourceId = `trk-geo-src-${zone.id}`;
-      const fillId = `trk-geo-fill-${zone.id}`;
-      const lineId = `trk-geo-line-${zone.id}`;
-
-      if (map.getLayer(lineId)) map.removeLayer(lineId);
-      if (map.getLayer(fillId)) map.removeLayer(fillId);
-      if (map.getSource(sourceId)) map.removeSource(sourceId);
-    });
+    // Remove existing geofence layers and sources dynamically
+    const style = map.getStyle();
+    if (style && style.layers) {
+      style.layers.forEach((layer) => {
+        if (layer.id.startsWith('trk-geo-fill-') || layer.id.startsWith('trk-geo-line-')) {
+          try { map.removeLayer(layer.id); } catch (e) {}
+        }
+      });
+    }
+    if (style && style.sources) {
+      Object.keys(style.sources).forEach((sourceId) => {
+        if (sourceId.startsWith('trk-geo-src-')) {
+          try { map.removeSource(sourceId); } catch (e) {}
+        }
+      });
+    }
 
     if (showGeofences) {
       activeZones.forEach((zone) => {

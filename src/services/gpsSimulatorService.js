@@ -76,8 +76,8 @@ export const advanceVehicleTelemetry = (telemetryList, speedLimit = TRACKING_CON
  */
 export const getCompassDirection = (deg) => {
   const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  const index = Math.round(deg / 45) % 8;
-  return directions[index];
+  const normalized = ((Math.round(Number(deg) / 45) % 8) + 8) % 8;
+  return directions[normalized] || 'N';
 };
 
 /**

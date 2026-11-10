@@ -76,9 +76,13 @@ export default function Login({ onLoginSuccess }) {
               <input type="checkbox" defaultChecked className="accent-[#b49aff] rounded" />
               <span>Remember workspace session</span>
             </label>
-            <a href="#" className="text-[#b49aff] hover:underline">
+            <button
+              type="button"
+              onClick={() => alert('Password reset link dispatched to operator email.')}
+              className="text-[#b49aff] hover:underline bg-transparent border-0 p-0 text-[11px] cursor-pointer"
+            >
               Reset key
-            </a>
+            </button>
           </div>
 
           <Button

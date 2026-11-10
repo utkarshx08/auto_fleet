@@ -1,4 +1,4 @@
-// ============================================================================
+ // ============================================================================
 // AUTRAIL GPS TELEMETRY INGESTION SERVICE
 // Validates, sanitizes, and transmits incoming GPS hardware / API events
 // ============================================================================
@@ -92,7 +92,12 @@ export const sendLocationTelemetry = async (payload, apiKey = 'autrail-sec-token
       body: JSON.stringify(payload)
     });
 
-    const data = await response.json();
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = { message: response.statusText || 'Non-JSON server response' };
+    }
     return {
       status: response.status,
       ok: response.ok,

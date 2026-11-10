@@ -35,10 +35,10 @@ export default function DeleteScheduleModal({
             <span>Schedule ID:</span> <b className="text-[#eee]">{schedule.id}</b>
           </div>
           <div className="flex justify-between">
-            <span>Interval:</span> <span className="text-[#eee]">{schedule.intervalKm.toLocaleString()} km / {schedule.intervalDays} days</span>
+            <span>Interval:</span> <span className="text-[#eee]">{Number(schedule.intervalKm || 0).toLocaleString()} km / {schedule.intervalDays || 180} days</span>
           </div>
           <div className="flex justify-between">
-            <span>Next Target:</span> <span className="text-[#8be0b3]">{schedule.nextServiceOdometer.toLocaleString()} km ({schedule.nextServiceDate})</span>
+            <span>Next Target:</span> <span className="text-[#8be0b3]">{Number(schedule.nextServiceOdometer || 0).toLocaleString()} km ({schedule.nextServiceDate || 'Scheduled'})</span>
           </div>
         </div>
 

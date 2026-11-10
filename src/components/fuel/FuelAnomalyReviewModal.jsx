@@ -63,7 +63,7 @@ export default function FuelAnomalyReviewModal({
 
                 <div className="flex items-center justify-between text-[10px] font-mono text-[#858894] pt-1">
                   <span>Driver: {rec.driverName}</span>
-                  <span>Qty: {rec.quantity}L @ {rec.odometerReading?.toLocaleString()} km</span>
+                  <span>Qty: {rec.quantity}L @ {Number(rec.odometerReading || 0).toLocaleString()} km</span>
                 </div>
 
                 <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#22242e]">

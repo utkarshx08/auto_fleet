@@ -116,7 +116,7 @@ export default function CompleteServiceModal({
                 min={0}
                 required
                 value={formData.odometerReading}
-                onChange={(e) => setFormData({ ...formData, odometerReading: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, odometerReading: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">km</span>
@@ -137,7 +137,7 @@ export default function CompleteServiceModal({
                 min={0}
                 required
                 value={formData.serviceCost}
-                onChange={(e) => setFormData({ ...formData, serviceCost: Number(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, serviceCost: e.target.value })}
                 className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] pl-6 pr-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
               />
               <span className="absolute left-2.5 top-2 text-[10px] text-[#717480] font-mono">$</span>

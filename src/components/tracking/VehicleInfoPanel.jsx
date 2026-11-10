@@ -163,12 +163,12 @@ export default function VehicleInfoPanel({
             </b>
             <div className="flex items-center gap-3 text-[9px] text-[#747783] font-mono mt-2 pt-1.5 border-t border-[#20222a]">
               <span>
-                LAT: {!isNaN(Number(vehicle.latitude)) && Number(vehicle.latitude) !== 0
+                LAT: {vehicle?.latitude != null && !isNaN(Number(vehicle.latitude))
                   ? `${Math.abs(Number(vehicle.latitude)).toFixed(4)}° ${Number(vehicle.latitude) >= 0 ? 'N' : 'S'}`
                   : '—'}
               </span>
               <span>
-                LNG: {!isNaN(Number(vehicle.longitude)) && Number(vehicle.longitude) !== 0
+                LNG: {vehicle?.longitude != null && !isNaN(Number(vehicle.longitude))
                   ? `${Math.abs(Number(vehicle.longitude)).toFixed(4)}° ${Number(vehicle.longitude) >= 0 ? 'E' : 'W'}`
                   : '—'}
               </span>

@@ -14,7 +14,7 @@ const inFlightRequests = new Map();
  * @returns {Promise<{ address: string, road: string, city: string, displayName: string, source: string }>}
  */
 export async function reverseGeocode(lat, lng) {
-  if (lat == null || lng == null) {
+  if (lat == null || lng == null || isNaN(Number(lat)) || isNaN(Number(lng))) {
     return { address: 'Unknown Location', source: 'error' };
   }
 

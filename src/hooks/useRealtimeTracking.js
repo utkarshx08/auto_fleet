@@ -81,7 +81,7 @@ export default function useRealtimeTracking() {
                   // Real-time geofence detection on live telemetry ping
                   const geoAlerts = evaluateVehicleGeofences(updatedVehicle, geofences);
                   if (geoAlerts.length > 0) {
-                    setAlerts((prevAlerts) => [...geoAlerts, ...prevAlerts]);
+                    setAlerts((prevAlerts) => [...geoAlerts, ...prevAlerts].slice(0, 100));
                   }
 
                   return updatedVehicle;
@@ -125,7 +125,7 @@ export default function useRealtimeTracking() {
 
       const combinedAlerts = [...newAlerts, ...allGeoAlerts];
       if (combinedAlerts.length > 0) {
-        setAlerts((prev) => [...combinedAlerts, ...prev]);
+        setAlerts((prev) => [...combinedAlerts, ...prev].slice(0, 100));
       }
     }, TRACKING_CONFIG.UPDATE_INTERVAL_MS);
 
