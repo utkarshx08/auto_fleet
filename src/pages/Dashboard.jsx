@@ -5,6 +5,7 @@ import DistanceChart from '../components/dashboard/DistanceChart';
 import VehicleTable from '../components/dashboard/VehicleTable';
 import MaintenanceAlerts from '../components/dashboard/MaintenanceAlerts';
 import Button from '../components/common/Button';
+import TrueFocus from '../components/common/TrueFocus';
 import { Download, Plus } from 'lucide-react';
 
 export default function Dashboard({
@@ -44,9 +45,25 @@ export default function Dashboard({
           <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-2">
             {formattedDate} <span className="text-[#ad91ff] px-1">•</span> {getGreeting()}, JORDAN
           </p>
-          <h1 className="text-[30px] tracking-[-1.2px] font-bold text-[#f0f0f4] m-0 leading-tight">
-            Fleet overview<span className="text-[#ad91ff]">.</span>
-          </h1>
+          <div className="-ml-3 py-1">
+            <TrueFocus
+              sentence="Fleet Command Intelligence"
+              manualMode={false}
+              focusStyle="brackets"
+              easing="smooth"
+              borderColor="#b49aff"
+              glowColor="rgba(180, 154, 255, 0.45)"
+              blurAmount={2.5}
+              focusScale={1.04}
+              cornerSize={14}
+              borderWidth={2.5}
+              frameGap={8}
+              animationDuration={0.5}
+              pauseBetweenAnimations={1.4}
+              fontSize="1.75rem"
+              wordClassName="text-[#f0f0f4] font-bold tracking-tight"
+            />
+          </div>
           <p className="text-[12px] text-[#898c98] mt-1.5 mb-0">
             Here’s what’s happening across your fleet today.
           </p>

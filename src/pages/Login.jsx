@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../components/common/Button';
+import TrueFocus from '../components/common/TrueFocus';
 import { Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function Login({ onLoginSuccess }) {
@@ -27,10 +28,26 @@ export default function Login({ onLoginSuccess }) {
           <div className="w-10 h-10 rounded-lg bg-[#b49aff] text-[#17131f] flex items-center justify-center text-xl font-extrabold mb-3 shadow-[0_0_15px_rgba(180,154,255,0.4)]">
             A
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-[#f0f0f4] mb-1">
-            AUTRAIL Fleet Command
-          </h1>
-          <p className="text-xs text-[#858894]">
+          <div className="py-1">
+            <TrueFocus
+              sentence="AUTRAIL Fleet Command"
+              manualMode={false}
+              focusStyle="brackets"
+              easing="smooth"
+              order="sequential"
+              borderColor="#b49aff"
+              glowColor="rgba(180, 154, 255, 0.45)"
+              blurAmount={2.5}
+              focusScale={1.03}
+              cornerSize={12}
+              borderWidth={2}
+              animationDuration={0.5}
+              pauseBetweenAnimations={1.2}
+              fontSize="1.25rem"
+              wordClassName="text-[#f0f0f4] font-bold tracking-tight"
+            />
+          </div>
+          <p className="text-xs text-[#858894] mt-1">
             Sign in with authorized administrator credentials.
           </p>
         </div>
