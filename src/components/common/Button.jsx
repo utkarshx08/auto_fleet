@@ -11,22 +11,22 @@ export default function Button({
   icon: Icon,
   ...props
 }) {
-  const baseStyles = 'inline-flex items-center justify-center gap-1.5 transition-all duration-150 font-sans cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 transition-all duration-200 font-sans cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98] font-medium';
 
   const variants = {
-    primary: 'bg-[#b49aff] hover:bg-[#c4b3ff] active:bg-[#a385f8] text-[#17131f] font-extrabold border border-[#b49aff] shadow-sm',
-    default: 'bg-transparent hover:bg-[#20222a] text-[#d1d1da] hover:text-white border border-[#353743]',
-    quiet: 'bg-transparent hover:bg-[#20222a] text-[#d1d1da] hover:text-white border border-[#353743]',
-    text: 'bg-transparent text-[#b8a2ff] hover:text-[#d0c2ff] p-0 border-0 text-[10px] font-medium inline-flex items-center gap-1',
-    danger: 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40',
-    ghost: 'bg-transparent hover:bg-[#20222a] text-[#aeb0ba] border-0'
+    primary: 'glass-btn-primary font-semibold',
+    default: 'glass-btn-secondary',
+    quiet: 'glass-btn-secondary',
+    text: 'bg-transparent text-[#2879E8] hover:text-[#1765CC] p-0 border-0 text-[11px] font-semibold inline-flex items-center gap-1.5',
+    danger: 'bg-[#FDF2F2] hover:bg-[#FBE8E8] text-[#E05252] font-semibold border border-[#FAD2D2] shadow-sm',
+    ghost: 'bg-transparent hover:bg-[#F0F5FC] text-[#68758A] hover:text-[#172033] border-0'
   };
 
   const sizes = {
-    sm: 'text-[10px] px-2.5 py-1.5 rounded-[6px]',
-    md: 'text-[11px] px-3.5 py-2 rounded-[7px]',
-    lg: 'text-xs px-4 py-2.5 rounded-[8px]',
-    icon: 'p-1.5 rounded-[6px]'
+    sm: 'text-[11px] px-3 py-1.5 rounded-lg',
+    md: 'text-xs px-3.5 py-2 rounded-xl',
+    lg: 'text-sm px-4.5 py-2.5 rounded-xl',
+    icon: 'p-2 rounded-xl'
   };
 
   return (
@@ -34,7 +34,7 @@ export default function Button({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`${baseStyles} ${variants[variant] || variants.default} ${variant !== 'text' ? sizes[size] : ''} ${className}`}
+      className={`${baseStyles} ${variants[variant] || variants.default} ${variant !== 'text' ? (sizes[size] || sizes.md) : ''} ${className}`}
       {...props}
     >
       {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}

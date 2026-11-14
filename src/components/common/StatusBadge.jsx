@@ -10,23 +10,23 @@ export default function StatusBadge({
   if (type === 'pill') {
     if (normalized === 'active' || normalized === 'in service' || normalized === 'inservice') {
       return (
-        <span className={`inline-flex items-center gap-1.5 bg-[#1c302a] text-[#8ad8ad] border border-[#2c493d] px-2 py-1 rounded-full font-mono text-[9px] tracking-wider uppercase ${className}`}>
-          <i className="w-[5px] h-[5px] rounded-full bg-[#81d8a8] not-italic"></i>
+        <span className={`inline-flex items-center gap-1.5 bg-[#E8F7F0] text-[#138656] border border-[#B7E4CF] px-2.5 py-1 rounded-full font-mono text-[9px] font-semibold tracking-wider uppercase shadow-sm ${className}`}>
+          <i className="w-1.5 h-1.5 rounded-full bg-[#16A36A] not-italic"></i>
           IN SERVICE
         </span>
       );
     }
     if (normalized === 'service' || normalized === 'maintenance') {
       return (
-        <span className={`inline-flex items-center gap-1.5 bg-[#382c25] text-[#e3ac77] border border-[#523d30] px-2 py-1 rounded-full font-mono text-[9px] tracking-wider uppercase ${className}`}>
-          <i className="w-[5px] h-[5px] rounded-full bg-[#e3ac77] not-italic"></i>
+        <span className={`inline-flex items-center gap-1.5 bg-[#FEF7EA] text-[#C07914] border border-[#F8DFB4] px-2.5 py-1 rounded-full font-mono text-[9px] font-semibold tracking-wider uppercase shadow-sm ${className}`}>
+          <i className="w-1.5 h-1.5 rounded-full bg-[#E7A329] not-italic"></i>
           MAINTENANCE
         </span>
       );
     }
     return (
-      <span className={`inline-flex items-center gap-1.5 bg-[#20222a] text-[#a5a7b0] border border-[#30333d] px-2 py-1 rounded-full font-mono text-[9px] tracking-wider uppercase ${className}`}>
-        <i className="w-[5px] h-[5px] rounded-full bg-[#858997] not-italic"></i>
+      <span className={`inline-flex items-center gap-1.5 bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0] px-2.5 py-1 rounded-full font-mono text-[9px] font-semibold tracking-wider uppercase shadow-sm ${className}`}>
+        <i className="w-1.5 h-1.5 rounded-full bg-[#94A3B8] not-italic"></i>
         IDLE
       </span>
     );
@@ -35,23 +35,23 @@ export default function StatusBadge({
   // Table status style
   if (normalized === 'active' || normalized === 'on duty' || normalized === 'available') {
     return (
-      <span className={`font-mono text-[9px] text-[#83d7a9] inline-flex items-center gap-1.5 ${className}`}>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#83d7a9]"></span>
+      <span className={`font-mono text-[10px] text-[#138656] font-semibold inline-flex items-center gap-1.5 ${className}`}>
+        <span className="w-1.5 h-1.5 rounded-full bg-[#16A36A]"></span>
         Active
       </span>
     );
   }
   if (normalized === 'service' || normalized === 'in service' || normalized === 'maintenance') {
     return (
-      <span className={`font-mono text-[9px] text-[#e1a46f] inline-flex items-center gap-1.5 ${className}`}>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#e1a46f]"></span>
+      <span className={`font-mono text-[10px] text-[#C07914] font-semibold inline-flex items-center gap-1.5 ${className}`}>
+        <span className="w-1.5 h-1.5 rounded-full bg-[#E7A329]"></span>
         In service
       </span>
     );
   }
   return (
-    <span className={`font-mono text-[9px] text-[#a5a7b0] inline-flex items-center gap-1.5 ${className}`}>
-      <span className="w-1.5 h-1.5 rounded-full bg-[#717480]"></span>
+    <span className={`font-mono text-[10px] text-[#64748B] font-semibold inline-flex items-center gap-1.5 ${className}`}>
+      <span className="w-1.5 h-1.5 rounded-full bg-[#94A3B8]"></span>
       Idle
     </span>
   );

@@ -41,12 +41,12 @@ export default function Dashboard({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Page Heading */}
-      <section className="flex items-end justify-between py-6 max-md:flex-col max-md:items-start max-md:gap-4 max-md:py-4">
+      <section className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-2">
-            {formattedDate} <span className="text-[#ad91ff] px-1">•</span> {getGreeting()}, {operatorGreetingName}
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#68758A] uppercase mb-1.5 font-semibold">
+            {formattedDate} <span className="text-[#2879E8] px-1 font-bold">•</span> {getGreeting()}, {operatorGreetingName}
           </p>
           <div className="-ml-3 py-1">
             <TrueFocus
@@ -54,8 +54,8 @@ export default function Dashboard({
               manualMode={false}
               focusStyle="brackets"
               easing="smooth"
-              borderColor="#b49aff"
-              glowColor="rgba(180, 154, 255, 0.45)"
+              borderColor="#2879E8"
+              glowColor="rgba(40, 121, 232, 0.35)"
               blurAmount={2.5}
               focusScale={1.04}
               cornerSize={14}
@@ -63,17 +63,17 @@ export default function Dashboard({
               frameGap={8}
               animationDuration={0.5}
               pauseBetweenAnimations={1.4}
-              fontSize="1.75rem"
-              wordClassName="text-[#f0f0f4] font-bold tracking-tight"
+              fontSize="1.85rem"
+              wordClassName="text-[#172033] font-black tracking-tight"
             />
           </div>
-          <p className="text-[12px] text-[#898c98] mt-1.5 mb-0">
-            Here’s what’s happening across your fleet today.
+          <p className="text-[13px] text-[#68758A] mt-1 mb-0 font-medium">
+            Real-time telemetry, asset utilization and operational intelligence across active logistics.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2.5 max-md:w-full">
+        <div className="flex items-center gap-3 max-md:w-full">
           <Button
             variant="quiet"
             onClick={onExportReport}
@@ -94,12 +94,12 @@ export default function Dashboard({
       </section>
 
       {/* 4 Metric Cards Grid */}
-      <section className="grid grid-cols-4 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-3.5">
+      <section className="grid grid-cols-4 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-4">
         <MetricCard
           title="ACTIVE VEHICLES"
           symbol="↗"
           value={`${activeCount}`}
-          unit={`/ ${totalCount}`}
+          unit={`/ ${totalCount} assets`}
           changeText="↑ 8.2%"
           changeType="positive"
           comparisonText="vs. last month"
@@ -137,7 +137,7 @@ export default function Dashboard({
           isSymbolWarning={true}
           value="03"
           unit="vehicles"
-          changeText="Needs attention"
+          changeText="Attention needed"
           changeType="warning"
           comparisonText="Next 7 days"
           sparklineTheme="steps"
@@ -146,7 +146,7 @@ export default function Dashboard({
       </section>
 
       {/* Middle Grid: Spotlight + Distance Chart */}
-      <section className="grid grid-cols-[1.06fr_1fr] max-lg:grid-cols-1 gap-3.5">
+      <section className="grid grid-cols-[1.1fr_1fr] max-lg:grid-cols-1 gap-4">
         <VehicleOverview
           vehicle={spotlightVehicle}
           currentIndex={1}
@@ -158,7 +158,7 @@ export default function Dashboard({
       </section>
 
       {/* Bottom Grid: Fleet Status Table + Attention Alerts */}
-      <section className="grid grid-cols-[1.6fr_1fr] max-lg:grid-cols-1 gap-3.5">
+      <section className="grid grid-cols-[1.6fr_1fr] max-lg:grid-cols-1 gap-4">
         <VehicleTable
           vehicles={vehicles}
           onViewAll={onViewAllVehicles}
@@ -173,4 +173,3 @@ export default function Dashboard({
     </div>
   );
 }
-

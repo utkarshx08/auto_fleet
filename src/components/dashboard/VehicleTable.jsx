@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import SearchBar from '../common/SearchBar';
 import StatusBadge from '../common/StatusBadge';
-import { SlidersHorizontal, ArrowUpRight, MoreHorizontal } from 'lucide-react';
+import { SlidersHorizontal, ArrowUpRight, MoreHorizontal, Truck } from 'lucide-react';
 
 export default function VehicleTable({
   vehicles = [],
@@ -36,41 +36,41 @@ export default function VehicleTable({
   const getThumbColor = (color) => {
     switch (color) {
       case 'blue':
-        return 'bg-[#263543] text-[#8dc8ed]';
+        return 'bg-[#EAF3FF] text-[#2879E8] border-[#D5E6FB]';
       case 'amber':
-        return 'bg-[#403329] text-[#e3ac77]';
+        return 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]';
       case 'green':
-        return 'bg-[#263a34] text-[#83d6ad]';
+        return 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]';
       case 'purple':
       default:
-        return 'bg-[#35323f] text-[#c0aaff]';
+        return 'bg-[#F3E8FF] text-[#7C3AED] border-[#E9D5FF]';
     }
   };
 
-  const getFuelColor = (fuel) => {
-    if (fuel > 50) return 'bg-[#82d4a8]';
-    if (fuel > 20) return 'bg-[#e5a46e]';
-    return 'bg-[#e56868]';
+  const getFuelFill = (fuel) => {
+    if (fuel > 50) return 'bg-gradient-to-r from-[#16A36A] to-[#34D399]';
+    if (fuel > 20) return 'bg-gradient-to-r from-[#D97706] to-[#FBBF24]';
+    return 'bg-gradient-to-r from-[#E05252] to-[#F87171]';
   };
 
   return (
     <article
-      className={`bg-[#17191f] border border-[#292c35] rounded-[10px] p-[18px] transition-all duration-200 hover:border-[#383c4a] ${className}`}
+      className={`glass-card glass-card-hover p-6 rounded-2xl transition-all duration-300 ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-1">
-            Your fleet
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
+            Your fleet directory
           </p>
-          <h2 className="text-[14px] font-bold tracking-[-0.2px] text-[#f0f0f4] m-0">
-            Vehicle status
+          <h2 className="text-[15px] font-bold tracking-tight text-[#172033] m-0">
+            Fleet Asset Status
           </h2>
         </div>
         <button
           type="button"
           onClick={onViewAll}
-          className="text-[#b8a2ff] hover:text-[#d4c6ff] text-[10px] font-medium flex items-center gap-1 transition-colors group cursor-pointer"
+          className="text-[#2879E8] hover:text-[#1765CC] text-[11px] font-semibold flex items-center gap-1.5 transition-colors group cursor-pointer px-3 py-1.5 rounded-xl hover:bg-[#EAF3FF]"
         >
           <span>View all vehicles</span>
           <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -78,30 +78,30 @@ export default function VehicleTable({
       </div>
 
       {/* Tools: Search + Filters */}
-      <div className="flex items-center justify-between gap-2.5 my-4 max-sm:flex-col max-sm:items-stretch">
+      <div className="flex items-center justify-between gap-3 my-4 max-sm:flex-col max-sm:items-stretch">
         <SearchBar
           value={searchTerm}
           onChange={setSearchTerm}
           onClear={() => setSearchTerm('')}
-          placeholder="Search vehicle or driver..."
-          width="w-[245px] max-sm:w-full"
+          placeholder="Search by license plate, driver, or location..."
+          width="w-[280px] max-sm:w-full"
         />
 
         <div className="relative">
           <button
             type="button"
             onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-            className="flex items-center gap-1.5 border border-[#343641] bg-[#20222a] hover:bg-[#252833] rounded-[6px] text-[#bcbec8] px-2.5 py-1.5 text-[10px] font-sans transition-colors cursor-pointer select-none"
+            className="flex items-center gap-2 border border-[#E2E8F0] bg-[#F8FAFD] hover:bg-[#F0F5FC] hover:border-[#2879E8]/30 rounded-xl text-[#172033] px-3 py-2 text-[11px] font-semibold transition-all cursor-pointer select-none shadow-2xs"
           >
-            <SlidersHorizontal className="w-3 h-3 text-[#a7a9b5]" />
-            <span>Filters</span>
-            <span className="bg-[#40375b] text-[#c7b6ff] px-1.5 py-0.5 rounded-[4px] ml-1 font-mono text-[9px]">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#2879E8]" />
+            <span>Filter</span>
+            <span className="bg-[#EAF3FF] text-[#2879E8] px-2 py-0.5 rounded-md font-mono text-[10px] font-bold">
               {statusFilter === 'ALL' ? 'All' : statusFilter}
             </span>
           </button>
 
           {showFilterDropdown && (
-            <div className="absolute right-0 mt-1.5 w-36 bg-[#1c1e25] border border-[#343641] rounded-md shadow-xl py-1 z-20 text-[10px]">
+            <div className="absolute right-0 mt-2 w-40 bg-white/98 backdrop-blur-2xl border border-white/90 rounded-2xl shadow-liquid-dropdown py-1.5 z-30 text-[11px]">
               {['ALL', 'active', 'service', 'idle'].map((st) => (
                 <button
                   key={st}
@@ -110,8 +110,8 @@ export default function VehicleTable({
                     setStatusFilter(st);
                     setShowFilterDropdown(false);
                   }}
-                  className={`w-full text-left px-3 py-1.5 hover:bg-[#252833] transition-colors capitalize ${
-                    statusFilter === st ? 'text-[#b49aff] font-bold' : 'text-[#aeb0ba]'
+                  className={`w-full text-left px-3.5 py-2 hover:bg-[#F0F5FC] transition-colors capitalize cursor-pointer font-medium ${
+                    statusFilter === st ? 'text-[#2879E8] font-bold bg-[#EAF3FF]/60' : 'text-[#172033]'
                   }`}
                 >
                   {st === 'ALL' ? 'All Statuses' : st === 'service' ? 'In service' : st}
@@ -126,29 +126,29 @@ export default function VehicleTable({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left whitespace-nowrap">
           <thead>
-            <tr className="border-b border-[#30323b]">
-              <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-2 uppercase">
+            <tr className="border-b border-[#E2E8F0]/80">
+              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
                 Vehicle
               </th>
-              <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-2 uppercase">
+              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
                 Driver
               </th>
-              <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-2 uppercase">
+              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
                 Status
               </th>
-              <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-2 uppercase">
+              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
                 Location
               </th>
-              <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-2 uppercase">
-                Fuel
+              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
+                Fuel Level
               </th>
-              <th className="py-2.5 px-2 w-8"></th>
+              <th className="py-3 px-3 w-8"></th>
             </tr>
           </thead>
           <tbody>
             {filteredVehicles.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-8 text-[#777b87] text-[11px]">
+                <td colSpan={6} className="text-center py-10 text-[#68758A] text-xs">
                   No vehicles found matching "{searchTerm}".
                 </td>
               </tr>
@@ -157,23 +157,23 @@ export default function VehicleTable({
                 <tr
                   key={veh.id}
                   onClick={() => onSelectVehicle && onSelectVehicle(veh)}
-                  className="border-b border-[#282a33] hover:bg-[#1f212a] transition-colors cursor-pointer group last:border-0"
+                  className="border-b border-[#F1F5F9] hover:bg-[#F8FAFD] transition-colors cursor-pointer group last:border-0"
                 >
                   {/* Vehicle Plate & Model */}
-                  <td className="py-2.5 px-2">
-                    <div className="flex items-center gap-2">
+                  <td className="py-3 px-3">
+                    <div className="flex items-center gap-2.5">
                       <span
-                        className={`w-[29px] h-[23px] rounded-[5px] flex items-center justify-center font-bold text-sm shrink-0 ${getThumbColor(
+                        className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 border shadow-2xs ${getThumbColor(
                           veh.colorThumb
                         )}`}
                       >
-                        ▰
+                        <Truck className="w-4 h-4" />
                       </span>
                       <div className="flex flex-col">
-                        <b className="text-[10px] text-[#e0e0e7] group-hover:text-white transition-colors leading-tight">
+                        <b className="text-[12px] text-[#172033] group-hover:text-[#2879E8] transition-colors leading-tight font-bold">
                           {veh.plate}
                         </b>
-                        <small className="text-[8px] text-[#777b87] leading-tight font-sans">
+                        <small className="text-[10px] text-[#68758A] leading-tight font-medium">
                           {veh.model}
                         </small>
                       </div>
@@ -181,49 +181,49 @@ export default function VehicleTable({
                   </td>
 
                   {/* Driver */}
-                  <td className="py-2.5 px-2 text-[#aeb0ba] text-[9px] font-sans">
+                  <td className="py-3 px-3 text-[#172033] text-[11px] font-semibold">
                     {veh.driver}
                   </td>
 
                   {/* Status */}
-                  <td className="py-2.5 px-2">
+                  <td className="py-3 px-3">
                     <StatusBadge status={veh.status} type="table" />
                   </td>
 
                   {/* Location */}
-                  <td className="py-2.5 px-2 text-[#aeb0ba] text-[9px] font-sans">
+                  <td className="py-3 px-3 text-[#68758A] text-[11px]">
                     {veh.location}
                   </td>
 
-                  {/* Fuel with animated/custom progress bar */}
-                  <td className="py-2.5 px-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-mono text-[#aeb0ba] w-6">
+                  {/* Fuel with animated progress bar */}
+                  <td className="py-3 px-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[11px] font-mono font-bold text-[#172033] w-8">
                         {veh.fuel}%
                       </span>
-                      <i className="w-[38px] h-[3px] rounded-full bg-[#343640] block overflow-hidden not-italic">
-                        <b
+                      <div className="w-[60px] h-2 rounded-full bg-[#E2E8F0] overflow-hidden shadow-inner">
+                        <div
                           style={{ width: `${veh.fuel}%` }}
-                          className={`block h-full rounded-full transition-all duration-300 ${getFuelColor(
+                          className={`h-full rounded-full transition-all duration-300 shadow-2xs ${getFuelFill(
                             veh.fuel
                           )}`}
                         />
-                      </i>
+                      </div>
                     </div>
                   </td>
 
                   {/* Action More */}
-                  <td className="py-2.5 px-2 text-right">
+                  <td className="py-3 px-3 text-right">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelectVehicle && onSelectVehicle(veh);
                       }}
-                      className="text-[#858894] hover:text-[#f0f0f4] p-1 rounded transition-colors"
+                      className="text-[#8A97AB] hover:text-[#172033] p-1.5 rounded-lg hover:bg-white transition-colors cursor-pointer"
                       aria-label="Vehicle actions"
                     >
-                      <MoreHorizontal className="w-3.5 h-3.5" />
+                      <MoreHorizontal className="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
@@ -235,4 +235,3 @@ export default function VehicleTable({
     </article>
   );
 }
-

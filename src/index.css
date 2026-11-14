@@ -4,17 +4,34 @@
 @tailwind utilities;
 
 :root {
-  --bg: #101116;
-  --panel: #17191f;
-  --panel2: #1c1e25;
-  --line: #292c35;
-  --muted: #858997;
-  --text: #f0f0f4;
-  --purple: #ad91ff;
-  --purple-primary: #b49aff;
-  --green: #8be0b3;
+  --bg-primary: #F4F7FB;
+  --bg-surface: #FFFFFF;
+  --bg-surface-subtle: #F8FAFD;
+  --bg-surface-hover: #F0F5FC;
+  --primary-blue: #2879E8;
+  --blue-hover: #1765CC;
+  --soft-blue: #EAF3FF;
+  --text-primary: #172033;
+  --text-secondary: #68758A;
+  --text-muted: #94A3B8;
+  --border-light: rgba(226, 232, 240, 0.85);
+  --border-highlight: rgba(255, 255, 255, 0.95);
+  --success: #16A36A;
+  --warning: #E7A329;
+  --danger: #E05252;
   --mono: 'DM Mono', monospace;
-  --sans: 'Manrope', sans-serif;
+  --sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+
+  /* Legacy aliases for compatibility */
+  --bg: #F4F7FB;
+  --panel: #FFFFFF;
+  --panel2: #F8FAFD;
+  --line: #E2E8F0;
+  --muted: #68758A;
+  --text: #172033;
+  --purple: #2879E8;
+  --purple-primary: #2879E8;
+  --green: #16A36A;
 }
 
 * {
@@ -23,30 +40,243 @@
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(40, 121, 232, 0.035) 0px, transparent 50%),
+    radial-gradient(at 90% 15%, rgba(40, 121, 232, 0.025) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(218, 230, 247, 0.3) 0px, transparent 60%);
+  background-attachment: fixed;
+  color: var(--text-primary);
   font-family: var(--sans);
   font-size: 13px;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar for sleek dark panels */
+/* Custom Scrollbar for Liquid Glass */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #121319;
+  background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2b2e38;
-  border-radius: 3px;
+  background: #CBD5E1;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b3f4d;
+  background: #94A3B8;
 }
 
-/* Van 3D Visual Scene - Preserved from original Autrail design */
+/* ==========================================================================
+   AUTRAIL Premium Liquid Glass Component Classes
+   ========================================================================== */
+
+.glass-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #fbfdff 55%,
+    #f2f7ff 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow:
+    0 12px 35px rgba(43, 73, 116, 0.08),
+    0 3px 10px rgba(43, 73, 116, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(218, 230, 247, 0.65);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    transparent 45%,
+    rgba(40, 121, 232, 0.035) 100%
+  );
+  border-radius: inherit;
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 45px rgba(43, 73, 116, 0.11),
+    0 6px 14px rgba(43, 73, 116, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(218, 230, 247, 0.85);
+  border-color: #ffffff;
+}
+
+.glass-panel {
+  position: relative;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 10px 30px rgba(43, 73, 116, 0.06),
+    0 2px 8px rgba(43, 73, 116, 0.03),
+    inset 0 1px 0 #ffffff;
+}
+
+.glass-panel-elevated {
+  position: relative;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 20px 48px rgba(43, 73, 116, 0.12),
+    0 6px 16px rgba(43, 73, 116, 0.05),
+    inset 0 1px 0 #ffffff,
+    inset 0 -1px 0 rgba(218, 230, 247, 0.5);
+}
+
+.glass-input {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  color: #172033;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 2px rgba(43, 73, 116, 0.04);
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  border-color: #2879E8;
+  box-shadow: 
+    0 0 0 3px rgba(40, 121, 232, 0.12),
+    inset 0 1px 2px rgba(43, 73, 116, 0.03);
+  outline: none;
+}
+
+.glass-input::placeholder {
+  color: #94A3B8;
+}
+
+.glass-btn-primary {
+  background: linear-gradient(135deg, #2E80F2 0%, #1A6CDA 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  box-shadow: 
+    0 6px 18px rgba(40, 121, 232, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: all 0.2s ease;
+}
+
+.glass-btn-primary:hover {
+  background: linear-gradient(135deg, #378AF8 0%, #1765CC 100%);
+  box-shadow: 
+    0 8px 22px rgba(40, 121, 232, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.glass-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 3px 10px rgba(40, 121, 232, 0.25),
+    inset 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.glass-btn-secondary {
+  background: #ffffff;
+  color: #172033;
+  font-weight: 500;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 
+    0 2px 6px rgba(43, 73, 116, 0.04),
+    inset 0 1px 0 #ffffff;
+  transition: all 0.2s ease;
+}
+
+.glass-btn-secondary:hover {
+  background: #F8FAFD;
+  border-color: #CBD5E1;
+  color: #2879E8;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 12px rgba(43, 73, 116, 0.08),
+    inset 0 1px 0 #ffffff;
+}
+
+.glass-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.glass-pill-blue {
+  background: #EAF3FF;
+  color: #1D68D3;
+  border: 1px solid #C8E0FF;
+}
+
+.glass-pill-green {
+  background: #E8F7F0;
+  color: #138656;
+  border: 1px solid #B7E4CF;
+}
+
+.glass-pill-amber {
+  background: #FEF7EA;
+  color: #C07914;
+  border: 1px solid #F8DFB4;
+}
+
+.glass-pill-neutral {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #E2E8F0;
+}
+
+/* Reflective Shimmer Effect */
+@keyframes glassShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.glass-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: glassShimmer 2.5s infinite;
+}
+
+/* Van 3D Visual Scene - Refined for Liquid Glass */
 .van-scene {
   position: absolute;
   right: -3%;
@@ -57,7 +287,7 @@ body {
   align-items: center;
   justify-content: center;
   perspective: 500px;
-  background: radial-gradient(ellipse at 55% 55%, #33313e 0, rgba(30, 30, 39, 0.45) 42%, transparent 72%);
+  background: radial-gradient(ellipse at 55% 55%, rgba(40, 121, 232, 0.12) 0%, rgba(234, 243, 255, 0.55) 45%, transparent 72%);
   pointer-events: none;
 }
 
@@ -65,10 +295,10 @@ body {
   width: 245px;
   height: 76px;
   position: relative;
-  background: linear-gradient(160deg, #e8e8e7, #9da1a7 80%);
+  background: linear-gradient(160deg, #ffffff, #dbe6f5 80%);
   border-radius: 16px 31px 13px 11px;
   transform: rotate(-8deg) skewX(-9deg);
-  box-shadow: inset 0 -7px 0 #777c85, 0 20px 25px #090a0e;
+  box-shadow: inset 0 -6px 0 #bac7db, 0 16px 25px rgba(43, 73, 116, 0.15);
   clip-path: polygon(5% 14%, 78% 0, 100% 17%, 100% 83%, 91% 96%, 8% 96%, 0 80%, 0 28%);
 }
 
@@ -76,9 +306,9 @@ body {
   content: "";
   position: absolute;
   inset: 7px 22px 19px 90px;
-  background: linear-gradient(140deg, #17212b, #394550);
+  background: linear-gradient(140deg, #1e293b, #334155);
   clip-path: polygon(0 0, 78% 0, 100% 100%, 0 100%);
-  border: 2px solid #7e858b;
+  border: 2px solid #94a3b8;
 }
 
 .van-window {
@@ -87,9 +317,9 @@ body {
   top: 9px;
   width: 70px;
   height: 39px;
-  background: linear-gradient(130deg, #18232d, #59626a);
+  background: linear-gradient(130deg, #1e293b, #475569);
   transform: skewY(-5deg);
-  border: 2px solid #82878c;
+  border: 2px solid #94a3b8;
 }
 
 .van-side-window {
@@ -98,9 +328,9 @@ body {
   top: 7px;
   width: 44px;
   height: 42px;
-  background: #29343e;
+  background: #334155;
   transform: skewY(-7deg);
-  border: 2px solid #8b9095;
+  border: 2px solid #94a3b8;
 }
 
 .van-line {
@@ -109,7 +339,7 @@ body {
   right: 15px;
   bottom: 19px;
   height: 1px;
-  background: #767b81;
+  background: #94a3b8;
 }
 
 .van-wheel {
@@ -118,8 +348,8 @@ body {
   width: 37px;
   height: 37px;
   border-radius: 50%;
-  background: radial-gradient(circle, #89909a 0 20%, #25282d 22% 43%, #090a0d 45% 70%, #4a4e53 72%);
-  border: 3px solid #17191d;
+  background: radial-gradient(circle, #94a3b8 0 20%, #334155 22% 43%, #0f172a 45% 70%, #64748b 72%);
+  border: 3px solid #1e293b;
 }
 
 .wheel-one {
@@ -136,16 +366,17 @@ body {
   top: 34px;
   width: 6px;
   height: 13px;
-  background: #f6d8a2;
+  background: #f59e0b;
   border-radius: 3px;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
 }
 
 .van-shadow {
   position: absolute;
   width: 250px;
   height: 20px;
-  background: #050609;
-  filter: blur(13px);
+  background: rgba(30, 41, 59, 0.25);
+  filter: blur(10px);
   bottom: 41px;
   transform: rotate(-8deg);
 }

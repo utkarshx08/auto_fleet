@@ -7,25 +7,25 @@ export default function MaintenanceAlerts({
   onAlertClick,
   className = ''
 }) {
-  const getAlertIcon = (type, color) => {
+  const getAlertIcon = (type) => {
     switch (type) {
       case 'maintenance':
         return (
-          <span className="w-7 h-7 rounded-[7px] flex items-center justify-center shrink-0 bg-[#382c25] text-[#e9a36d]">
-            <Settings className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-[#FEF7EA] text-[#E7A329] border border-[#F8DCB0] shadow-2xs">
+            <Settings className="w-4 h-4" />
           </span>
         );
       case 'fuel':
         return (
-          <span className="w-7 h-7 rounded-[7px] flex items-center justify-center shrink-0 bg-[#302a40] text-[#bda5ff]">
-            <AlertTriangle className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-[#EAF3FF] text-[#2879E8] border border-[#D5E6FB] shadow-2xs">
+            <AlertTriangle className="w-4 h-4" />
           </span>
         );
       case 'document':
       default:
         return (
-          <span className="w-7 h-7 rounded-[7px] flex items-center justify-center shrink-0 bg-[#263541] text-[#86c9ed]">
-            <User className="w-3.5 h-3.5" />
+          <span className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-[#E8F7F0] text-[#16A36A] border border-[#C2E8D7] shadow-2xs">
+            <User className="w-4 h-4" />
           </span>
         );
     }
@@ -33,44 +33,44 @@ export default function MaintenanceAlerts({
 
   return (
     <article
-      className={`bg-[#17191f] border border-[#292c35] rounded-[10px] p-[18px] pb-2.5 flex flex-col justify-between transition-all duration-200 hover:border-[#383c4a] ${className}`}
+      className={`glass-card glass-card-hover p-6 pb-2.5 flex flex-col justify-between rounded-2xl transition-all duration-300 ${className}`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between pb-1">
+      <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]/70">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-1">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-0.5 font-semibold">
             Stay ahead
           </p>
-          <h2 className="text-[14px] font-bold tracking-[-0.2px] text-[#f0f0f4] m-0">
-            Attention needed
+          <h2 className="text-[15px] font-bold tracking-tight text-[#172033] m-0">
+            Attention Needed
           </h2>
         </div>
-        <span className="bg-[#46352c] text-[#eab17d] px-2 py-1 rounded-[5px] font-mono text-[10px] font-medium leading-none">
-          {alerts.length}
+        <span className="bg-[#FEF7EA] text-[#E7A329] border border-[#F8DCB0] px-2.5 py-1 rounded-xl font-mono text-[11px] font-bold leading-none shadow-2xs">
+          {alerts.length} Pending
         </span>
       </div>
 
       {/* Alert Items List */}
-      <div className="flex flex-col">
+      <div className="flex flex-col divide-y divide-[#F1F5F9] my-1">
         {alerts.map((alert) => (
           <div
             key={alert.id}
             onClick={() => onAlertClick && onAlertClick(alert)}
-            className="flex items-start gap-2.5 py-4 border-b border-[#2a2c35] hover:bg-[#1c1e25]/60 -mx-2 px-2 rounded-md transition-colors cursor-pointer group"
+            className="flex items-start gap-3 py-3.5 hover:bg-[#F8FAFD] -mx-3 px-3 rounded-xl transition-all cursor-pointer group"
           >
-            {getAlertIcon(alert.type, alert.color)}
+            {getAlertIcon(alert.type)}
             <div className="flex-1 min-w-0">
-              <b className="text-[10px] font-semibold text-[#f0f0f4] group-hover:text-[#b49aff] transition-colors leading-tight block">
+              <b className="text-[12px] font-bold text-[#172033] group-hover:text-[#2879E8] transition-colors leading-tight block truncate">
                 {alert.title}
               </b>
-              <p className="text-[9px] text-[#999ca7] my-1 font-sans truncate">
+              <p className="text-[11px] text-[#68758A] my-1 font-sans truncate">
                 {alert.desc}
               </p>
-              <small className="font-mono text-[8px] text-[#70737f]">
+              <small className="font-mono text-[9px] text-[#8A97AB]">
                 {alert.timestamp}
               </small>
             </div>
-            <ArrowUpRight className="w-3.5 h-3.5 text-[#7f8290] group-hover:text-[#b49aff] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-0.5" />
+            <ArrowUpRight className="w-4 h-4 text-[#8A97AB] group-hover:text-[#2879E8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-0.5" />
           </div>
         ))}
       </div>
@@ -79,12 +79,11 @@ export default function MaintenanceAlerts({
       <button
         type="button"
         onClick={onViewAllAlerts}
-        className="w-full text-left text-[#b7a0ff] hover:text-[#d3c4ff] text-[9px] font-medium py-3.5 flex items-center justify-between transition-colors cursor-pointer group"
+        className="w-full text-left text-[#2879E8] hover:text-[#1765CC] text-[11px] font-semibold py-3 flex items-center justify-between border-t border-[#E2E8F0]/70 transition-colors cursor-pointer group"
       >
-        <span>View all notifications</span>
-        <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+        <span>View all operational alerts</span>
+        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
       </button>
     </article>
   );
 }
-

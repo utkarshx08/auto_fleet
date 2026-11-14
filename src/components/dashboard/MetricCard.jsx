@@ -16,77 +16,80 @@ export default function MetricCard({
   const getThemeBarColor = (theme) => {
     switch (theme) {
       case 'teal':
-        return 'bg-[#70cbb7]';
+        return 'bg-gradient-to-t from-[#0D9488] to-[#2DD4BF]';
       case 'violet':
-        return 'bg-[#9b9de4]';
+        return 'bg-gradient-to-t from-[#6366F1] to-[#818CF8]';
       case 'orange':
       case 'warning':
-        return 'bg-[#d28e5f]';
+      case 'steps':
+        return 'bg-gradient-to-t from-[#D97706] to-[#F59E0B]';
       case 'purple':
       default:
-        return 'bg-[#ab90ed]';
+        return 'bg-gradient-to-t from-[#2879E8] to-[#60A5FA]';
     }
   };
 
   return (
     <article
-      className={`bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-[17px] pb-[14px] min-h-[132px] flex flex-col justify-between transition-all duration-200 group ${className}`}
+      className={`glass-card glass-card-hover p-5 pb-4 min-h-[142px] flex flex-col justify-between rounded-2xl transition-all duration-300 group ${className}`}
     >
       {/* Metric Top */}
-      <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+      <div className="flex items-center justify-between text-[#68758A] font-mono text-[10px] tracking-[1.2px] uppercase font-semibold">
         <span>{title}</span>
         {isSymbolWarning ? (
-          <span className="text-[#e8aa73] border border-[#5a4333] rounded-full w-[18px] h-[18px] flex items-center justify-center font-bold text-xs leading-none">
+          <span className="bg-[#FEF7EA] text-[#E7A329] border border-[#F8DCB0] rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs leading-none shadow-2xs">
             !
           </span>
         ) : (
-          <span className="text-[15px] text-[#a99ad0] group-hover:text-[#c4b3ff] transition-colors leading-none">
+          <span className="w-6 h-6 rounded-full bg-[#EAF3FF] text-[#2879E8] border border-[#D5E6FB] flex items-center justify-center font-bold text-xs leading-none shadow-2xs group-hover:scale-105 transition-transform">
             {symbol}
           </span>
         )}
       </div>
 
       {/* Metric Value */}
-      <div className="text-[27px] font-bold tracking-[-1px] text-[#f0f0f4] my-2 leading-none flex items-baseline gap-1.5">
+      <div className="text-[30px] font-black tracking-[-1px] text-[#172033] my-2.5 leading-none flex items-baseline gap-2">
         <span>{value}</span>
         {unit && (
-          <small className="text-[11px] tracking-normal text-[#888b97] font-medium font-sans">
+          <small className="text-[12px] tracking-normal text-[#68758A] font-medium font-sans">
             {unit}
           </small>
         )}
       </div>
 
       {/* Metric Foot with Sparkline */}
-      <div className="flex items-center justify-between text-[#777b87] text-[9px] gap-1.5 mt-auto pt-1">
-        <div className="flex items-center gap-1.5">
+      <div className="flex items-center justify-between text-[11px] gap-2 mt-auto pt-1">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <span
-            className={`font-mono text-[10px] ${
-              changeType === 'warning' ? 'text-[#e5a46e]' : 'text-[#80d9a9]'
+            className={`font-mono text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+              changeType === 'warning'
+                ? 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]'
+                : 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]'
             }`}
           >
             {changeText}
           </span>
-          <span className="text-[#777b87]">{comparisonText}</span>
+          <span className="text-[#68758A] text-[10px]">{comparisonText}</span>
         </div>
 
         {/* Mini Bars Sparkline */}
         {sparklineTheme === 'steps' ? (
-          <div className="ml-auto flex items-end gap-[3px] h-[21px]">
+          <div className="ml-auto flex items-end gap-[3px] h-[24px]">
             {sparkline.map((h, i) => (
               <span
                 key={i}
-                style={{ height: `${h}px` }}
-                className="w-[5px] rounded-[2px] bg-[#d28e5f]"
+                style={{ height: `${Math.max(h, 6)}px` }}
+                className="w-[5px] rounded-t-[3px] bg-gradient-to-t from-[#D97706] to-[#F59E0B] shadow-2xs"
               />
             ))}
           </div>
         ) : (
-          <div className="ml-auto flex items-end gap-[3px] h-[22px]">
+          <div className="ml-auto flex items-end gap-[3px] h-[24px]">
             {sparkline.map((h, i) => (
               <i
                 key={i}
-                style={{ height: `${h}%` }}
-                className={`w-[4px] rounded-t-[3px] opacity-80 ${getThemeBarColor(
+                style={{ height: `${Math.max(h, 15)}%` }}
+                className={`w-[5px] rounded-t-[3px] shadow-2xs ${getThemeBarColor(
                   sparklineTheme
                 )}`}
               />
@@ -97,4 +100,3 @@ export default function MetricCard({
     </article>
   );
 }
-

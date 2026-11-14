@@ -7,26 +7,26 @@ export default function SearchBar({
   onClear,
   placeholder = 'Search vehicle or driver...',
   className = '',
-  width = 'w-[245px]'
+  width = 'w-[260px]'
 }) {
   return (
-    <div className={`flex items-center gap-2 bg-[#20222a] border border-[#30333d] focus-within:border-[#4c4265] rounded-[6px] px-2.5 transition-colors ${width} text-[#858894] ${className}`}>
-      <Search className="w-3.5 h-3.5 shrink-0 text-[#858894]" />
+    <div className={`flex items-center gap-2 bg-white/90 border border-[#E2E8F0] focus-within:border-[#2879E8] focus-within:ring-2 focus-within:ring-[#2879E8]/10 rounded-xl px-3 transition-all ${width} text-[#68758A] shadow-sm ${className}`}>
+      <Search className="w-3.5 h-3.5 shrink-0 text-[#94A3B8]" />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="bg-transparent border-0 outline-none text-[#eee] placeholder-[#717480] text-[10px] py-2 w-full font-sans"
+        className="bg-transparent border-0 outline-none text-[#172033] placeholder-[#94A3B8] text-xs py-2 w-full font-sans"
       />
       {value && onClear && (
         <button
           type="button"
           onClick={onClear}
-          className="text-[#717480] hover:text-[#d1d1da] p-0.5 rounded"
+          className="text-[#94A3B8] hover:text-[#172033] p-0.5 rounded-md hover:bg-[#F1F5F9]"
           aria-label="Clear search"
         >
-          <X className="w-3 h-3" />
+          <X className="w-3.5 h-3.5" />
         </button>
       )}
     </div>

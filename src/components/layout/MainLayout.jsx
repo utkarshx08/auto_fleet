@@ -35,7 +35,15 @@ export default function MainLayout({
   };
 
   return (
-    <div className="flex min-h-screen bg-[#101116] text-[#f0f0f4] font-sans">
+    <div className="flex min-h-screen bg-[#F4F7FB] text-[#172033] font-sans relative selection:bg-[#EAF3FF] selection:text-[#2879E8]">
+      {/* Ambient Subtle Radial Blue Lighting */}
+      <div
+        className="fixed top-0 left-0 w-full h-[520px] pointer-events-none z-0 opacity-70"
+        style={{
+          background: 'radial-gradient(ellipse 80% 50% at 20% -10%, rgba(40, 121, 232, 0.08) 0%, rgba(234, 243, 255, 0) 70%)'
+        }}
+      />
+
       {/* Sidebar */}
       <Sidebar
         vehicleCount={vehicleCount}
@@ -44,8 +52,8 @@ export default function MainLayout({
       />
 
       {/* Main Container */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <div className="max-w-[1600px] w-full mx-auto px-10 max-lg:px-6 max-md:px-4 flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
+        <div className="max-w-[1600px] w-full mx-auto px-8 max-lg:px-6 max-md:px-4 flex-1 flex flex-col">
           {/* Top Navbar */}
           <Navbar
             currentSection={getSectionTitle()}
@@ -56,20 +64,22 @@ export default function MainLayout({
           />
 
           {/* Page Body */}
-          <main className="flex-1 py-4">
+          <main className="flex-1 py-5">
             {children}
           </main>
 
-          {/* Autrail Footer */}
-          <footer className="flex flex-wrap items-center gap-4 text-[#666a76] font-mono text-[8px] tracking-[0.6px] py-6 mt-auto border-t border-[#1c1e25]">
-            <span>© 2025 AUTRAIL</span>
-            <span className="font-sans text-[9px] tracking-normal text-[#777b87]">
-              Built for the road ahead.
-            </span>
-            <div className="ml-auto flex items-center gap-1.5 text-[#777b87]">
-              <span>SYSTEM STATUS</span>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#75d5a2] shadow-[0_0_6px_#75d5a2] mx-1 beacon-pulse"></span>
-              <span className="text-[#8be0b3] font-mono">OPERATIONAL</span>
+          {/* Liquid Glass Footer */}
+          <footer className="py-5 border-t border-[#E2E8F0]/80 flex flex-wrap items-center justify-between text-[11px] text-[#68758A] mt-auto">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#16A36A] shadow-[0_0_8px_#16A36A]/40" />
+              <span>AUTRAIL Fleet Intelligence Engine • v2.4</span>
+            </div>
+            <div className="flex items-center gap-4 text-[#8A97AB]">
+              <span className="hover:text-[#2879E8] transition-colors cursor-pointer" onClick={() => navigate('/settings')}>Settings</span>
+              <span>•</span>
+              <span className="hover:text-[#2879E8] transition-colors cursor-pointer" onClick={() => navigate('/reports')}>Compliance</span>
+              <span>•</span>
+              <span>© {new Date().getFullYear()} AUTRAIL Inc.</span>
             </div>
           </footer>
         </div>
