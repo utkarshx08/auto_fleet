@@ -129,6 +129,9 @@ export default defineConfig({
     port: 3000,
     open: false
   },
+  optimizeDeps: {
+    exclude: ['maplibre-gl']
+  },
   build: {
     chunkSizeWarningLimit: 1200,
     rollupOptions: {

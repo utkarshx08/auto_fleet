@@ -19,6 +19,11 @@ const TripDetails = lazy(() => import('./pages/TripDetails'));
 const DriverPortal = lazy(() => import('./pages/DriverPortal'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Profile = lazy(() => import('./pages/Profile'));
+
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 import Toast from './components/common/Toast';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -152,25 +157,29 @@ function AppContent() {
             element={
               <Login
                 onLoginSuccess={() => {
-                  showToast('Authentication confirmed. Welcome, Jordan.', 'success');
-                  navigate('/overview');
+                  showToast('Authentication confirmed. Welcome to Fleet Command.', 'success');
                 }}
               />
             }
+          />
+          <Route
+            path="/register"
+            element={<Register />}
           />
 
           <Route
             path="/*"
             element={
-              <MainLayout
-                unreadAlertsCount={alerts.filter((a) => !a.read).length}
-                vehicleCount={vehicles.length}
-                maintenanceAlert={alerts.length > 0}
-                onOpenNotifications={() => setIsNotificationsOpen(true)}
-                onOpenHelp={() => setIsHelpCenterOpen(true)}
-                onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-              >
-                <Routes>
+              <ProtectedRoute>
+                <MainLayout
+                  unreadAlertsCount={alerts.filter((a) => !a.read).length}
+                  vehicleCount={vehicles.length}
+                  maintenanceAlert={alerts.length > 0}
+                  onOpenNotifications={() => setIsNotificationsOpen(true)}
+                  onOpenHelp={() => setIsHelpCenterOpen(true)}
+                  onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+                >
+                  <Routes>
                   <Route path="/" element={<Navigate to="/overview" replace />} />
                   <Route
                     path="/overview"
@@ -304,6 +313,10 @@ function AppContent() {
                     }
                   />
                   <Route
+                    path="/profile"
+                    element={<Profile />}
+                  />
+                  <Route
                     path="/settings"
                     element={
                       <Settings
@@ -314,8 +327,9 @@ function AppContent() {
                   <Route path="*" element={<Navigate to="/overview" replace />} />
                 </Routes>
               </MainLayout>
-            }
-          />
+            </ProtectedRoute>
+          }
+        />
         </Routes>
       </Suspense>
 
@@ -387,7 +401,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <AppContent />
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );

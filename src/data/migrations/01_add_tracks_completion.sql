@@ -39,9 +39,9 @@ CREATE POLICY "Allow authenticated modify tracks" ON public.tracks
 -- 4. Initial Seed Data
 INSERT INTO public.tracks (id, name, origin, destination, stops, distance, eta, assigned_vehicle_id, assigned_driver_name, status, completed_at, completed_by)
 VALUES
-    ('RT-401', 'Midtown Express Loop', 'Queens Terminal Hub', 'Manhattan Financial District', 8, '34.2 km', '45 mins', 'RST-291', 'Alex Morgan', 'In Progress', NULL, NULL),
-    ('RT-402', 'Brooklyn River Corridor', 'Greenpoint Distribution Depot', 'Coney Island Fulfillment', 12, '48.6 km', '1 hr 15 mins', 'RST-284', 'Sarah Chen', 'In Progress', NULL, NULL),
-    ('RT-403', 'Bronx Cross-County Freight', 'Hunts Point Logistics Center', 'White Plains Hub', 5, '29.1 km', '35 mins', 'RST-263', 'David Kim', 'Pending', NULL, NULL)
+    ('RT-401', 'Midtown Express Loop', 'Queens Terminal Hub', 'Manhattan Financial District', 8, '34.2 km', '45 mins', 'RST-291', 'Aarav Sharma', 'In Progress', NULL, NULL),
+    ('RT-402', 'Brooklyn River Corridor', 'Greenpoint Distribution Depot', 'Coney Island Fulfillment', 12, '48.6 km', '1 hr 15 mins', 'RST-284', 'Priya Patel', 'In Progress', NULL, NULL),
+    ('RT-403', 'Bronx Cross-County Freight', 'Hunts Point Logistics Center', 'White Plains Hub', 5, '29.1 km', '35 mins', 'RST-263', 'Rajesh Kumar', 'Pending', NULL, NULL)
 ON CONFLICT (id) DO UPDATE SET
     status = EXCLUDED.status,
     completed_at = EXCLUDED.completed_at,

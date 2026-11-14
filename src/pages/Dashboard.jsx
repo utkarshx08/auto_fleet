@@ -6,6 +6,7 @@ import VehicleTable from '../components/dashboard/VehicleTable';
 import MaintenanceAlerts from '../components/dashboard/MaintenanceAlerts';
 import Button from '../components/common/Button';
 import TrueFocus from '../components/common/TrueFocus';
+import { useAuth } from '../context/AuthContext';
 import { Download, Plus } from 'lucide-react';
 
 export default function Dashboard({
@@ -22,6 +23,8 @@ export default function Dashboard({
   const activeCount = vehicles.filter((v) => v.status === 'active').length;
   const totalCount = vehicles.length;
   const spotlightVehicle = vehicles[0];
+  const { profile } = useAuth();
+  const operatorGreetingName = profile?.fullName ? profile.fullName.split(' ')[0].toUpperCase() : 'SURYANSH';
 
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
@@ -43,7 +46,7 @@ export default function Dashboard({
       <section className="flex items-end justify-between py-6 max-md:flex-col max-md:items-start max-md:gap-4 max-md:py-4">
         <div>
           <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-2">
-            {formattedDate} <span className="text-[#ad91ff] px-1">•</span> {getGreeting()}, JORDAN
+            {formattedDate} <span className="text-[#ad91ff] px-1">•</span> {getGreeting()}, {operatorGreetingName}
           </p>
           <div className="-ml-3 py-1">
             <TrueFocus

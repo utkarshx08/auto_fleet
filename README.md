@@ -15,15 +15,15 @@ AUTRAIL is intended to help fleet operators manage and monitor vehicle-related i
 
 The following describes the project direction. Check the current application to confirm which functions are implemented and operational.
 
-| Module | Purpose |
-|---|---|
-| Fleet Dashboard | Centralized overview of fleet information and key metrics |
-| Vehicle Management | Organize vehicle details and related information |
-| Maintenance Scheduling | Plan services and track maintenance history |
-| Fuel Management | Record fuel purchases and review fuel expenses |
-| GPS Tracking | Display vehicle locations when a real location source is connected |
-| Geofencing | Define geographical zones and detect entry/exit events |
-| Analytics | Present fleet-related metrics and trends |
+| Module                 | Purpose                                                            |
+| ---------------------- | ------------------------------------------------------------------ |
+| Fleet Dashboard        | Centralized overview of fleet information and key metrics          |
+| Vehicle Management     | Organize vehicle details and related information                   |
+| Maintenance Scheduling | Plan services and track maintenance history                        |
+| Fuel Management        | Record fuel purchases and review fuel expenses                     |
+| GPS Tracking           | Display vehicle locations when a real location source is connected |
+| Geofencing             | Define geographical zones and detect entry/exit events             |
+| Analytics              | Present fleet-related metrics and trends                           |
 
 **GPS note:** Genuine live tracking requires a GPS device, a mobile location source with permission, or an external tracking-provider integration. Simulated locations must be clearly labelled as demo data.
 
@@ -47,7 +47,7 @@ The repository also contains `src/components`, `src/pages`, `src/hooks`, `src/se
 ## Repository Structure
 
 ```text
-AUTRAIL/
+auo_fleet/
 ├── dist/                  # Generated production build
 │   ├── assets/
 │   └── index.html
@@ -97,7 +97,7 @@ Install the following before running the project:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/AUTRAIL.git
+git clone https://github.com/utkarshx08/AUTRAIL.git
 ```
 
 Replace `YOUR_USERNAME/AUTRAIL` with the actual GitHub repository URL.
@@ -105,7 +105,7 @@ Replace `YOUR_USERNAME/AUTRAIL` with the actual GitHub repository URL.
 ### 2. Open the project directory
 
 ```bash
-cd AUTRAIL
+cd auto_fleet
 ```
 
 ### 3. Install dependencies

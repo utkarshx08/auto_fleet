@@ -13,7 +13,7 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
     distance: 25.5,
     eta: '40 mins',
     assignedVehicle: initialVehicles[0]?.plate || 'RST-291',
-    assignedDriver: initialDrivers[0]?.name || 'Alex Morgan',
+    assignedDriver: initialDrivers[0]?.name || 'Aarav Sharma',
     status: 'Scheduled'
   });
 

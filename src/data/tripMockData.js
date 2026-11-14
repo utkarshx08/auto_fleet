@@ -91,14 +91,14 @@ export const initialTrips = [
         toStatus: 'Assigned',
         changedAt: '2026-11-03T17:30:00Z',
         changedBy: 'Fleet Lead',
-        notes: 'Assigned vehicle RST-291 and driver Alex Morgan'
+        notes: 'Assigned vehicle RST-291 and driver Aarav Sharma'
       },
       {
         id: 'hst-1001-4',
         fromStatus: 'Assigned',
         toStatus: 'In Progress',
         changedAt: '2026-11-04T07:45:00Z',
-        changedBy: 'Alex Morgan',
+        changedBy: 'Aarav Sharma',
         notes: 'Driver departed JFK Air Cargo Hub'
       }
     ],
@@ -154,7 +154,7 @@ export const initialTrips = [
         toStatus: 'Scheduled',
         changedAt: '2026-11-04T11:00:00Z',
         changedBy: 'Fleet Lead',
-        notes: 'Assigned to Sarah Chen & RST-284 for tomorrow morning'
+        notes: 'Assigned to Priya Patel & RST-284 for tomorrow morning'
       }
     ],
     createdAt: '2026-11-04T10:15:00Z',
@@ -257,14 +257,14 @@ export const initialTrips = [
         toStatus: 'Assigned',
         changedAt: '2026-11-02T15:00:00Z',
         changedBy: 'Fleet Lead',
-        notes: 'Assigned to RST-265 & Emily Park'
+        notes: 'Assigned to RST-265 & Ananya Iyer'
       },
       {
         id: 'hst-1003-3',
         fromStatus: 'Assigned',
         toStatus: 'In Progress',
         changedAt: '2026-11-03T06:10:00Z',
-        changedBy: 'Emily Park',
+        changedBy: 'Ananya Iyer',
         notes: 'Departed Hunts Point terminal'
       },
       {
@@ -272,7 +272,7 @@ export const initialTrips = [
         fromStatus: 'In Progress',
         toStatus: 'Completed',
         changedAt: '2026-11-03T11:15:00Z',
-        changedBy: 'Emily Park',
+        changedBy: 'Ananya Iyer',
         notes: 'All manifests signed off and final delivery accepted'
       }
     ],
@@ -326,14 +326,14 @@ export const initialTrips = [
         toStatus: 'Assigned',
         changedAt: '2026-11-03T17:00:00Z',
         changedBy: 'Fleet Lead',
-        notes: 'Assigned to RST-251 & Lisa Wang'
+        notes: 'Assigned to RST-251 & Neha Gupta'
       },
       {
         id: 'hst-1004-3',
         fromStatus: 'Assigned',
         toStatus: 'In Progress',
         changedAt: '2026-11-04T09:40:00Z',
-        changedBy: 'Lisa Wang',
+        changedBy: 'Neha Gupta',
         notes: 'Departed late due to client loading bay delay'
       },
       {
@@ -385,7 +385,7 @@ export const initialTrips = [
         toStatus: 'Assigned',
         changedAt: '2026-11-04T10:00:00Z',
         changedBy: 'Fleet Lead',
-        notes: 'Assigned vehicle RST-263 and driver David Kim'
+        notes: 'Assigned vehicle RST-263 and driver Rajesh Kumar'
       }
     ],
     createdAt: '2026-11-04T09:00:00Z',

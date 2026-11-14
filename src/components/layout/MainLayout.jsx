@@ -29,6 +29,7 @@ export default function MainLayout({
     if (pathname.startsWith('/reports')) return 'Reports';
     if (pathname.startsWith('/routes')) return 'Routes';
     if (pathname.startsWith('/fuel')) return 'Fuel & Energy';
+    if (pathname.startsWith('/profile')) return 'Operator Profile';
     if (pathname.startsWith('/settings')) return 'Settings';
     return 'Overview';
   };

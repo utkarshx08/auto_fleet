@@ -35,7 +35,7 @@ export default function FuelPurchaseModal({
 
   const [formData, setFormData] = useState({
     vehicleId: vehicles[0]?.plate || 'RST-291',
-    driverName: vehicles[0]?.driver || drivers[0]?.name || 'Alex Morgan',
+    driverName: vehicles[0]?.driver || drivers[0]?.name || 'Aarav Sharma',
     driverId: drivers[0]?.id || 'drv-1',
     fuelType: 'Diesel',
     quantity: 50.0,
@@ -70,7 +70,7 @@ export default function FuelPurchaseModal({
       const selectedVeh = vehicles[0];
       setFormData({
         vehicleId: selectedVeh?.plate || 'RST-291',
-        driverName: selectedVeh?.driver || 'Alex Morgan',
+        driverName: selectedVeh?.driver || 'Aarav Sharma',
         driverId: 'drv-1',
         fuelType: 'Diesel',
         quantity: 50.0,

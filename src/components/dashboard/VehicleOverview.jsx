@@ -13,7 +13,7 @@ export default function VehicleOverview({
     id: 'RST-291',
     plate: 'RST-291',
     model: 'Mercedes-Benz Sprinter',
-    driver: 'Alex Morgan',
+    driver: 'Aarav Sharma',
     location: 'New York, NY',
     odometer: 12840,
     fuel: 78,

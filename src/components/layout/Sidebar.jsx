@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import {
   LayoutGrid,
   Truck,
@@ -19,7 +20,8 @@ import {
   Compass,
   PlusCircle,
   Clock,
-  Smartphone
+  Smartphone,
+  User
 } from 'lucide-react';
 
 export default function Sidebar({
@@ -30,6 +32,11 @@ export default function Sidebar({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { profile } = useAuth();
+
+  const userName = profile?.fullName || 'Suryansh Tyagi';
+  const userRole = profile?.role || 'Administrator';
+  const userInitials = userName.split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'ST';
 
   const currentPath = location.pathname.replace('/', '') || 'overview';
   const isTripsActive = location.pathname.startsWith('/trips');
@@ -118,6 +125,12 @@ export default function Sidebar({
       path: '/routes',
       label: 'Routes',
       icon: Compass,
+    },
+    {
+      id: 'profile',
+      path: '/profile',
+      label: 'My Profile',
+      icon: User,
     },
     {
       id: 'settings',
@@ -313,18 +326,26 @@ export default function Sidebar({
         </div>
 
         <div
-          onClick={() => navigate('/settings')}
+          onClick={() => navigate('/profile')}
           className="border-t border-[#292b34] pt-4 flex items-center gap-2.5 px-0.5 cursor-pointer hover:opacity-90 transition-opacity"
         >
-          <div className="w-[30px] h-[30px] rounded-full flex items-center justify-center bg-[#514365] text-[#e9dfff] text-[10px] font-bold shrink-0">
-            JD
-          </div>
+          {profile?.avatarUrl ? (
+            <img
+              src={profile.avatarUrl}
+              alt={userName}
+              className="w-[30px] h-[30px] rounded-full object-cover border border-[#b49aff]/40 shrink-0"
+            />
+          ) : (
+            <div className="w-[30px] h-[30px] rounded-full flex items-center justify-center bg-[#514365] text-[#e9dfff] text-[10px] font-bold shrink-0">
+              {userInitials}
+            </div>
+          )}
           <div className="max-md:hidden flex flex-col gap-0.5 truncate flex-1">
-            <b className="text-[11px] text-[#e0e0e7] font-semibold leading-none">
-              Jordan Davis
+            <b className="text-[11px] text-[#e0e0e7] font-semibold leading-none truncate">
+              {userName}
             </b>
-            <small className="text-[10px] text-[#858894] leading-tight">
-              Fleet manager
+            <small className="text-[10px] text-[#858894] leading-tight truncate">
+              {userRole}
             </small>
           </div>
           <button

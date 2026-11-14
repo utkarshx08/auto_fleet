@@ -38,7 +38,7 @@ const formatTimeSafe = (dateVal) => {
 };
 
 export default function DriverPortal({ onShowToast }) {
-  // Driver selection (defaults to drv-1 Alex Morgan)
+  // Driver selection (defaults to drv-1 Aarav Sharma)
   const [selectedDriverId, setSelectedDriverId] = useState(() => {
     return storageService.getItem('autrail_active_driver_id', 'drv-1');
   });

@@ -1,6 +1,8 @@
-import React from 'react';
-import { Bell, Command, Wifi, WifiOff } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, Command, Wifi, WifiOff, User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar({
   currentSection = 'Overview',
@@ -9,10 +11,52 @@ export default function Navbar({
   onProfileClick,
   onOpenCommandPalette
 }) {
+  const navigate = useNavigate();
   const { isOnline } = useNetworkStatus();
+  const { profile, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click or escape
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') setDropdownOpen(false);
+    }
+
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dropdownOpen]);
+
+  const handleLogout = async () => {
+    setDropdownOpen(false);
+    await logout();
+    navigate('/login', { replace: true });
+  };
+
+  const getInitials = (name) => {
+    if (!name) return 'OP';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
+  const userInitials = getInitials(profile?.fullName || 'Suryansh Tyagi');
 
   return (
-    <header className="h-[70px] max-md:h-[58px] flex items-center justify-between border-b border-[#252730] px-0 select-none">
+    <header className="h-[70px] max-md:h-[58px] flex items-center justify-between border-b border-[#252730] px-0 select-none relative z-30">
       {/* Breadcrumb */}
       <div className="text-[11px] text-[#888b97] flex items-center">
         <span>Workspace</span>
@@ -65,17 +109,94 @@ export default function Navbar({
           )}
         </button>
 
-        {/* User Avatar */}
-        <button
-          type="button"
-          onClick={onProfileClick}
-          aria-label="Open profile settings"
-          className="w-7 h-7 rounded-full flex items-center justify-center bg-[#514365] text-[#e9dfff] text-[10px] font-bold hover:ring-2 hover:ring-[#b49aff]/40 transition-all cursor-pointer"
-        >
-          JD
-        </button>
+        {/* User Profile Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            type="button"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            aria-expanded={dropdownOpen}
+            aria-haspopup="true"
+            className="flex items-center gap-2.5 p-1 rounded-lg hover:bg-[#1c1e25] transition-colors cursor-pointer group"
+          >
+            {profile?.avatarUrl ? (
+              <img
+                src={profile.avatarUrl}
+                alt={profile.fullName || 'User'}
+                className="w-7 h-7 rounded-full object-cover border border-[#b49aff]/40 group-hover:ring-2 group-hover:ring-[#b49aff]/50 transition-all shrink-0"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full flex items-center justify-center bg-[#514365] text-[#e9dfff] text-[10px] font-bold group-hover:ring-2 group-hover:ring-[#b49aff]/50 transition-all shrink-0">
+                {userInitials}
+              </div>
+            )}
+
+            <div className="hidden md:flex flex-col text-left leading-none">
+              <span className="text-xs font-semibold text-[#eee] group-hover:text-[#b49aff] transition-colors truncate max-w-[120px]">
+                {profile?.fullName || 'Suryansh Tyagi'}
+              </span>
+              <span className="text-[9px] text-[#7d808c] font-mono mt-0.5">
+                {profile?.role || 'Administrator'}
+              </span>
+            </div>
+
+            <ChevronDown className={`w-3 h-3 text-[#777] transition-transform duration-200 ${dropdownOpen ? 'rotate-180 text-[#b49aff]' : ''}`} />
+          </button>
+
+          {/* Dropdown Menu */}
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-56 bg-[#17191f] border border-[#2b2e38] rounded-xl shadow-2xl p-1.5 text-xs text-[#eee] animate-fadeIn z-50">
+              {/* Profile Card Header */}
+              <div className="p-2.5 border-b border-[#252730] mb-1">
+                <div className="font-bold text-sm text-[#f0f0f4] truncate">
+                  {profile?.fullName || 'Suryansh Tyagi'}
+                </div>
+                <div className="text-[11px] text-[#858894] truncate">
+                  {profile?.email || 'suryansh.tyagi@autrail.io'}
+                </div>
+                <div className="mt-1.5 inline-block text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#b49aff]/15 text-[#b49aff] border border-[#b49aff]/30 font-semibold">
+                  {profile?.role || 'Administrator'}
+                </div>
+              </div>
+
+              {/* Menu items */}
+              <button
+                type="button"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  navigate('/profile');
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left hover:bg-[#20222a] text-[#ddd] hover:text-[#fff] transition-colors cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5 text-[#b49aff]" />
+                <span>My Profile</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  navigate('/settings');
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left hover:bg-[#20222a] text-[#ddd] hover:text-[#fff] transition-colors cursor-pointer"
+              >
+                <Settings className="w-3.5 h-3.5 text-[#8be0b3]" />
+                <span>Account Settings</span>
+              </button>
+
+              <div className="h-px bg-[#252730] my-1" />
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left hover:bg-red-950/40 text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5 text-red-400" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
 }
-

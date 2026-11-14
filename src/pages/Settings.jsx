@@ -142,11 +142,11 @@ export default function Settings({ onSaveSettings }) {
 
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-[#514365] text-[#e9dfff] font-bold text-sm flex items-center justify-center shrink-0">
-              JD
+              ST
             </div>
             <div>
-              <b className="text-sm text-[#f0f0f4] block">Jordan Davis</b>
-              <span className="text-xs text-[#858894] font-mono">jordan.davis@autrail.io · Fleet Manager (Admin)</span>
+              <b className="text-sm text-[#f0f0f4] block">Suryansh Tyagi</b>
+              <span className="text-xs text-[#858894] font-mono">suryansh.tyagi@autrail.io · Fleet Administrator</span>
             </div>
           </div>
         </div>
