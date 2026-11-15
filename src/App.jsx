@@ -23,6 +23,7 @@ const Register = lazy(() => import('./pages/Register'));
 const Profile = lazy(() => import('./pages/Profile'));
 
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 import Toast from './components/common/Toast';
@@ -402,7 +403,9 @@ export default function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <AuthProvider>
-          <AppContent />
+          <ThemeProvider>
+            <AppContent />
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>

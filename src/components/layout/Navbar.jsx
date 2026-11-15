@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Command, WifiOff, User, Settings, LogOut, ChevronDown, Sparkles } from 'lucide-react';
+import { Bell, Command, WifiOff, User, Settings, LogOut, ChevronDown, Sparkles, Palette, Check } from 'lucide-react';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Navbar({
   currentSection = 'Overview',
@@ -14,8 +15,11 @@ export default function Navbar({
   const navigate = useNavigate();
   const { isOnline } = useNetworkStatus();
   const { profile, logout } = useAuth();
+  const { theme, setTheme, themes } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const themeDropdownRef = useRef(null);
 
   // Close dropdown on outside click or escape
   useEffect(() => {
@@ -23,12 +27,18 @@ export default function Navbar({
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
+      if (themeDropdownRef.current && !themeDropdownRef.current.contains(e.target)) {
+        setThemeDropdownOpen(false);
+      }
     }
     function handleKeyDown(e) {
-      if (e.key === 'Escape') setDropdownOpen(false);
+      if (e.key === 'Escape') {
+        setDropdownOpen(false);
+        setThemeDropdownOpen(false);
+      }
     }
 
-    if (dropdownOpen) {
+    if (dropdownOpen || themeDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleKeyDown);
     }
@@ -36,7 +46,7 @@ export default function Navbar({
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [dropdownOpen]);
+  }, [dropdownOpen, themeDropdownOpen]);
 
   const handleLogout = async () => {
     setDropdownOpen(false);
@@ -58,10 +68,10 @@ export default function Navbar({
   return (
     <header className="h-[70px] max-md:h-[58px] flex items-center justify-between border-b border-[#E2E8F0]/80 px-0 select-none relative z-30">
       {/* Breadcrumb */}
-      <div className="text-[12px] text-[#68758A] flex items-center">
-        <span className="font-medium hover:text-[#172033] transition-colors cursor-pointer" onClick={() => navigate('/overview')}>Workspace</span>
+      <div className="text-[12px] text-[#475569] flex items-center font-semibold">
+        <span className="font-semibold hover:text-[#0B132B] transition-colors cursor-pointer" onClick={() => navigate('/overview')}>Workspace</span>
         <span className="px-2.5 text-[#CBD5E1] font-mono">/</span>
-        <b className="text-[#172033] font-bold capitalize">{currentSection}</b>
+        <b className="text-[#0B132B] font-black capitalize text-[13px]">{currentSection}</b>
       </div>
 
       {/* Top Actions */}
@@ -89,6 +99,73 @@ export default function Navbar({
             <div className="flex items-center text-[#E7A329] bg-[#FEF7EA] px-2.5 py-1 rounded-xl border border-[#F8DCB0]">
               <WifiOff className="w-3.5 h-3.5 mr-1.5 text-[#E7A329] animate-pulse" />
               Gateway Offline
+            </div>
+          )}
+        </div>
+
+        {/* Theme Quick Switcher Button */}
+        <div className="relative" ref={themeDropdownRef}>
+          <button
+            type="button"
+            onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+            aria-label="Change theme"
+            title="Liquid Glass Theme Options"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[#475569] hover:text-[#0B132B] transition-all rounded-xl bg-white/90 border border-[#E2E8F0] hover:bg-[#F0F5FC] shadow-2xs hover:shadow-sm cursor-pointer"
+          >
+            <Palette className="w-4 h-4 text-[#2879E8]" />
+            <span className="hidden sm:inline font-sans font-bold text-[11px] text-[#0B132B]">Theme</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2879E8] shadow-[0_0_6px_#2879E8]" />
+          </button>
+
+          {/* Liquid Glass Theme Dropdown Menu */}
+          {themeDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-72 bg-white/98 backdrop-blur-2xl border border-white/95 rounded-2xl shadow-liquid-dropdown p-2 text-xs text-[#172033] animate-fadeIn z-50">
+              <div className="px-2.5 py-2 border-b border-[#E2E8F0]/80 mb-1.5 flex items-center justify-between">
+                <div>
+                  <span className="font-extrabold text-[12px] text-[#0B132B] block">Surface Themes</span>
+                  <span className="text-[10px] text-[#64748B]">Base Liquid Glass is default</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/20">
+                  GLASS UI
+                </span>
+              </div>
+
+              <div className="space-y-1">
+                {themes.map((t) => {
+                  const isActive = theme === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => {
+                        setTheme(t.id);
+                        setThemeDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-start gap-2.5 p-2 rounded-xl text-left transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#EAF3FF] border border-[#2879E8]/40 shadow-xs'
+                          : 'hover:bg-[#F0F5FC] border border-transparent'
+                      }`}
+                    >
+                      <div
+                        className="w-3.5 h-3.5 rounded-full mt-0.5 shrink-0 border border-white shadow-xs"
+                        style={{ backgroundColor: t.accentColor }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className={`text-[11px] font-bold truncate ${isActive ? 'text-[#0B132B]' : 'text-[#334155]'}`}>
+                            {t.name}
+                          </span>
+                          {isActive && <Check className="w-3.5 h-3.5 text-[#2879E8] shrink-0" />}
+                        </div>
+                        <p className="text-[10px] text-[#64748B] line-clamp-1 mt-0.5">
+                          {t.desc}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
