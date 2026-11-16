@@ -1,5 +1,53 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import fs from 'fs';
+import path from 'path';
+
+/**
+ * Ensures MapLibre GL Web Worker is always available to Vite dev server
+ * avoiding the "The file does not exist at .../node_modules/.vite/deps/maplibre-gl-worker.mjs" error
+ */
+function maplibreWorkerPlugin() {
+  return {
+    name: 'maplibre-worker-handler',
+    configureServer(server) {
+      const serveWorker = (res) => {
+        const workerPath = path.resolve(__dirname, 'node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs');
+        if (fs.existsSync(workerPath)) {
+          const content = fs.readFileSync(workerPath);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+          res.setHeader('Cache-Control', 'no-cache');
+          res.end(content);
+          return true;
+        }
+        return false;
+      };
+
+      // Intercept any request matching maplibre-gl-worker.mjs in dev
+      server.middlewares.use((req, res, next) => {
+        if (req.url && req.url.includes('maplibre-gl-worker.mjs')) {
+          if (serveWorker(res)) return;
+        }
+        next();
+      });
+
+      // Ensure node_modules/.vite/deps/maplibre-gl-worker.mjs is populated on disk
+      try {
+        const viteDepsDir = path.resolve(__dirname, 'node_modules/.vite/deps');
+        const workerSrc = path.resolve(__dirname, 'node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs');
+        if (!fs.existsSync(viteDepsDir)) {
+          fs.mkdirSync(viteDepsDir, { recursive: true });
+        }
+        if (fs.existsSync(workerSrc)) {
+          fs.copyFileSync(workerSrc, path.resolve(viteDepsDir, 'maplibre-gl-worker.mjs'));
+        }
+      } catch {
+        // Silently continue if directory cannot be written
+      }
+    }
+  };
+}
 
 /**
  * Backend Mock Middleware for POST /api/tracking/location
@@ -124,13 +172,13 @@ function gpsIngestionEndpoint() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), gpsIngestionEndpoint()],
+  plugins: [react(), maplibreWorkerPlugin(), gpsIngestionEndpoint()],
   server: {
     port: 3000,
     open: false
   },
   optimizeDeps: {
-    exclude: ['maplibre-gl']
+    exclude: ['maplibre-gl', 'maplibre-gl/dist/maplibre-gl-worker.mjs']
   },
   build: {
     chunkSizeWarningLimit: 1200,

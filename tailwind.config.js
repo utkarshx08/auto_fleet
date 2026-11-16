@@ -17,9 +17,9 @@ export default {
           'blue-hover': '#1765CC',
           'blue-soft': '#EAF3FF',
           'blue-tint': 'rgba(40, 121, 232, 0.08)',
-          text: '#172033',
-          muted: '#68758A',
-          dim: '#94A3B8',
+          text: '#0B132B',
+          muted: '#334155',
+          dim: '#64748B',
           border: 'rgba(226, 232, 240, 0.8)',
           'border-highlight': 'rgba(255, 255, 255, 0.95)',
           success: '#16A36A',
@@ -74,10 +74,10 @@ export default {
           pill: '#EAF3FF',
         },
         autrail: {
-          muted: '#68758A',
-          dim: '#94A3B8',
-          text: '#172033',
-          subtext: '#475569',
+          muted: '#475569',
+          dim: '#64748B',
+          text: '#0B132B',
+          subtext: '#1E293B',
         }
       },
       boxShadow: {

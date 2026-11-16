@@ -19,31 +19,31 @@ export default function DeleteScheduleModal({
       subtitle="Permanent Operational Removal"
       maxWidth="max-w-md"
     >
-      <div className="space-y-3.5 text-xs font-sans">
-        <div className="p-3 bg-red-500/10 border border-red-500/25 rounded-lg flex items-start gap-2.5 text-red-300">
-          <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+      <div className="space-y-4 text-xs font-sans">
+        <div className="p-3.5 bg-[#FDF2F2] border border-[#FAD2D2] rounded-xl flex items-start gap-3 text-[#E05252]">
+          <AlertTriangle className="w-5 h-5 text-[#E05252] shrink-0 mt-0.5" />
           <div className="text-[11px] leading-tight">
-            <b>Confirm Schedule Deletion</b>
-            <p className="mt-1 text-red-300/80 mb-0">
+            <b className="font-semibold text-[#E05252]">Confirm Schedule Deletion</b>
+            <p className="mt-1 text-[#E05252]/90 mb-0 leading-relaxed">
               Are you sure you want to remove the automated <b>{schedule.maintenanceType}</b> schedule for vehicle <b>{schedule.vehicleId}</b>? This action cannot be undone.
             </p>
           </div>
         </div>
 
-        <div className="p-3 bg-[#121319] border border-[#252730] rounded-lg font-mono text-[10px] space-y-1 text-[#aeb0bb]">
+        <div className="p-3.5 bg-gradient-to-br from-[#F8FAFD] to-[#FFFFFF] border border-[#D5E2F1] rounded-xl font-mono text-[11px] space-y-1.5 text-[#68758A] shadow-2xs">
           <div className="flex justify-between">
-            <span>Schedule ID:</span> <b className="text-[#eee]">{schedule.id}</b>
+            <span>Schedule ID:</span> <b className="text-[#172033]">{schedule.id}</b>
           </div>
           <div className="flex justify-between">
-            <span>Interval:</span> <span className="text-[#eee]">{Number(schedule.intervalKm || 0).toLocaleString()} km / {schedule.intervalDays || 180} days</span>
+            <span>Interval:</span> <span className="text-[#172033]">{Number(schedule.intervalKm || 0).toLocaleString()} km / {schedule.intervalDays || 180} days</span>
           </div>
           <div className="flex justify-between">
-            <span>Next Target:</span> <span className="text-[#8be0b3]">{Number(schedule.nextServiceOdometer || 0).toLocaleString()} km ({schedule.nextServiceDate || 'Scheduled'})</span>
+            <span>Next Target:</span> <span className="text-[#16A36A] font-semibold">{Number(schedule.nextServiceOdometer || 0).toLocaleString()} km ({schedule.nextServiceDate || 'Scheduled'})</span>
           </div>
         </div>
 
-        <div className="pt-2 border-t border-[#252730] flex justify-end gap-2">
-          <Button variant="quiet" size="sm" type="button" onClick={onClose}>
+        <div className="pt-3 border-t border-[#E2E8F0] flex justify-end gap-2.5">
+          <Button variant="default" size="sm" type="button" onClick={onClose}>
             Cancel
           </Button>
           <Button

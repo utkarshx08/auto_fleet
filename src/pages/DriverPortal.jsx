@@ -19,6 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import Button from '../components/common/Button';
+import TrueFocus from '../components/common/TrueFocus';
 import TripStatusBadge from '../components/trips/TripStatusBadge';
 import TripExpenseModal from '../components/trips/TripExpenseModal';
 import TripReportModal from '../components/trips/TripReportModal';
@@ -89,7 +90,6 @@ export default function DriverPortal({ onShowToast }) {
 
   // Active or upcoming trip for this driver
   const activeTrip = useMemo(() => {
-    // Priority: In Progress > Delayed > Assigned > Scheduled
     const inProg = driverTrips.find((t) => t.status === 'In Progress');
     if (inProg) return inProg;
     const delayed = driverTrips.find((t) => t.status === 'Delayed');
@@ -101,17 +101,26 @@ export default function DriverPortal({ onShowToast }) {
     return null;
   }, [driverTrips]);
 
-  // Completed trips by this driver
   const completedTrips = useMemo(() => {
     return driverTrips.filter((t) => t.status === 'Completed');
   }, [driverTrips]);
 
-  // Actions
+  // Handlers
   const handleStartTrip = (tripId) => {
     try {
-      updateTripStatus(tripId, 'In Progress', 'Driver initiated departure via mobile portal', currentDriver.name);
+      updateTripStatus(tripId, 'In Progress', 'Driver commenced dispatch voyage.');
       setRefreshKey((p) => p + 1);
-      if (onShowToast) onShowToast(`Trip started! Live dispatch broadcast active.`, 'success');
+      if (onShowToast) onShowToast('Journey started. GPS broadcaster active.', 'success');
+    } catch (err) {
+      if (onShowToast) onShowToast(err.message, 'error');
+    }
+  };
+
+  const handleCompleteTrip = (tripId) => {
+    try {
+      updateTripStatus(tripId, 'Completed', 'Driver marked trip delivered.');
+      setRefreshKey((p) => p + 1);
+      if (onShowToast) onShowToast('Voyage marked completed. Manifest finalized.', 'success');
     } catch (err) {
       if (onShowToast) onShowToast(err.message, 'error');
     }
@@ -120,32 +129,20 @@ export default function DriverPortal({ onShowToast }) {
   const handleReportDelay = () => {
     if (!activeTrip || !delayReason.trim()) return;
     try {
-      updateTripStatus(activeTrip.id, 'Delayed', `Driver delay report: ${delayReason.trim()}`, currentDriver.name);
+      updateTripStatus(activeTrip.id, 'Delayed', `Driver reported bottleneck: ${delayReason}`);
       setRefreshKey((p) => p + 1);
       setIsDelayModalOpen(false);
       setDelayReason('');
-      if (onShowToast) onShowToast('Delay report logged and dispatch notified.', 'warning');
+      if (onShowToast) onShowToast('Delay recorded and broadcast to dispatchers.', 'warning');
     } catch (err) {
       if (onShowToast) onShowToast(err.message, 'error');
     }
   };
 
-  const handleCompleteTrip = (tripId) => {
-    if (window.confirm('Confirm final delivery and voyage sign-off?')) {
-      try {
-        updateTripStatus(tripId, 'Completed', 'Driver confirmed final cargo delivery and signed manifest', currentDriver.name);
-        setRefreshKey((p) => p + 1);
-        if (onShowToast) onShowToast('Trip marked as Completed! Great work.', 'success');
-      } catch (err) {
-        if (onShowToast) onShowToast(err.message, 'error');
-      }
-    }
-  };
-
-  const handleToggleStop = (tripId, stopId, currentStopStatus) => {
-    const nextStatus = currentStopStatus === 'Pending' ? 'Reached' : currentStopStatus === 'Reached' ? 'Departed' : 'Pending';
+  const handleToggleStop = (tripId, stopId, currentStatus) => {
     try {
-      updateTripStopStatus(tripId, stopId, nextStatus, `Waypoint status updated to ${nextStatus} by driver`);
+      const nextStatus = currentStatus === 'Reached' ? 'Departed' : 'Reached';
+      updateTripStopStatus(tripId, stopId, nextStatus);
       setRefreshKey((p) => p + 1);
       if (onShowToast) onShowToast(`Stop updated: ${nextStatus}.`, 'info');
     } catch (err) {
@@ -154,19 +151,43 @@ export default function DriverPortal({ onShowToast }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5 pb-12 text-[#d4d4dc]">
+    <div className="max-w-2xl mx-auto space-y-6 pb-12 text-[#172033]">
+      {/* Header */}
+      <div className="text-center py-2">
+        <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
+          Mobile Command Console
+        </p>
+        <div className="flex justify-center -ml-2 py-0.5">
+          <TrueFocus
+            sentence="Driver Dispatch Portal"
+            manualMode={false}
+            focusStyle="brackets"
+            easing="smooth"
+            borderColor="#2879E8"
+            glowColor="rgba(40, 121, 232, 0.35)"
+            blurAmount={2}
+            focusScale={1.03}
+            cornerSize={14}
+            borderWidth={2.5}
+            frameGap={8}
+            fontSize="1.5rem"
+            wordClassName="text-[#172033] font-bold tracking-tight"
+          />
+        </div>
+      </div>
+
       {/* Driver Mobile Top Banner */}
-      <div className="bg-[#17191f] border border-[#292c35] p-4 rounded-xl flex items-center justify-between gap-3 shadow-lg">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-11 h-11 rounded-full bg-[#24212f] border border-[#3b3252] text-[#c4b3ff] flex items-center justify-center font-bold font-mono text-sm shrink-0 shadow-[0_0_10px_rgba(180,154,255,0.3)]">
+      <div className="glass-card border border-white/95 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-xl">
+        <div className="flex items-center gap-3.5 min-w-0">
+          <div className="w-12 h-12 rounded-2xl bg-[#EAF3FF] border border-[#2879E8]/30 text-[#2879E8] flex items-center justify-center font-black font-mono text-base shrink-0 shadow-sm">
             {currentDriver.avatar || 'DR'}
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <select
                 value={selectedDriverId}
                 onChange={(e) => handleDriverChange(e.target.value)}
-                className="bg-[#121319] border border-[#2b2e38] text-xs font-bold text-[#f0f0f4] px-2 py-1 rounded-[6px] focus:outline-none focus:border-[#ad91ff] cursor-pointer"
+                className="bg-[#F8FAFD] border border-[#D5E2F1] text-xs font-bold text-[#172033] px-3 py-1.5 rounded-xl focus:outline-none focus:border-[#2879E8] cursor-pointer"
               >
                 {initialDrivers.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -177,20 +198,20 @@ export default function DriverPortal({ onShowToast }) {
               <button
                 type="button"
                 onClick={() => setDutyStatus(dutyStatus === 'On Duty' ? 'On Break' : 'On Duty')}
-                className={`text-[10px] font-mono px-2 py-0.5 rounded-full flex items-center gap-1.5 border transition-colors ${
+                className={`text-[10px] font-mono font-bold px-3 py-1 rounded-full flex items-center gap-1.5 border transition-all cursor-pointer ${
                   dutyStatus === 'On Duty'
-                    ? 'bg-[#122822] text-[#6ee7b7] border-[#1d4c3e]'
-                    : 'bg-[#2d2218] text-[#fcd34d] border-[#4d3822]'
+                    ? 'bg-[#DCFCE7] text-[#16A36A] border-[#BBF7D0]'
+                    : 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'
                 }`}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${dutyStatus === 'On Duty' ? 'bg-[#10b981] animate-pulse' : 'bg-[#f59e0b]'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${dutyStatus === 'On Duty' ? 'bg-[#16A36A] animate-pulse' : 'bg-[#D97706]'}`} />
                 <span>{dutyStatus}</span>
               </button>
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-[#858894] mt-1 font-mono">
+            <div className="flex items-center gap-2 text-[11px] text-[#68758A] mt-1 font-mono">
               <span>Lic: {currentDriver.license}</span>
               <span>•</span>
-              <span className="text-[#c4b3ff]">★ {currentDriver.rating}</span>
+              <span className="text-[#D97706] font-bold">★ {currentDriver.rating}</span>
             </div>
           </div>
         </div>
@@ -198,7 +219,7 @@ export default function DriverPortal({ onShowToast }) {
         <button
           type="button"
           onClick={() => setRefreshKey((p) => p + 1)}
-          className="p-2 text-[#747683] hover:text-[#d4d4dc] rounded-lg hover:bg-[#20222d] transition-colors"
+          className="p-2.5 text-[#68758A] hover:text-[#2879E8] rounded-xl hover:bg-[#EAF3FF] transition-colors"
           title="Refresh assignments"
         >
           <RefreshCw className="w-4 h-4" />
@@ -206,55 +227,57 @@ export default function DriverPortal({ onShowToast }) {
       </div>
 
       {/* Assigned Vehicle Quick Ribbon */}
-      <div className="bg-[#17191f] border border-[#292c35] p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs font-mono">
-        <div className="flex items-center gap-2.5">
-          <Truck className="w-4 h-4 text-[#ad91ff] shrink-0" />
+      <div className="glass-card border border-white/95 p-4 rounded-2xl flex items-center justify-between gap-4 text-xs font-mono shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#2879E8] flex items-center justify-center shadow-xs">
+            <Truck className="w-5 h-5" />
+          </div>
           <div>
-            <span className="text-[#f0f0f4] font-bold block">{assignedVehicle.plate}</span>
-            <span className="text-[11px] text-[#858894]">{assignedVehicle.model}</span>
+            <span className="text-[#172033] font-bold block text-sm">{assignedVehicle.plate}</span>
+            <span className="text-[11px] text-[#68758A]">{assignedVehicle.model}</span>
           </div>
         </div>
         <div className="flex items-center gap-4 text-right">
           <div>
-            <span className="text-[10px] text-[#747683] block">FUEL</span>
-            <span className="text-[#8be0b3] font-bold flex items-center gap-1">
-              <Fuel className="w-3 h-3" />
+            <span className="text-[10px] text-[#8A97AB] block font-semibold">TANK</span>
+            <span className="text-[#16A36A] font-bold flex items-center gap-1">
+              <Fuel className="w-3.5 h-3.5" />
               {assignedVehicle.fuel}%
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-[#747683] block">ODO</span>
-            <span className="text-[#d4d4dc] font-bold">{assignedVehicle.odometer?.toLocaleString()} km</span>
+            <span className="text-[10px] text-[#8A97AB] block font-semibold">ODOMETER</span>
+            <span className="text-[#172033] font-bold">{assignedVehicle.odometer?.toLocaleString()} km</span>
           </div>
         </div>
       </div>
 
       {/* Hero Active Trip Manifest Card */}
       {activeTrip ? (
-        <div className="bg-[#17191f] border-2 border-[#3b3252] rounded-xl overflow-hidden shadow-2xl space-y-4">
+        <div className="glass-card border-2 border-[#2879E8]/30 rounded-2xl overflow-hidden shadow-2xl space-y-4">
           {/* Card Header */}
-          <div className="bg-[#1c1a27] p-4 border-b border-[#2e2a3f] flex items-start justify-between gap-2">
+          <div className="bg-[#EAF3FF]/60 p-5 border-b border-[#E2E8F0] flex items-start justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-mono text-xs font-bold text-[#b49aff] bg-[#24212f] px-2 py-0.5 rounded border border-[#3b3252]">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span className="font-mono text-xs font-bold text-[#2879E8] bg-white px-2.5 py-0.5 rounded-md border border-[#2879E8]/20 shadow-2xs">
                   {activeTrip.id}
                 </span>
                 <TripStatusBadge status={activeTrip.status} size="sm" />
-                <span className="font-mono text-[10px] uppercase px-1.5 py-0.2 rounded bg-[#20232e] text-[#a0a3b1]">
+                <span className="font-mono text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-white text-[#68758A] border border-[#E2E8F0]">
                   {activeTrip.priority} Priority
                 </span>
               </div>
-              <h2 className="text-base font-bold text-[#f0f0f4] m-0 leading-snug">
+              <h2 className="text-base font-bold text-[#172033] m-0 leading-snug">
                 {activeTrip.tripName}
               </h2>
-              <p className="text-xs text-[#858894] mt-0.5 m-0">
-                Client: <b className="text-[#e0e0e7]">{activeTrip.customerName}</b>
+              <p className="text-xs text-[#68758A] mt-1 m-0">
+                Client: <b className="text-[#172033]">{activeTrip.customerName}</b>
               </p>
             </div>
 
             <a
               href="tel:+15552345678"
-              className="p-2.5 rounded-full bg-[#24212f] hover:bg-[#322c42] text-[#c4b3ff] border border-[#3f3558] transition-colors"
+              className="p-3 rounded-xl bg-white hover:bg-[#F8FAFD] text-[#2879E8] border border-[#D5E2F1] shadow-xs transition-colors"
               title="Call Dispatch Coordinator"
             >
               <Phone className="w-4 h-4" />
@@ -263,29 +286,29 @@ export default function DriverPortal({ onShowToast }) {
 
           {/* Cargo Details */}
           {activeTrip.cargoDetails && (
-            <div className="px-4 py-2 mx-4 bg-[#121319] rounded-lg border border-[#242631] text-xs">
-              <span className="text-[10px] font-mono uppercase text-[#747683] block">Consignment Load</span>
-              <p className="text-[#e0e0e7] m-0">{activeTrip.cargoDetails}</p>
+            <div className="px-4 py-2.5 mx-5 bg-[#F8FAFD] rounded-xl border border-[#E2E8F0] text-xs">
+              <span className="text-[10px] font-mono uppercase text-[#8A97AB] block font-semibold">Consignment Load</span>
+              <p className="text-[#172033] font-medium m-0 mt-0.5">{activeTrip.cargoDetails}</p>
             </div>
           )}
 
           {/* Interactive Route Waypoint Checklist */}
-          <div className="px-4 space-y-3">
-            <span className="font-mono text-[10px] uppercase text-[#858894] tracking-wider block">
+          <div className="px-5 space-y-3">
+            <span className="font-mono text-[10px] uppercase text-[#68758A] tracking-wider block font-bold">
               Route & Waypoint Checklist
             </span>
 
             <div className="space-y-2.5">
               {/* Pickup Point */}
-              <div className="bg-[#14151b] border border-[#272935] p-3 rounded-lg flex items-start justify-between gap-3">
+              <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl flex items-start justify-between gap-3">
                 <div className="flex items-start gap-2.5 min-w-0">
-                  <div className="w-5 h-5 rounded-full bg-[#182a22] border border-[#234b3c] text-[#6ee7b7] flex items-center justify-center font-mono text-[10px] font-bold shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[#DCFCE7] border border-[#BBF7D0] text-[#16A36A] flex items-center justify-center font-mono text-xs font-bold shrink-0 mt-0.5">
                     A
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono text-[#747683] uppercase block">Origin Pickup</span>
-                    <p className="text-xs font-semibold text-[#f0f0f4] truncate m-0">{activeTrip.pickupLocation}</p>
-                    <span className="text-[10px] text-[#858894] font-mono">
+                    <span className="text-[10px] font-mono text-[#8A97AB] uppercase block font-semibold">Origin Pickup</span>
+                    <p className="text-xs font-bold text-[#172033] truncate m-0">{activeTrip.pickupLocation}</p>
+                    <span className="text-[11px] text-[#68758A] font-mono">
                       Dep: {formatTimeSafe(activeTrip.scheduledDeparture)}
                     </span>
                   </div>
@@ -295,9 +318,9 @@ export default function DriverPortal({ onShowToast }) {
                   href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(activeTrip.pickupLocation)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-2 py-1 rounded bg-[#1e212c] hover:bg-[#282c3b] text-[#ad91ff] text-[11px] font-medium flex items-center gap-1 shrink-0"
+                  className="px-2.5 py-1.5 rounded-lg bg-white border border-[#D5E2F1] text-[#2879E8] text-xs font-bold flex items-center gap-1 shrink-0 shadow-2xs hover:bg-[#F8FAFD]"
                 >
-                  <Navigation className="w-3 h-3" />
+                  <Navigation className="w-3.5 h-3.5" />
                   <span>Map</span>
                 </a>
               </div>
@@ -308,18 +331,18 @@ export default function DriverPortal({ onShowToast }) {
                 return (
                   <div
                     key={stop.id || idx}
-                    className={`border p-3 rounded-lg flex items-start justify-between gap-3 transition-colors ${
-                      isReached ? 'bg-[#151c19] border-[#203a2e]' : 'bg-[#14151b] border-[#272935]'
+                    className={`border p-3.5 rounded-xl flex items-start justify-between gap-3 transition-colors ${
+                      isReached ? 'bg-[#DCFCE7]/30 border-[#BBF7D0]' : 'bg-[#F8FAFD] border-[#E2E8F0]'
                     }`}
                   >
                     <div className="flex items-start gap-2.5 min-w-0">
                       <button
                         type="button"
                         onClick={() => handleToggleStop(activeTrip.id, stop.id, stop.status)}
-                        className={`w-5 h-5 rounded flex items-center justify-center font-mono text-xs border transition-colors shrink-0 mt-0.5 ${
+                        className={`w-6 h-6 rounded-lg flex items-center justify-center font-mono text-xs border transition-all shrink-0 mt-0.5 ${
                           isReached
-                            ? 'bg-[#10b981] border-[#10b981] text-[#121319]'
-                            : 'bg-[#1e2029] border-[#373a4a] text-[#858894] hover:border-[#b49aff]'
+                            ? 'bg-[#16A36A] border-[#16A36A] text-white shadow-2xs'
+                            : 'bg-white border-[#D5E2F1] text-[#68758A] hover:border-[#2879E8]'
                         }`}
                         title="Click to check off waypoint"
                       >
@@ -327,21 +350,21 @@ export default function DriverPortal({ onShowToast }) {
                       </button>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] font-mono text-[#b49aff] uppercase">Stop #{stop.order || idx + 1}</span>
-                          <span className="font-mono text-[9px] text-[#70cbb7]">{stop.status || 'Pending'}</span>
+                          <span className="text-[10px] font-mono text-[#2879E8] uppercase font-bold">Stop #{stop.order || idx + 1}</span>
+                          <span className="font-mono text-[10px] text-[#16A36A] font-semibold">{stop.status || 'Pending'}</span>
                         </div>
-                        <p className="text-xs font-medium text-[#f0f0f4] truncate m-0">{stop.locationName}</p>
-                        {stop.notes && <p className="text-[11px] text-[#858894] m-0 mt-0.5">{stop.notes}</p>}
+                        <p className="text-xs font-bold text-[#172033] truncate m-0">{stop.locationName}</p>
+                        {stop.notes && <p className="text-[11px] text-[#68758A] m-0 mt-0.5">{stop.notes}</p>}
                       </div>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => handleToggleStop(activeTrip.id, stop.id, stop.status)}
-                      className={`px-2 py-1 rounded text-[11px] font-medium shrink-0 transition-colors ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-colors ${
                         isReached
-                          ? 'bg-[#1e2a24] text-[#8be0b3] border border-[#2b4d3c]'
-                          : 'bg-[#24212f] text-[#c4b3ff] border border-[#3b3252]'
+                          ? 'bg-[#DCFCE7] text-[#16A36A] border border-[#BBF7D0]'
+                          : 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30'
                       }`}
                     >
                       {stop.status === 'Reached' ? 'Mark Departed' : stop.status === 'Departed' ? 'Done' : 'Mark Reached'}
@@ -351,15 +374,15 @@ export default function DriverPortal({ onShowToast }) {
               })}
 
               {/* Destination Point */}
-              <div className="bg-[#14151b] border border-[#272935] p-3 rounded-lg flex items-start justify-between gap-3">
+              <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl flex items-start justify-between gap-3">
                 <div className="flex items-start gap-2.5 min-w-0">
-                  <div className="w-5 h-5 rounded-full bg-[#321719] border border-[#522930] text-[#fca5a5] flex items-center justify-center font-mono text-[10px] font-bold shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[#FEF2F2] border border-[#FECACA] text-[#E05252] flex items-center justify-center font-mono text-xs font-bold shrink-0 mt-0.5">
                     B
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono text-[#747683] uppercase block">Final Destination</span>
-                    <p className="text-xs font-semibold text-[#f0f0f4] truncate m-0">{activeTrip.destinationLocation}</p>
-                    <span className="text-[10px] text-[#858894] font-mono">
+                    <span className="text-[10px] font-mono text-[#8A97AB] uppercase block font-semibold">Final Destination</span>
+                    <p className="text-xs font-bold text-[#172033] truncate m-0">{activeTrip.destinationLocation}</p>
+                    <span className="text-[11px] text-[#68758A] font-mono">
                       Arr: {formatTimeSafe(activeTrip.scheduledArrival)}
                     </span>
                   </div>
@@ -369,9 +392,9 @@ export default function DriverPortal({ onShowToast }) {
                   href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(activeTrip.destinationLocation)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-2 py-1 rounded bg-[#1e212c] hover:bg-[#282c3b] text-[#ad91ff] text-[11px] font-medium flex items-center gap-1 shrink-0"
+                  className="px-2.5 py-1.5 rounded-lg bg-white border border-[#D5E2F1] text-[#2879E8] text-xs font-bold flex items-center gap-1 shrink-0 shadow-2xs hover:bg-[#F8FAFD]"
                 >
-                  <Navigation className="w-3 h-3" />
+                  <Navigation className="w-3.5 h-3.5" />
                   <span>Map</span>
                 </a>
               </div>
@@ -379,13 +402,13 @@ export default function DriverPortal({ onShowToast }) {
           </div>
 
           {/* Primary Mobile Action Buttons Bar */}
-          <div className="p-4 bg-[#14151c] border-t border-[#292c3a] space-y-2.5">
+          <div className="p-5 bg-white border-t border-[#E2E8F0] space-y-3">
             {/* If Scheduled or Assigned: Start Trip Button */}
             {(activeTrip.status === 'Scheduled' || activeTrip.status === 'Assigned') && (
               <button
                 type="button"
                 onClick={() => handleStartTrip(activeTrip.id)}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-[#121319] font-bold text-sm tracking-wide shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full py-3.5 rounded-xl bg-[#16A36A] hover:bg-[#15803D] text-white font-bold text-sm tracking-wide shadow-md shadow-[#16A36A]/25 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.98]"
               >
                 <Play className="w-4 h-4 fill-current" />
                 <span>START TRIP / DEPART NOW</span>
@@ -394,11 +417,11 @@ export default function DriverPortal({ onShowToast }) {
 
             {/* If In Progress or Delayed: Complete & Delay Triggers */}
             {(activeTrip.status === 'In Progress' || activeTrip.status === 'Delayed') && (
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setIsDelayModalOpen(true)}
-                  className="py-3 rounded-lg bg-[#2d2218] hover:bg-[#3d2e20] text-[#fcd34d] border border-[#4d3822] font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  className="py-3 rounded-xl bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#D97706] border border-[#FDE68A] font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>Report Delay</span>
@@ -407,7 +430,7 @@ export default function DriverPortal({ onShowToast }) {
                 <button
                   type="button"
                   onClick={() => handleCompleteTrip(activeTrip.id)}
-                  className="py-3 rounded-lg bg-[#142921] hover:bg-[#1e3d31] text-[#70cbb7] border border-[#234b3c] font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  className="py-3 rounded-xl bg-[#DCFCE7] hover:bg-[#BBF7D0] text-[#16A36A] border border-[#BBF7D0] font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Complete Journey</span>
@@ -419,20 +442,20 @@ export default function DriverPortal({ onShowToast }) {
             <button
               type="button"
               onClick={() => setIsExpenseModalOpen(true)}
-              className="w-full py-2.5 rounded-lg bg-[#1e212c] hover:bg-[#282c3a] text-[#c4b3ff] border border-[#38334a] font-medium text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              className="w-full py-3 rounded-xl bg-[#EAF3FF] hover:bg-[#D5E2F1] text-[#2879E8] border border-[#2879E8]/30 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
-              <DollarSign className="w-3.5 h-3.5 text-[#6ee7b7]" />
+              <DollarSign className="w-3.5 h-3.5 text-[#16A36A]" />
               <span>+ Log Fuel / Toll / Meal Expense</span>
             </button>
           </div>
         </div>
       ) : (
-        <div className="bg-[#17191f] border border-[#292c35] rounded-xl p-10 text-center space-y-3">
-          <div className="w-12 h-12 rounded-full bg-[#1b1d26] text-[#858894] flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-6 h-6 text-[#10b981]" />
+        <div className="glass-card border border-white/95 rounded-2xl p-10 text-center space-y-3 shadow-xl">
+          <div className="w-12 h-12 rounded-2xl bg-[#DCFCE7] text-[#16A36A] flex items-center justify-center mx-auto shadow-2xs">
+            <CheckCircle2 className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-[#f0f0f4] m-0">All Dispatches Clear</h3>
-          <p className="text-xs text-[#858894] max-w-sm mx-auto">
+          <h3 className="text-base font-bold text-[#172033] m-0">All Dispatches Clear</h3>
+          <p className="text-xs text-[#68758A] max-w-sm mx-auto leading-relaxed">
             You currently have no active or pending dispatches assigned. You are listed as <b>{dutyStatus}</b> on vehicle <b>{assignedVehicle.plate}</b>.
           </p>
         </div>
@@ -440,30 +463,30 @@ export default function DriverPortal({ onShowToast }) {
 
       {/* Completed Dispatches History */}
       <div className="space-y-3">
-        <h3 className="text-xs font-mono uppercase tracking-wider text-[#858894] m-0 px-1">
-          Recent Completed Voyages ({completedTrips.length})
+        <h3 className="text-xs font-mono uppercase tracking-wider text-[#68758A] m-0 px-1 font-bold">
+          Recent Completed Manifests ({completedTrips.length})
         </h3>
 
         {completedTrips.length === 0 ? (
-          <div className="bg-[#17191f] border border-[#292c35] p-5 rounded-lg text-center text-xs text-[#747683]">
+          <div className="glass-card border border-white/95 p-6 rounded-2xl text-center text-xs text-[#68758A] font-mono">
             No completed manifests on record yet.
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {completedTrips.slice(0, 4).map((t) => {
               const { totalExpense } = calculateTripExpenses(t);
               return (
                 <div
                   key={t.id}
-                  className="bg-[#17191f] border border-[#292c35] p-3 rounded-lg flex items-center justify-between gap-3 text-xs"
+                  className="glass-card border border-white/95 p-4 rounded-xl flex items-center justify-between gap-3 text-xs shadow-sm hover:shadow-md transition-all"
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-[#ad91ff]">{t.id}</span>
+                      <span className="font-mono text-xs font-bold text-[#2879E8]">{t.id}</span>
                       <TripStatusBadge status={t.status} size="sm" />
                     </div>
-                    <b className="text-[#f0f0f4] block truncate mt-0.5">{t.tripName}</b>
-                    <span className="text-[11px] text-[#747683] font-mono">
+                    <b className="text-[#172033] block truncate mt-1 text-xs">{t.tripName}</b>
+                    <span className="text-[11px] text-[#68758A] font-mono">
                       {t.actualDistanceKm || t.estimatedDistanceKm} km · ${totalExpense.toFixed(2)} expenses
                     </span>
                   </div>
@@ -474,9 +497,9 @@ export default function DriverPortal({ onShowToast }) {
                       setSelectedReportTrip(t);
                       setIsReportModalOpen(true);
                     }}
-                    className="px-2.5 py-1 rounded bg-[#24212f] hover:bg-[#322c42] text-[#c4b3ff] border border-[#3b3252] text-[11px] font-medium shrink-0 flex items-center gap-1"
+                    className="px-3 py-1.5 rounded-lg bg-[#EAF3FF] hover:bg-[#2879E8] hover:text-white text-[#2879E8] border border-[#2879E8]/20 text-xs font-bold shrink-0 flex items-center gap-1 transition-colors"
                   >
-                    <FileText className="w-3 h-3" />
+                    <FileText className="w-3.5 h-3.5" />
                     <span>Manifest</span>
                   </button>
                 </div>
@@ -488,16 +511,16 @@ export default function DriverPortal({ onShowToast }) {
 
       {/* Delay Report Modal */}
       {isDelayModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm bg-[#17191f] border border-[#2b2e38] rounded-xl p-5 space-y-4 text-xs text-[#d4d4dc]">
-            <h3 className="text-sm font-bold text-[#f0f0f4] m-0 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-[#fcd34d]" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/40 backdrop-blur-md">
+          <div className="w-full max-w-sm glass-card border border-white/95 rounded-2xl p-6 space-y-4 text-xs text-[#172033] shadow-2xl">
+            <h3 className="text-sm font-bold text-[#172033] m-0 flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-[#D97706]" />
               <span>Report Voyage Delay</span>
             </h3>
 
             {/* Quick Reason Presets */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-mono uppercase text-[#747683]">Quick Reason Presets</span>
+              <span className="text-[10px] font-mono uppercase text-[#68758A] font-semibold">Quick Reason Presets</span>
               <div className="flex flex-wrap gap-1.5">
                 {[
                   'Heavy Highway Traffic',
@@ -510,7 +533,7 @@ export default function DriverPortal({ onShowToast }) {
                     key={preset}
                     type="button"
                     onClick={() => setDelayReason(preset)}
-                    className="px-2 py-1 rounded bg-[#121319] hover:bg-[#20222d] text-[#c4c6d2] border border-[#282a35] text-[10px]"
+                    className="px-2.5 py-1 rounded-lg bg-[#F8FAFD] hover:bg-[#EAF3FF] text-[#172033] border border-[#D5E2F1] text-[10px] font-medium transition-colors"
                   >
                     {preset}
                   </button>
@@ -519,7 +542,7 @@ export default function DriverPortal({ onShowToast }) {
             </div>
 
             <div>
-              <label className="block text-[10px] font-mono text-[#858894] uppercase mb-1">
+              <label className="block text-[10px] font-mono text-[#68758A] uppercase mb-1 font-semibold">
                 Delay Details
               </label>
               <textarea
@@ -527,15 +550,15 @@ export default function DriverPortal({ onShowToast }) {
                 value={delayReason}
                 onChange={(e) => setDelayReason(e.target.value)}
                 placeholder="Describe reason for delay..."
-                className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] p-2 rounded focus:outline-none focus:border-[#ad91ff] resize-none"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] text-xs text-[#172033] p-2.5 rounded-xl focus:outline-none focus:border-[#2879E8] resize-none font-medium"
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-[#252834]">
-              <Button variant="quiet" onClick={() => setIsDelayModalOpen(false)}>
+            <div className="flex justify-end gap-2.5 pt-2 border-t border-[#E2E8F0]">
+              <Button variant="quiet" onClick={() => setIsDelayModalOpen(false)} className="rounded-xl px-3 py-1.5 text-xs">
                 Cancel
               </Button>
-              <Button variant="primary" onClick={handleReportDelay}>
+              <Button variant="primary" onClick={handleReportDelay} className="rounded-xl px-4 py-1.5 text-xs font-bold">
                 Submit Delay
               </Button>
             </div>
@@ -572,4 +595,3 @@ export default function DriverPortal({ onShowToast }) {
     </div>
   );
 }
-

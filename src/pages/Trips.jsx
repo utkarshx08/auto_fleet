@@ -209,13 +209,13 @@ export default function Trips({
       {/* Header Section */}
       <section className="flex items-end justify-between py-6 max-md:flex-col max-md:items-start max-md:gap-4 max-md:py-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-2">
-            DISPATCH OPERATIONS <span className="text-[#ad91ff] px-1">•</span> JOURNEY TRACKING & SCHEDULING
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-2 font-bold">
+            DISPATCH OPERATIONS <span className="text-[#2879E8] px-1 font-bold">•</span> JOURNEY TRACKING & SCHEDULING
           </p>
-          <h1 className="text-[30px] tracking-[-1.2px] font-bold text-[#f0f0f4] m-0 leading-tight">
-            Trip & Dispatch Management<span className="text-[#ad91ff]">.</span>
+          <h1 className="text-[30px] tracking-tight font-black text-[#0B132B] m-0 leading-tight">
+            Trip & Dispatch Management<span className="text-[#2879E8]">.</span>
           </h1>
-          <p className="text-[12px] text-[#898c98] mt-1.5 mb-0">
+          <p className="text-[13px] text-[#334155] mt-1.5 mb-0 font-medium">
             Monitor active journeys, assign drivers & vehicles, manage intermediate waypoints, and control trip expenses.
           </p>
         </div>
@@ -242,32 +242,32 @@ export default function Trips({
       </section>
 
       {/* Sub-navigation Tabs */}
-      <div className="flex items-center gap-1.5 border-b border-[#252834] pb-3 overflow-x-auto select-none">
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3 overflow-x-auto select-none">
         <button
           type="button"
           onClick={() => setTab('dashboard')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[7px] text-xs font-medium transition-all cursor-pointer shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer shrink-0 ${
             activeTab === 'dashboard'
-              ? 'bg-[#24212f] text-[#e9e2ff] border border-[#3b3353] shadow-[inset_0_0_12px_rgba(180,154,255,0.15)]'
-              : 'text-[#8b8e9a] hover:bg-[#1a1b24] hover:text-[#d4d4dc]'
+              ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
+              : 'text-[#68758A] hover:bg-[#F8FAFD] hover:text-[#172033]'
           }`}
         >
-          <LayoutGrid className="w-3.5 h-3.5 text-[#ad91ff]" />
+          <LayoutGrid className="w-3.5 h-3.5 text-[#2879E8]" />
           <span>Trip Dashboard</span>
         </button>
 
         <button
           type="button"
           onClick={() => setTab('all')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[7px] text-xs font-medium transition-all cursor-pointer shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer shrink-0 ${
             activeTab === 'all'
-              ? 'bg-[#24212f] text-[#e9e2ff] border border-[#3b3353]'
-              : 'text-[#8b8e9a] hover:bg-[#1a1b24] hover:text-[#d4d4dc]'
+              ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
+              : 'text-[#68758A] hover:bg-[#F8FAFD] hover:text-[#172033]'
           }`}
         >
-          <Route className="w-3.5 h-3.5 text-[#ad91ff]" />
+          <Route className="w-3.5 h-3.5 text-[#2879E8]" />
           <span>All Trips</span>
-          <span className="font-mono text-[10px] bg-[#1a1b24] text-[#c4b3ff] px-1.5 py-0.2 rounded border border-[#2d2e3d]">
+          <span className="font-mono text-[10px] bg-white text-[#2879E8] px-2 py-0.5 rounded-md border border-[#D5E2F1] font-bold">
             {trips.length}
           </span>
         </button>
@@ -275,17 +275,17 @@ export default function Trips({
         <button
           type="button"
           onClick={() => setTab('active')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[7px] text-xs font-medium transition-all cursor-pointer shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer shrink-0 ${
             activeTab === 'active'
-              ? 'bg-[#24212f] text-[#e9e2ff] border border-[#3b3353]'
-              : 'text-[#8b8e9a] hover:bg-[#1a1b24] hover:text-[#d4d4dc]'
+              ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
+              : 'text-[#68758A] hover:bg-[#F8FAFD] hover:text-[#172033]'
           }`}
         >
-          <Navigation className="w-3.5 h-3.5 text-[#6ee7b7]" />
+          <Navigation className="w-3.5 h-3.5 text-[#16A36A]" />
           <span>Active Trips</span>
           {activeTrips.length > 0 && (
-            <span className="font-mono text-[10px] bg-[#122822] text-[#6ee7b7] px-1.5 py-0.2 rounded border border-[#1d4c3e] flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+            <span className="font-mono text-[10px] bg-[#DCFCE7] text-[#16A36A] px-2 py-0.5 rounded-md border border-[#BBF7D0] flex items-center gap-1.5 font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A36A] animate-pulse" />
               {activeTrips.length}
             </span>
           )}
@@ -294,15 +294,15 @@ export default function Trips({
         <button
           type="button"
           onClick={() => setTab('history')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[7px] text-xs font-medium transition-all cursor-pointer shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer shrink-0 ${
             activeTab === 'history'
-              ? 'bg-[#24212f] text-[#e9e2ff] border border-[#3b3353]'
-              : 'text-[#8b8e9a] hover:bg-[#1a1b24] hover:text-[#d4d4dc]'
+              ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
+              : 'text-[#68758A] hover:bg-[#F8FAFD] hover:text-[#172033]'
           }`}
         >
-          <Clock className="w-3.5 h-3.5 text-[#a0a3b1]" />
+          <Clock className="w-3.5 h-3.5 text-[#68758A]" />
           <span>Trip History</span>
-          <span className="font-mono text-[10px] bg-[#1a1b24] text-[#8e919f] px-1.5 py-0.2 rounded border border-[#2d2e3d]">
+          <span className="font-mono text-[10px] bg-white text-[#68758A] px-2 py-0.5 rounded-md border border-[#D5E2F1] font-bold">
             {historyTrips.length}
           </span>
         </button>
@@ -310,13 +310,13 @@ export default function Trips({
         <button
           type="button"
           onClick={() => setTab('reports')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[7px] text-xs font-medium transition-all cursor-pointer shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer shrink-0 ${
             activeTab === 'reports'
-              ? 'bg-[#24212f] text-[#e9e2ff] border border-[#3b3353]'
-              : 'text-[#8b8e9a] hover:bg-[#1a1b24] hover:text-[#d4d4dc]'
+              ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
+              : 'text-[#68758A] hover:bg-[#F8FAFD] hover:text-[#172033]'
           }`}
         >
-          <FileText className="w-3.5 h-3.5 text-[#ad91ff]" />
+          <FileText className="w-3.5 h-3.5 text-[#2879E8]" />
           <span>Trip Reports</span>
         </button>
 
@@ -324,9 +324,9 @@ export default function Trips({
           type="button"
           onClick={handleResetData}
           title="Reset database to demo seed data"
-          className="ml-auto text-[#737684] hover:text-[#d4d4dc] p-1.5 rounded hover:bg-[#1f212c] transition-colors flex items-center gap-1 text-[11px]"
+          className="ml-auto text-[#68758A] hover:text-[#172033] p-2 rounded-xl hover:bg-[#F0F5FC] transition-colors flex items-center gap-1.5 text-xs font-medium"
         >
-          <RefreshCw className="w-3 h-3" />
+          <RefreshCw className="w-3.5 h-3.5" />
           <span className="max-md:hidden">Reset Demo</span>
         </button>
       </div>
@@ -337,100 +337,100 @@ export default function Trips({
       {activeTab === 'dashboard' && (
         <div className="space-y-6">
           {/* 6 KPI Cards (Calculated from real stored trip data) */}
-          <div className="grid grid-cols-6 gap-3 max-xl:grid-cols-3 max-md:grid-cols-2">
+          <div className="grid grid-cols-6 gap-4 max-xl:grid-cols-3 max-md:grid-cols-2">
             {/* Total Trips */}
-            <article className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-4 flex flex-col justify-between transition-colors">
-              <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <article className="glass-card border border-white/95 rounded-2xl p-4 flex flex-col justify-between shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center justify-between text-[#68758A] font-mono text-[9px] tracking-[1px] uppercase font-semibold">
                 <span>Total Trips</span>
-                <Route className="w-3.5 h-3.5 text-[#ad91ff]" />
+                <Route className="w-3.5 h-3.5 text-[#2879E8]" />
               </div>
-              <div className="text-[26px] font-bold text-[#f0f0f4] my-2 font-mono leading-none">
+              <div className="text-[26px] font-black text-[#172033] my-2 font-mono leading-none tracking-tight">
                 {metrics.totalTrips}
               </div>
-              <p className="text-[11px] text-[#747683] m-0">All registered journeys</p>
+              <p className="text-[11px] text-[#68758A] m-0">All registered journeys</p>
             </article>
 
             {/* Scheduled Trips */}
-            <article className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-4 flex flex-col justify-between transition-colors">
-              <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <article className="glass-card border border-white/95 rounded-2xl p-4 flex flex-col justify-between shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center justify-between text-[#68758A] font-mono text-[9px] tracking-[1px] uppercase font-semibold">
                 <span>Scheduled</span>
-                <Calendar className="w-3.5 h-3.5 text-[#8cb4ff]" />
+                <Calendar className="w-3.5 h-3.5 text-[#2879E8]" />
               </div>
-              <div className="text-[26px] font-bold text-[#8cb4ff] my-2 font-mono leading-none">
+              <div className="text-[26px] font-black text-[#2879E8] my-2 font-mono leading-none tracking-tight">
                 {metrics.scheduledTrips + metrics.assignedTrips}
               </div>
-              <p className="text-[11px] text-[#747683] m-0">Awaiting departure</p>
+              <p className="text-[11px] text-[#68758A] m-0">Awaiting departure</p>
             </article>
 
             {/* Active Trips */}
-            <article className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-4 flex flex-col justify-between transition-colors">
-              <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <article className="glass-card border border-white/95 rounded-2xl p-4 flex flex-col justify-between shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center justify-between text-[#68758A] font-mono text-[9px] tracking-[1px] uppercase font-semibold">
                 <span>Active Journeys</span>
-                <Navigation className="w-3.5 h-3.5 text-[#6ee7b7]" />
+                <Navigation className="w-3.5 h-3.5 text-[#16A36A]" />
               </div>
-              <div className="text-[26px] font-bold text-[#6ee7b7] my-2 font-mono leading-none flex items-center gap-2">
+              <div className="text-[26px] font-black text-[#16A36A] my-2 font-mono leading-none flex items-center gap-2 tracking-tight">
                 <span>{metrics.activeTrips}</span>
                 {metrics.activeTrips > 0 && (
-                  <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-[#16A36A] animate-pulse" />
                 )}
               </div>
-              <p className="text-[11px] text-[#747683] m-0">Currently in transit</p>
+              <p className="text-[11px] text-[#68758A] m-0">Currently in transit</p>
             </article>
 
             {/* Completed Trips */}
-            <article className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-4 flex flex-col justify-between transition-colors">
-              <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <article className="glass-card border border-white/95 rounded-2xl p-4 flex flex-col justify-between shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center justify-between text-[#68758A] font-mono text-[9px] tracking-[1px] uppercase font-semibold">
                 <span>Completed</span>
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#70cbb7]" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#16A36A]" />
               </div>
-              <div className="text-[26px] font-bold text-[#70cbb7] my-2 font-mono leading-none">
+              <div className="text-[26px] font-black text-[#16A36A] my-2 font-mono leading-none tracking-tight">
                 {metrics.completedTrips}
               </div>
-              <p className="text-[11px] text-[#747683] m-0">Successfully delivered</p>
+              <p className="text-[11px] text-[#68758A] m-0">Successfully delivered</p>
             </article>
 
             {/* Delayed Trips */}
-            <article className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-4 flex flex-col justify-between transition-colors">
-              <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <article className="glass-card border border-white/95 rounded-2xl p-4 flex flex-col justify-between shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center justify-between text-[#68758A] font-mono text-[9px] tracking-[1px] uppercase font-semibold">
                 <span>Delayed</span>
-                <AlertTriangle className="w-3.5 h-3.5 text-[#fcd34d]" />
+                <AlertTriangle className="w-3.5 h-3.5 text-[#D97706]" />
               </div>
-              <div className="text-[26px] font-bold text-[#fcd34d] my-2 font-mono leading-none">
+              <div className="text-[26px] font-black text-[#D97706] my-2 font-mono leading-none tracking-tight">
                 {metrics.delayedTrips}
               </div>
-              <p className="text-[11px] text-[#747683] m-0">Require dispatch focus</p>
+              <p className="text-[11px] text-[#68758A] m-0">Require dispatch focus</p>
             </article>
 
             {/* Cancelled Trips */}
-            <article className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] rounded-[10px] p-4 flex flex-col justify-between transition-colors">
-              <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <article className="glass-card border border-white/95 rounded-2xl p-4 flex flex-col justify-between shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center justify-between text-[#68758A] font-mono text-[9px] tracking-[1px] uppercase font-semibold">
                 <span>Cancelled</span>
-                <XCircle className="w-3.5 h-3.5 text-[#fca5a5]" />
+                <XCircle className="w-3.5 h-3.5 text-[#E05252]" />
               </div>
-              <div className="text-[26px] font-bold text-[#fca5a5] my-2 font-mono leading-none">
+              <div className="text-[26px] font-black text-[#E05252] my-2 font-mono leading-none tracking-tight">
                 {metrics.cancelledTrips}
               </div>
-              <p className="text-[11px] text-[#747683] m-0">Aborted / flagged</p>
+              <p className="text-[11px] text-[#68758A] m-0">Aborted / flagged</p>
             </article>
           </div>
 
           {/* Real-time Alerts Banner if present */}
           {alerts.length > 0 && (
-            <div className="bg-[#241a1c] border border-[#48282d] rounded-[10px] p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#f87171] uppercase tracking-[1px] font-mono mb-2">
-                <Bell className="w-3.5 h-3.5" />
+            <div className="p-4 bg-[#FEF2F2] border border-[#FECACA] rounded-2xl shadow-sm text-[#B91C1C]">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#E05252] uppercase tracking-[1px] font-mono mb-2.5">
+                <Bell className="w-4 h-4" />
                 <span>Recent Trip Alerts ({alerts.length})</span>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 max-md:grid-cols-1">
+              <div className="grid grid-cols-2 gap-3 max-md:grid-cols-1">
                 {alerts.map((alt) => (
                   <div
                     key={alt.id}
-                    className="bg-[#191419] border border-[#3b232a] p-2.5 rounded-[7px] flex items-start gap-2.5 text-xs"
+                    className="bg-white border border-[#FECACA] p-3 rounded-xl flex items-start gap-2.5 text-xs shadow-2xs"
                   >
-                    <span className="w-2 h-2 rounded-full bg-[#f87171] shrink-0 mt-1.5" />
+                    <span className="w-2 h-2 rounded-full bg-[#E05252] shrink-0 mt-1.5" />
                     <div className="flex-1 min-w-0">
-                      <b className="text-[#f0f0f4] block leading-snug">{alt.title}</b>
-                      <p className="text-[#9ea0ad] text-[11px] m-0">{alt.message}</p>
+                      <b className="text-[#172033] block leading-snug">{alt.title}</b>
+                      <p className="text-[#68758A] text-[11px] m-0 mt-0.5">{alt.message}</p>
                     </div>
                   </div>
                 ))}
@@ -442,22 +442,22 @@ export default function Trips({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-[#f0f0f4] m-0">Active Journeys & Live Dispatch</h2>
-                <p className="text-xs text-[#858894] m-0">Trips currently in transit or flagged with route delays.</p>
+                <h2 className="text-base font-bold text-[#0B132B] m-0">Active Journeys & Live Dispatch</h2>
+                <p className="text-xs text-[#475569] m-0 font-medium">Trips currently in transit or flagged with route delays.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setTab('active')}
-                className="text-xs text-[#ad91ff] hover:text-[#c4b3ff] transition-colors"
+                className="text-xs font-bold text-[#2879E8] hover:text-[#1765CC] transition-colors"
               >
                 View all active ({activeTrips.length}) →
               </button>
             </div>
 
             {activeTrips.length === 0 ? (
-              <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-8 text-center text-[#747683]">
-                <p className="text-sm font-medium text-[#9a9ca8]">No trips currently in progress</p>
-                <p className="text-xs text-[#676a77] mt-1">Start a scheduled trip from the All Trips view.</p>
+              <div className="glass-card p-8 text-center text-[#64748B]">
+                <p className="text-sm font-bold text-[#0F172A]">No trips currently in progress</p>
+                <p className="text-xs text-[#475569] mt-1 font-medium">Start a scheduled trip from the All Trips view.</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4 max-lg:grid-cols-1">
@@ -480,43 +480,43 @@ export default function Trips({
             <div className="col-span-2 space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-base font-semibold text-[#f0f0f4] m-0">Upcoming Scheduled Departures</h2>
-                  <p className="text-xs text-[#858894] m-0">Trips queued for departure within the dispatch schedule.</p>
+                  <h2 className="text-base font-bold text-[#0B132B] m-0">Upcoming Scheduled Departures</h2>
+                  <p className="text-xs text-[#475569] m-0 font-medium">Trips queued for departure within the dispatch schedule.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setTab('all')}
-                  className="text-xs text-[#ad91ff] hover:text-[#c4b3ff] transition-colors"
+                  className="text-xs font-bold text-[#2879E8] hover:text-[#1765CC] transition-colors"
                 >
                   View schedule →
                 </button>
               </div>
 
-              <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] divide-y divide-[#242631]">
+              <div className="glass-card divide-y divide-[#E2E8F0]">
                 {upcomingTrips.length === 0 ? (
-                  <div className="p-6 text-center text-[#747683] text-xs">No upcoming departures queued.</div>
+                  <div className="p-6 text-center text-[#64748B] text-xs font-medium">No upcoming departures queued.</div>
                 ) : (
                   upcomingTrips.slice(0, 4).map((trip) => (
                     <div
                       key={trip.id}
-                      className="p-3.5 flex items-center justify-between gap-3 hover:bg-[#1c1e26] transition-colors"
+                      className="p-3.5 flex items-center justify-between gap-3 hover:bg-[#F8FAFD] transition-colors"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="font-mono text-xs text-[#ad91ff] bg-[#24212f] px-2 py-0.5 rounded border border-[#3b3252] shrink-0">
+                        <span className="font-mono text-xs font-bold text-[#2879E8] bg-[#EAF3FF] px-2 py-0.5 rounded-lg border border-[#C8E0FF] shrink-0">
                           {trip.id}
                         </span>
                         <div className="truncate">
-                          <b className="text-xs text-[#f0f0f4] block truncate">{trip.tripName}</b>
-                          <span className="text-[11px] text-[#747683]">
+                          <b className="text-xs font-bold text-[#0F172A] block truncate">{trip.tripName}</b>
+                          <span className="text-[11px] text-[#475569] font-medium">
                             {trip.pickupLocation} → {trip.destinationLocation}
                           </span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3 shrink-0">
-                        <div className="text-right font-mono text-[11px] text-[#9a9ca8]">
+                        <div className="text-right font-mono text-[11px] text-[#334155] font-semibold">
                           <div>{trip.assignedVehicleId || 'Vehicle TBD'}</div>
-                          <div className="text-[#676a77] text-[10px]">
+                          <div className="text-[#64748B] text-[10px] font-medium">
                             {new Date(trip.scheduledDeparture).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>
@@ -574,22 +574,22 @@ export default function Trips({
               </div>
 
               {/* Financial Snapshot */}
-              <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-4">
-                <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#858894] mb-3">
+              <div className="glass-card p-4">
+                <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#475569] mb-3 font-bold">
                   Dispatch Financials
                 </h3>
                 <div className="space-y-3 font-mono">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-[#858894]">Total Trip Expenses</span>
-                    <span className="text-base font-bold text-[#f0f0f4]">${metrics.totalExpenses.toFixed(2)}</span>
+                    <span className="text-[#64748B] font-medium">Total Trip Expenses</span>
+                    <span className="text-base font-bold text-[#0B132B]">${metrics.totalExpenses.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-[#858894]">Recorded Distance</span>
-                    <span className="text-[#d4d4dc]">{metrics.totalDistanceKm} km</span>
+                    <span className="text-[#64748B] font-medium">Recorded Distance</span>
+                    <span className="text-[#0F172A] font-semibold">{metrics.totalDistanceKm} km</span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-[#858894]">Avg Cost Per KM</span>
-                    <span className="text-[#6ee7b7]">${metrics.averageCostPerKm} / km</span>
+                    <span className="text-[#64748B] font-medium">Avg Cost Per KM</span>
+                    <span className="text-[#16A36A] font-bold">${metrics.averageCostPerKm} / km</span>
                   </div>
                 </div>
               </div>
@@ -615,10 +615,10 @@ export default function Trips({
       {/* TAB: CREATE NEW TRIP (IN-PAGE WORKFLOW) */}
       {/* ========================================================================= */}
       {activeTab === 'create' && (
-        <div className="bg-[#17191f] border border-[#292c35] p-6 rounded-[10px] space-y-4">
-          <div className="border-b border-[#252834] pb-4">
-            <h2 className="text-lg font-semibold text-[#f0f0f4] m-0">Create New Fleet Trip Manifest</h2>
-            <p className="text-xs text-[#858894] mt-1">
+        <div className="glass-card p-6 space-y-4">
+          <div className="border-b border-[#E2E8F0] pb-4">
+            <h2 className="text-lg font-bold text-[#0B132B] m-0">Create New Fleet Trip Manifest</h2>
+            <p className="text-xs text-[#475569] mt-1 font-medium">
               Configure route waypoints, departure windows, vehicle assignment & conflict verification.
             </p>
           </div>
@@ -639,21 +639,21 @@ export default function Trips({
       {/* ========================================================================= */}
       {activeTab === 'active' && (
         <div className="space-y-4">
-          <div className="flex justify-between items-center bg-[#17191f] border border-[#292c35] p-4 rounded-[10px]">
+          <div className="flex justify-between items-center glass-card p-4">
             <div>
-              <h2 className="text-base font-semibold text-[#f0f0f4] m-0">Live Active Journeys</h2>
-              <p className="text-xs text-[#858894] m-0">Tracking active vehicles and road transit progression.</p>
+              <h2 className="text-base font-bold text-[#0B132B] m-0">Live Active Journeys</h2>
+              <p className="text-xs text-[#475569] m-0 font-medium">Tracking active vehicles and road transit progression.</p>
             </div>
-            <div className="flex items-center gap-2 font-mono text-xs text-[#6ee7b7] bg-[#122822] px-3 py-1 rounded border border-[#1d4c3e]">
-              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+            <div className="flex items-center gap-2 font-mono text-xs text-[#16A36A] bg-[#E8F7F0] px-3 py-1 rounded-xl border border-[#B7E4CF] font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#16A36A] animate-pulse" />
               <span>{activeTrips.length} Trips in Transit</span>
             </div>
           </div>
 
           {activeTrips.length === 0 ? (
-            <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-12 text-center text-[#747683]">
-              <p className="text-base font-medium text-[#9a9ca8]">No journeys currently active</p>
-              <p className="text-xs text-[#676a77] mt-1">Start a scheduled trip from the All Trips table.</p>
+            <div className="glass-card p-12 text-center text-[#64748B]">
+              <p className="text-base font-bold text-[#0F172A]">No journeys currently active</p>
+              <p className="text-xs text-[#475569] mt-1 font-medium">Start a scheduled trip from the All Trips table.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 max-lg:grid-cols-1">
@@ -676,12 +676,12 @@ export default function Trips({
       {/* ========================================================================= */}
       {activeTab === 'history' && (
         <div className="space-y-4">
-          <div className="flex justify-between items-center bg-[#17191f] border border-[#292c35] p-4 rounded-[10px]">
+          <div className="flex justify-between items-center glass-card p-4">
             <div>
-              <h2 className="text-base font-semibold text-[#f0f0f4] m-0">Completed & Past Trip Archive</h2>
-              <p className="text-xs text-[#858894] m-0">Historical records of completed and cancelled dispatches.</p>
+              <h2 className="text-base font-bold text-[#0B132B] m-0">Completed & Past Trip Archive</h2>
+              <p className="text-xs text-[#475569] m-0 font-medium">Historical records of completed and cancelled dispatches.</p>
             </div>
-            <div className="text-xs font-mono text-[#858894]">
+            <div className="text-xs font-mono text-[#475569] font-bold">
               {historyTrips.length} Archive Records
             </div>
           </div>
@@ -701,11 +701,11 @@ export default function Trips({
       {/* ========================================================================= */}
       {activeTab === 'reports' && (
         <div className="space-y-4">
-          <div className="bg-[#17191f] border border-[#292c35] p-6 rounded-[10px]">
+          <div className="glass-card p-6">
             <div className="flex justify-between items-start max-md:flex-col max-md:gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-[#f0f0f4] m-0">Trip Completion & Performance Reports</h2>
-                <p className="text-xs text-[#858894] mt-1">
+                <h2 className="text-lg font-bold text-[#0B132B] m-0">Trip Completion & Performance Reports</h2>
+                <p className="text-xs text-[#475569] mt-1 font-medium">
                   Export structured manifests, review cost per kilometer, fuel expenses, and audit logs.
                 </p>
               </div>
@@ -719,25 +719,25 @@ export default function Trips({
             </div>
 
             <div className="grid grid-cols-4 gap-4 mt-6 max-lg:grid-cols-2">
-              <div className="bg-[#121319] p-3 rounded-[8px] border border-[#242631]">
-                <p className="font-mono text-[9px] uppercase text-[#747683]">Total Completed</p>
-                <p className="text-xl font-bold font-mono text-[#70cbb7] my-1">{metrics.completedTrips}</p>
-                <span className="text-[10px] text-[#858894]">With verified manifest</span>
+              <div className="bg-[#F8FAFD] p-3 rounded-xl border border-[#E2E8F0]">
+                <p className="font-mono text-[9px] uppercase text-[#64748B] font-bold">Total Completed</p>
+                <p className="text-xl font-black font-mono text-[#16A36A] my-1">{metrics.completedTrips}</p>
+                <span className="text-[10px] text-[#475569] font-medium">With verified manifest</span>
               </div>
-              <div className="bg-[#121319] p-3 rounded-[8px] border border-[#242631]">
-                <p className="font-mono text-[9px] uppercase text-[#747683]">Total Expenses</p>
-                <p className="text-xl font-bold font-mono text-[#f0f0f4] my-1">${metrics.totalExpenses.toFixed(2)}</p>
-                <span className="text-[10px] text-[#858894]">Fuel, tolls & allowances</span>
+              <div className="bg-[#F8FAFD] p-3 rounded-xl border border-[#E2E8F0]">
+                <p className="font-mono text-[9px] uppercase text-[#64748B] font-bold">Total Expenses</p>
+                <p className="text-xl font-black font-mono text-[#0B132B] my-1">${metrics.totalExpenses.toFixed(2)}</p>
+                <span className="text-[10px] text-[#475569] font-medium">Fuel, tolls & allowances</span>
               </div>
-              <div className="bg-[#121319] p-3 rounded-[8px] border border-[#242631]">
-                <p className="font-mono text-[9px] uppercase text-[#747683]">Total Distance</p>
-                <p className="text-xl font-bold font-mono text-[#c4b3ff] my-1">{metrics.totalDistanceKm} km</p>
-                <span className="text-[10px] text-[#858894]">Road travel verified</span>
+              <div className="bg-[#F8FAFD] p-3 rounded-xl border border-[#E2E8F0]">
+                <p className="font-mono text-[9px] uppercase text-[#64748B] font-bold">Total Distance</p>
+                <p className="text-xl font-black font-mono text-[#2879E8] my-1">{metrics.totalDistanceKm} km</p>
+                <span className="text-[10px] text-[#475569] font-medium">Road travel verified</span>
               </div>
-              <div className="bg-[#121319] p-3 rounded-[8px] border border-[#242631]">
-                <p className="font-mono text-[9px] uppercase text-[#747683]">Average Cost / KM</p>
-                <p className="text-xl font-bold font-mono text-[#6ee7b7] my-1">${metrics.averageCostPerKm}</p>
-                <span className="text-[10px] text-[#858894]">Standard fleet benchmark</span>
+              <div className="bg-[#F8FAFD] p-3 rounded-xl border border-[#E2E8F0]">
+                <p className="font-mono text-[9px] uppercase text-[#64748B] font-bold">Average Cost / KM</p>
+                <p className="text-xl font-black font-mono text-[#16A36A] my-1">${metrics.averageCostPerKm}</p>
+                <span className="text-[10px] text-[#475569] font-medium">Standard fleet benchmark</span>
               </div>
             </div>
           </div>

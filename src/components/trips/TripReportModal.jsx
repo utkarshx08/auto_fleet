@@ -126,45 +126,45 @@ export default function TripReportModal({
       subtitle="OFFICIAL DISPATCH RECORD & COST PERFORMANCE AUDIT"
       maxWidth="max-w-4xl"
     >
-      <div className="space-y-6 max-h-[75vh] overflow-y-auto pr-2 text-xs text-[#d4d4dc]">
+      <div className="space-y-6 max-h-[75vh] overflow-y-auto pr-2 text-xs font-sans text-[#172033]">
         {/* Printable Paper Canvas */}
         <div
           ref={reportRef}
-          className="bg-[#121319] border border-[#272935] rounded-xl p-6 space-y-6 text-[#d4d4dc] print:bg-white print:text-black print:border-none print:p-0"
+          className="bg-gradient-to-br from-white to-[#F8FAFD] border border-[#D5E2F1] rounded-2xl p-6 sm:p-7 space-y-6 text-[#172033] shadow-liquid-subtle print:bg-white print:text-black print:border-none print:p-0"
         >
           {/* Manifest Document Header */}
-          <div className="flex justify-between items-start border-b border-[#242632] pb-4">
+          <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="w-6 h-6 rounded bg-[#b49aff] text-[#121319] font-extrabold flex items-center justify-center text-xs font-mono">
+                <span className="w-6 h-6 rounded-lg bg-[#2879E8] text-white font-extrabold flex items-center justify-center text-xs font-mono shadow-2xs">
                   A
                 </span>
-                <span className="text-base font-extrabold text-[#f0f0f4] tracking-widest font-mono">
+                <span className="text-base font-extrabold text-[#172033] tracking-wider font-mono">
                   AUTRAIL DISPATCH MANIFEST
                 </span>
               </div>
-              <p className="text-[11px] text-[#858894] m-0">
+              <p className="text-[11px] text-[#68758A] m-0 font-medium">
                 Automated Fleet Operations & Dispatch Registry
               </p>
             </div>
 
             <div className="text-right font-mono text-[11px] space-y-0.5">
-              <div className="text-[#b49aff] font-bold text-sm">{trip.id}</div>
-              <div className="text-[#858894]">Date: {new Date().toLocaleDateString()}</div>
-              <div className="text-[#70cbb7] font-semibold uppercase">Status: {trip.status}</div>
+              <div className="text-[#2879E8] font-bold text-sm">{trip.id}</div>
+              <div className="text-[#68758A]">Date: {new Date().toLocaleDateString()}</div>
+              <div className="text-[#16A36A] font-semibold uppercase">Status: {trip.status}</div>
             </div>
           </div>
 
           {/* Section: Client & Cargo */}
-          <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 bg-[#17191f] p-3.5 rounded-[8px] border border-[#232530]">
+          <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 bg-[#F8FAFD] p-4 rounded-xl border border-[#E2E8F0] shadow-2xs">
             <div>
-              <span className="font-mono text-[10px] uppercase text-[#747683] block">Client / Customer</span>
-              <b className="text-sm text-[#f0f0f4]">{trip.customerName}</b>
-              <p className="text-[11px] text-[#858894] mt-0.5 m-0">Order: {trip.tripName}</p>
+              <span className="font-mono text-[10px] uppercase text-[#68758A] block font-semibold">Client / Customer</span>
+              <b className="text-sm text-[#172033]">{trip.customerName}</b>
+              <p className="text-[11px] text-[#68758A] mt-0.5 m-0">Order: {trip.tripName}</p>
             </div>
             <div>
-              <span className="font-mono text-[10px] uppercase text-[#747683] block">Cargo Manifest</span>
-              <p className="text-xs text-[#e0e0e7] m-0">
+              <span className="font-mono text-[10px] uppercase text-[#68758A] block font-semibold">Cargo Manifest</span>
+              <p className="text-xs text-[#172033] m-0 font-medium">
                 {trip.cargoDetails || 'Standard general freight consignment.'}
               </p>
             </div>
@@ -172,43 +172,43 @@ export default function TripReportModal({
 
           {/* Section: Route Waypoints & Timing */}
           <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-[1px] text-[#b49aff] m-0 flex items-center gap-1.5">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-[#2879E8] m-0 flex items-center gap-1.5 font-bold">
               <MapPin className="w-3.5 h-3.5" />
               <span>Route Specifications & Timing Log</span>
             </h4>
 
             <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 font-mono text-xs">
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530] space-y-1.5">
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] space-y-2 shadow-2xs">
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Origin:</span>
-                  <span className="text-[#e0e0e7] text-right truncate max-w-[200px]">{trip.pickupLocation}</span>
+                  <span className="text-[#68758A]">Origin:</span>
+                  <span className="text-[#172033] font-medium text-right truncate max-w-[200px]">{trip.pickupLocation}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Destination:</span>
-                  <span className="text-[#e0e0e7] text-right truncate max-w-[200px]">{trip.destinationLocation}</span>
+                  <span className="text-[#68758A]">Destination:</span>
+                  <span className="text-[#172033] font-medium text-right truncate max-w-[200px]">{trip.destinationLocation}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Intermediate Stops:</span>
-                  <span className="text-[#c4b3ff]">{trip.stops?.length || 0} stops recorded</span>
+                  <span className="text-[#68758A]">Intermediate Stops:</span>
+                  <span className="text-[#2879E8] font-bold">{trip.stops?.length || 0} stops recorded</span>
                 </div>
               </div>
 
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530] space-y-1.5">
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] space-y-2 shadow-2xs">
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Scheduled Dep:</span>
-                  <span className="text-[#e0e0e7]">{formatDateTime(trip.scheduledDeparture)}</span>
+                  <span className="text-[#68758A]">Scheduled Dep:</span>
+                  <span className="text-[#172033] font-medium">{formatDateTime(trip.scheduledDeparture)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Actual Dep:</span>
-                  <span className="text-[#8be0b3]">{formatDateTime(trip.actualDeparture)}</span>
+                  <span className="text-[#68758A]">Actual Dep:</span>
+                  <span className="text-[#16A36A] font-semibold">{formatDateTime(trip.actualDeparture)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Actual Arrival:</span>
-                  <span className="text-[#8be0b3]">{formatDateTime(trip.actualArrival)}</span>
+                  <span className="text-[#68758A]">Actual Arrival:</span>
+                  <span className="text-[#16A36A] font-semibold">{formatDateTime(trip.actualArrival)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#747683]">Total Duration:</span>
-                  <span className="text-[#b49aff] font-bold">{getDuration()}</span>
+                  <span className="text-[#68758A]">Total Duration:</span>
+                  <span className="text-[#2879E8] font-bold">{getDuration()}</span>
                 </div>
               </div>
             </div>
@@ -216,39 +216,39 @@ export default function TripReportModal({
 
           {/* Section: Distance & Expense Performance */}
           <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-[1px] text-[#6ee7b7] m-0 flex items-center gap-1.5">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-[#16A36A] m-0 flex items-center gap-1.5 font-bold">
               <DollarSign className="w-3.5 h-3.5" />
               <span>Distance & Expense Accounting</span>
             </h4>
 
-            <div className="grid grid-cols-4 gap-3 max-md:grid-cols-2 font-mono">
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530]">
-                <span className="text-[10px] text-[#747683] uppercase block">Planned Dist</span>
-                <b className="text-base text-[#e0e0e7]">{trip.estimatedDistanceKm} km</b>
+            <div className="grid grid-cols-4 gap-3.5 max-md:grid-cols-2 font-mono">
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Planned Dist</span>
+                <b className="text-base text-[#172033]">{trip.estimatedDistanceKm} km</b>
               </div>
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530]">
-                <span className="text-[10px] text-[#747683] uppercase block">Actual Dist</span>
-                <b className="text-base text-[#b49aff]">{trip.actualDistanceKm || trip.estimatedDistanceKm} km</b>
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Actual Dist</span>
+                <b className="text-base text-[#2879E8]">{trip.actualDistanceKm || trip.estimatedDistanceKm} km</b>
               </div>
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530]">
-                <span className="text-[10px] text-[#747683] uppercase block">Total Expenses</span>
-                <b className="text-base text-[#6ee7b7]">${totalExpense.toFixed(2)}</b>
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Total Expenses</span>
+                <b className="text-base text-[#16A36A]">${totalExpense.toFixed(2)}</b>
               </div>
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530]">
-                <span className="text-[10px] text-[#747683] uppercase block">Cost / KM</span>
-                <b className="text-base text-[#70cbb7]">${costPerKm}/km</b>
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Cost / KM</span>
+                <b className="text-base text-[#16A36A]">${costPerKm}/km</b>
               </div>
             </div>
 
             {/* Expense Breakdown List */}
             {Array.isArray(trip.expenses) && trip.expenses.length > 0 && (
-              <div className="bg-[#17191f] p-3 rounded-[8px] border border-[#232530]">
-                <span className="font-mono text-[10px] uppercase text-[#747683] block mb-2">Itemized Disbursements</span>
-                <div className="divide-y divide-[#242631] text-xs">
+              <div className="bg-[#F8FAFD] p-4 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="font-mono text-[10px] uppercase text-[#68758A] block mb-2 font-semibold">Itemized Disbursements</span>
+                <div className="divide-y divide-[#E2E8F0] text-xs">
                   {trip.expenses.map((exp, idx) => (
-                    <div key={exp.id || idx} className="py-1.5 flex justify-between font-mono text-[11px]">
-                      <span className="text-[#e0e0e7]">{exp.type} — {exp.description}</span>
-                      <span className="text-[#8be0b3]">${Number(exp.amount).toFixed(2)}</span>
+                    <div key={exp.id || idx} className="py-2 flex justify-between font-mono text-[11px]">
+                      <span className="text-[#172033] font-medium">{exp.type} — {exp.description}</span>
+                      <span className="text-[#16A36A] font-bold">${Number(exp.amount).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -257,44 +257,45 @@ export default function TripReportModal({
           </div>
 
           {/* Section: Safety & Geofence Compliance */}
-          <div className="bg-[#17191f] p-3.5 rounded-[8px] border border-[#232530] flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-[#8be0b3]" />
+          <div className="bg-[#F8FAFD] p-4 rounded-xl border border-[#E2E8F0] flex items-center justify-between shadow-2xs">
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="w-5 h-5 text-[#16A36A]" />
               <div>
-                <b className="text-xs text-[#f0f0f4] block">Safety & Geofence Compliance</b>
-                <span className="text-[11px] text-[#858894]">
+                <b className="text-xs text-[#172033] block">Safety & Geofence Compliance</b>
+                <span className="text-[11px] text-[#68758A] font-medium">
                   {geofenceEvents.length > 0
                     ? `${geofenceEvents.length} perimeter events noted during voyage.`
                     : 'Zero perimeter violations or route deviations logged during this voyage.'}
                 </span>
               </div>
             </div>
-            <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#122822] text-[#6ee7b7] border border-[#1d4c3e]">
+            <span className="font-mono text-[10px] px-2.5 py-1 rounded-full bg-[#E8F7F0] text-[#16A36A] border border-[#C2E8D7] font-bold">
               AUDITED
             </span>
           </div>
 
           {/* Signatures & Auditor Sign-off */}
-          <div className="pt-6 border-t border-[#242632] grid grid-cols-2 gap-8 text-[11px] font-mono text-[#747683]">
-            <div className="border-t border-dashed border-[#363948] pt-2">
-              <p className="m-0 text-[#a0a3b1]">Driver Signature / Sign-off:</p>
-              <p className="text-xs text-[#e0e0e7] mt-1 font-semibold">{driver?.name || trip.assignedDriverId || 'Certified Operator'}</p>
+          <div className="pt-6 border-t border-[#E2E8F0] grid grid-cols-2 gap-8 text-[11px] font-mono text-[#68758A]">
+            <div className="border-t border-dashed border-[#CBD5E1] pt-2">
+              <p className="m-0 text-[#68758A]">Driver Signature / Sign-off:</p>
+              <p className="text-xs text-[#172033] mt-1 font-bold">{driver?.name || trip.assignedDriverId || 'Certified Operator'}</p>
             </div>
-            <div className="border-t border-dashed border-[#363948] pt-2 text-right">
-              <p className="m-0 text-[#a0a3b1]">Dispatch Supervisor Verification:</p>
-              <p className="text-xs text-[#e0e0e7] mt-1 font-semibold">AUTRAIL Fleet Operations Lead</p>
+            <div className="border-t border-dashed border-[#CBD5E1] pt-2 text-right">
+              <p className="m-0 text-[#68758A]">Dispatch Supervisor Verification:</p>
+              <p className="text-xs text-[#172033] mt-1 font-bold">Suryansh Tyagi (Administrator)</p>
             </div>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center justify-between pt-2 border-t border-[#252834]">
-          <span className="text-[11px] font-mono text-[#747683]">
-            Print format formatted for standard A4 / US Letter
+        <div className="flex items-center justify-between pt-3 border-t border-[#E2E8F0]">
+          <span className="text-[11px] font-mono text-[#68758A]">
+            Formatted for standard A4 / US Letter export
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <Button
-              variant="quiet"
+              variant="default"
+              size="sm"
               onClick={handleDownloadText}
               icon={Download}
             >
@@ -302,6 +303,7 @@ export default function TripReportModal({
             </Button>
             <Button
               variant="primary"
+              size="sm"
               onClick={handlePrint}
               icon={Printer}
             >
@@ -313,4 +315,3 @@ export default function TripReportModal({
     </Modal>
   );
 }
-

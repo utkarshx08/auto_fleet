@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
+
+if (typeof maplibregl.setWorkerUrl === 'function') {
+  maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
+}
 import {
   Compass,
   Layers,
@@ -11,31 +15,13 @@ import {
   MapPin
 } from 'lucide-react';
 import { haversineDistanceMeters, createGeoJsonFeature } from '../../services/geofenceService.js';
-
-const DARK_MAP_STYLE = {
-  version: 8,
-  sources: {
-    'carto-dark': {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors, © CARTO'
-    }
-  },
-  layers: [
-    {
-      id: 'carto-dark-layer',
-      type: 'raster',
-      source: 'carto-dark',
-      minzoom: 0,
-      maxzoom: 19
-    }
-  ]
-};
+import { useTheme } from '../../context/ThemeContext';
+import {
+  CARTO_VOYAGER_STYLE,
+  CARTO_DARK_STYLE,
+  getMapStyle,
+  CARTO_API_KEY
+} from '../../config/mapConfig';
 
 export default function GeofenceMap({
   geofences = [],
@@ -49,8 +35,16 @@ export default function GeofenceMap({
   const mapRef = useRef(null);
   const markersRef = useRef({});
   const popupRef = useRef(null);
+  const { theme } = useTheme();
+  const [basemapMode, setBasemapMode] = useState(() => (theme === 'dark-liquid-glass' ? 'dark' : 'voyager'));
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showVehicles, setShowVehicles] = useState(true);
+  const [styleVersion, setStyleVersion] = useState(0);
+
+  // Sync with theme
+  useEffect(() => {
+    setBasemapMode(theme === 'dark-liquid-glass' ? 'dark' : 'voyager');
+  }, [theme]);
 
   // Initialize MapLibre
   useEffect(() => {
@@ -58,9 +52,10 @@ export default function GeofenceMap({
     let isMounted = true;
 
     try {
+      const initialStyle = basemapMode === 'dark' ? CARTO_DARK_STYLE : CARTO_VOYAGER_STYLE;
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
-        style: DARK_MAP_STYLE,
+        style: initialStyle,
         center: [-73.975, 40.735], // [lng, lat] NYC Center
         zoom: 11.2,
         attributionControl: false,
@@ -73,6 +68,11 @@ export default function GeofenceMap({
         if (!isMounted) return;
         setMapLoaded(true);
         map.resize();
+      });
+
+      map.on('style.load', () => {
+        if (!isMounted) return;
+        setStyleVersion((v) => v + 1);
       });
 
       const ro = new ResizeObserver(() => {
@@ -102,6 +102,18 @@ export default function GeofenceMap({
       console.error('Failed to initialize Geofence MapLibre instance:', err);
     }
   }, []);
+
+  // Update style on basemapMode change
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    const targetStyle = basemapMode === 'dark' ? CARTO_DARK_STYLE : CARTO_VOYAGER_STYLE;
+    try {
+      map.setStyle(targetStyle);
+    } catch (e) {
+      console.warn('Error updating geofence map style:', e);
+    }
+  }, [basemapMode]);
 
   // Render Geofence Polygons and Circles
   useEffect(() => {
@@ -205,7 +217,7 @@ export default function GeofenceMap({
         map.getCanvas().style.cursor = '';
       });
     });
-  }, [geofences, selectedGeofenceId, mapLoaded, onSelectGeofence]);
+  }, [geofences, selectedGeofenceId, mapLoaded, onSelectGeofence, styleVersion]);
 
   // Sync Live Vehicle Markers
   useEffect(() => {
@@ -276,27 +288,27 @@ export default function GeofenceMap({
 
   return (
     <div
-      className="relative w-full bg-[#0d0e13] rounded-xl overflow-hidden border border-[#252730] flex flex-col shadow-lg"
+      className="glass-card rounded-2xl relative overflow-hidden flex flex-col shadow-liquid-subtle"
       style={{ height }}
     >
       <div ref={mapContainerRef} className="w-full h-full flex-1" />
 
       {/* Top HUD */}
-      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 pointer-events-none">
-        <div className="bg-[#17191f]/90 border border-[#2b2e38] px-3 py-1.5 rounded-lg text-xs font-mono backdrop-blur-md flex items-center gap-2 pointer-events-auto shadow-xl">
-          <ShieldAlert className="w-3.5 h-3.5 text-[#b49aff]" />
-          <span className="text-[#e0e0e7] font-bold">GEOFENCE RADAR MATRIX</span>
-          <span className="text-[#555]">|</span>
-          <span className="text-[#8be0b3] font-bold">{geofences.filter((g) => g.isActive).length} ZONES ACTIVE</span>
+      <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-2 pointer-events-none">
+        <div className="bg-white/95 border border-white/90 px-3.5 py-2 rounded-xl text-xs font-mono backdrop-blur-xl flex items-center gap-2 pointer-events-auto shadow-liquid-subtle">
+          <ShieldAlert className="w-4 h-4 text-[#2879E8]" />
+          <span className="text-[#172033] font-bold">GEOFENCE RADAR MATRIX</span>
+          <span className="text-[#CBD5E1]">|</span>
+          <span className="text-[#16A36A] font-bold">{geofences.filter((g) => g.isActive).length} ZONES ACTIVE</span>
         </div>
       </div>
 
       {/* Controls Overlay */}
-      <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 bg-[#17191f]/90 border border-[#2b2e38] p-1 rounded-lg backdrop-blur-md shadow-xl">
+      <div className="absolute top-3.5 right-3.5 z-10 flex flex-col gap-1.5 bg-white/95 border border-white/90 p-1.5 rounded-xl backdrop-blur-xl shadow-liquid-subtle text-[#172033]">
         <button
           type="button"
           onClick={handleZoomIn}
-          className="p-1.5 text-[#a7a9b5] hover:text-white rounded hover:bg-[#22242d] transition-colors"
+          className="p-1.5 text-[#68758A] hover:text-[#172033] rounded-lg hover:bg-[#F0F5FC] transition-colors cursor-pointer"
           title="Zoom In"
         >
           <ZoomIn className="w-4 h-4" />
@@ -304,15 +316,28 @@ export default function GeofenceMap({
         <button
           type="button"
           onClick={handleZoomOut}
-          className="p-1.5 text-[#a7a9b5] hover:text-white rounded hover:bg-[#22242d] transition-colors"
+          className="p-1.5 text-[#68758A] hover:text-[#172033] rounded-lg hover:bg-[#F0F5FC] transition-colors cursor-pointer"
           title="Zoom Out"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           type="button"
+          onClick={() => setBasemapMode((prev) => (prev === 'voyager' ? 'dark' : 'voyager'))}
+          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            basemapMode === 'voyager'
+              ? 'text-[#2879E8] bg-[#EAF3FF] hover:bg-[#D5E6FB]'
+              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
+          }`}
+          title={basemapMode === 'voyager' ? 'Switch to CARTO Dark Matter' : 'Switch to CARTO Voyager'}
+          aria-label="Toggle map basemap style"
+        >
+          <Layers className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
           onClick={handleRecenter}
-          className="p-1.5 text-[#a7a9b5] hover:text-[#b49aff] rounded hover:bg-[#22242d] transition-colors"
+          className="p-1.5 text-[#68758A] hover:text-[#2879E8] rounded-lg hover:bg-[#F0F5FC] transition-colors cursor-pointer"
           title="Recenter Metro NYC"
         >
           <Crosshair className="w-4 h-4" />
@@ -320,8 +345,8 @@ export default function GeofenceMap({
         <button
           type="button"
           onClick={() => setShowVehicles((prev) => !prev)}
-          className={`p-1.5 rounded transition-colors ${
-            showVehicles ? 'text-[#8be0b3] bg-[#8be0b3]/10' : 'text-[#71737e] hover:text-white'
+          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            showVehicles ? 'text-[#16A36A] bg-[#E8F7F0]' : 'text-[#8A97AB] hover:text-[#172033]'
           }`}
           title="Toggle Vehicle Transponders"
         >
@@ -330,21 +355,21 @@ export default function GeofenceMap({
       </div>
 
       {/* Legend Footer */}
-      <div className="absolute bottom-3 left-3 z-10 flex items-center gap-3 bg-[#17191f]/90 border border-[#2b2e38] px-3 py-1.5 rounded-lg text-[10px] font-mono backdrop-blur-md shadow-xl text-[#8b8d98]">
+      <div className="absolute bottom-3.5 left-3.5 z-10 flex items-center gap-3 bg-white/95 border border-white/90 px-3.5 py-2 rounded-xl text-[10px] font-mono backdrop-blur-xl shadow-liquid-subtle text-[#68758A] font-medium">
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#b49aff]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#2879E8]" />
           <span>Depot</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#8be0b3]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#16A36A]" />
           <span>Warehouse</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7]" />
           <span>Client Site</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#E05252]" />
           <span>Restricted / Hazmat</span>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, ShieldAlert, MapPin, AlertTriangle, CheckCircle, Navigation } from 'lucide-react';
+import { Shield, ShieldAlert, MapPin, AlertTriangle } from 'lucide-react';
 
 export default function GeofenceKPIGrid({
   geofences = [],
@@ -24,32 +24,32 @@ export default function GeofenceKPIGrid({
       value: totalZones,
       subtitle: `${activeZones} active · ${totalZones - activeZones} paused`,
       icon: MapPin,
-      color: '#b49aff',
-      bgColor: 'rgba(180, 154, 255, 0.08)'
+      color: 'text-[#2879E8]',
+      bg: 'bg-[#EAF3FF]'
     },
     {
       title: 'RESTRICTED ZONES',
       value: restrictedZones,
-      subtitle: 'Strict hazmat & pedestrian perimeters',
+      subtitle: 'Strict containment perimeters',
       icon: ShieldAlert,
-      color: '#ef4444',
-      bgColor: 'rgba(239, 68, 68, 0.08)'
+      color: 'text-[#E05252]',
+      bg: 'bg-[#FDF2F2]'
     },
     {
       title: 'ACTIVE BREACH ALERTS',
       value: pendingAlerts,
       subtitle: `${criticalBreaches} critical unaddressed`,
       icon: AlertTriangle,
-      color: criticalBreaches > 0 ? '#ef4444' : '#e5a46e',
-      bgColor: criticalBreaches > 0 ? 'rgba(239, 68, 68, 0.12)' : 'rgba(229, 164, 110, 0.08)'
+      color: criticalBreaches > 0 ? 'text-[#E05252]' : 'text-[#E7A329]',
+      bg: criticalBreaches > 0 ? 'bg-[#FDF2F2]' : 'bg-[#FEF7EA]'
     },
     {
       title: 'MONITORED INCIDENTS',
       value: todayBreaches,
       subtitle: 'Entry, exit, dwell & speed events',
       icon: Shield,
-      color: '#8be0b3',
-      bgColor: 'rgba(139, 224, 179, 0.08)'
+      color: 'text-[#16A36A]',
+      bg: 'bg-[#E8F7F0]'
     }
   ];
 
@@ -60,31 +60,29 @@ export default function GeofenceKPIGrid({
         return (
           <div
             key={idx}
-            className="bg-[#17191f] border border-[#252730] rounded-xl p-4 flex flex-col justify-between hover:border-[#353945] transition-all"
+            className="glass-card glass-card-hover rounded-2xl p-5 flex flex-col justify-between transition-all group"
           >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-mono tracking-wider text-[#8b8d98]">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-mono tracking-wider text-[#8A97AB] uppercase font-semibold">
                 {kpi.title}
               </span>
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: kpi.bgColor }}
-              >
-                <IconComponent className="w-4 h-4" style={{ color: kpi.color }} />
+              <div className={`w-8 h-8 rounded-xl ${kpi.bg} ${kpi.color} flex items-center justify-center border border-white/60 shadow-2xs`}>
+                <IconComponent className="w-4 h-4" />
               </div>
             </div>
-            <div>
-              <div className="text-2xl font-bold font-mono text-[#f4f3f8] mb-1">
+
+            <div className="my-1.5">
+              <span className="text-3xl font-black tracking-tight text-[#172033]">
                 {kpi.value}
-              </div>
-              <div className="text-[11px] text-[#71737e] flex items-center gap-1.5 font-mono">
-                {kpi.subtitle}
-              </div>
+              </span>
             </div>
+
+            <p className="text-[11px] text-[#68758A] font-medium m-0">
+              {kpi.subtitle}
+            </p>
           </div>
         );
       })}
     </div>
   );
 }
-

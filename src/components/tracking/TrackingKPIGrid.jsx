@@ -28,8 +28,8 @@ export default function TrackingKPIGrid({ telemetryList = [], alerts = [], onOve
       unit: 'units',
       sub: 'All deployed vehicles',
       icon: Truck,
-      color: 'text-[#b49aff]',
-      bg: 'bg-[#b49aff]/10'
+      color: 'text-[#2879E8]',
+      bg: 'bg-[#EAF3FF]'
     },
     {
       id: 'moving',
@@ -38,8 +38,8 @@ export default function TrackingKPIGrid({ telemetryList = [], alerts = [], onOve
       unit: 'active',
       sub: 'Speed > 5 km/h',
       icon: Navigation,
-      color: 'text-[#8be0b3]',
-      bg: 'bg-[#8be0b3]/10'
+      color: 'text-[#16A36A]',
+      bg: 'bg-[#E8F7F0]'
     },
     {
       id: 'stopped',
@@ -48,8 +48,8 @@ export default function TrackingKPIGrid({ telemetryList = [], alerts = [], onOve
       unit: 'depot/bay',
       sub: 'Stationary units',
       icon: Clock,
-      color: 'text-[#e5a46e]',
-      bg: 'bg-[#e5a46e]/10'
+      color: 'text-[#E7A329]',
+      bg: 'bg-[#FEF7EA]'
     },
     {
       id: 'offline',
@@ -58,8 +58,8 @@ export default function TrackingKPIGrid({ telemetryList = [], alerts = [], onOve
       unit: 'units',
       sub: 'No ping > 15m',
       icon: WifiOff,
-      color: 'text-[#747783]',
-      bg: 'bg-[#747783]/10'
+      color: 'text-[#8A97AB]',
+      bg: 'bg-[#F1F5F9]'
     },
     {
       id: 'distance',
@@ -68,23 +68,23 @@ export default function TrackingKPIGrid({ telemetryList = [], alerts = [], onOve
       unit: 'km',
       sub: 'Cumulative today',
       icon: Milestone,
-      color: 'text-[#c4b3ff]',
-      bg: 'bg-[#c4b3ff]/10'
+      color: 'text-[#2879E8]',
+      bg: 'bg-[#EAF3FF]'
     },
     {
       id: 'overspeed',
       title: 'OVERSPEED ALERTS',
       value: overspeedAlerts,
       unit: 'events',
-      sub: overspeedAlerts > 0 ? 'Click to inspect events ↗' : 'Speed > 80 km/h threshold',
+      sub: overspeedAlerts > 0 ? 'Click to inspect events ↗' : 'Speed > 80 km/h limit',
       icon: AlertTriangle,
-      color: overspeedAlerts > 0 ? 'text-red-400' : 'text-[#8be0b3]',
-      bg: overspeedAlerts > 0 ? 'bg-red-400/10' : 'bg-[#8be0b3]/10'
+      color: overspeedAlerts > 0 ? 'text-[#E05252]' : 'text-[#16A36A]',
+      bg: overspeedAlerts > 0 ? 'bg-[#FDF2F2]' : 'bg-[#E8F7F0]'
     }
   ];
 
   return (
-    <div className="grid grid-cols-6 max-xl:grid-cols-3 max-sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-6 max-xl:grid-cols-3 max-sm:grid-cols-2 gap-3.5">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
@@ -95,31 +95,38 @@ export default function TrackingKPIGrid({ telemetryList = [], alerts = [], onOve
                 onOverspeedClick();
               }
             }}
-            className={`bg-[#17191f] border border-[#292c35] rounded-[9px] p-3 flex flex-col justify-between transition-all group ${
+            className={`glass-card glass-card-hover rounded-2xl p-4 flex flex-col justify-between transition-all group ${
               card.id === 'overspeed'
-                ? 'cursor-pointer hover:border-red-500/50 hover:bg-[#1a1720] active:scale-[0.99]'
-                : 'hover:border-[#383c4a]'
+                ? 'cursor-pointer hover:border-[#E05252]/40 active:scale-[0.99]'
+                : ''
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[8px] text-[#858894] uppercase tracking-wider">
+              <span className="font-mono text-[9px] text-[#8A97AB] uppercase tracking-wider font-semibold">
                 {card.title}
               </span>
-              <div className={`w-5 h-5 rounded flex items-center justify-center ${card.bg}`}>
-                <Icon className={`w-3 h-3 ${card.color}`} />
+              <div className={`w-7 h-7 rounded-xl ${card.bg} ${card.color} flex items-center justify-center border border-white/60 shadow-2xs`}>
+                <Icon className="w-3.5 h-3.5" />
               </div>
             </div>
 
-            <div className="my-2 flex items-baseline gap-1.5">
-              <b className="text-xl font-bold font-mono text-[#f0f0f4]">{card.value}</b>
-              <small className="text-[10px] text-[#888b97] font-mono">{card.unit}</small>
+            <div className="my-2.5">
+              <div className="flex items-baseline gap-1.5">
+                <span className={`text-2xl font-black tracking-tight ${card.id === 'overspeed' && card.value > 0 ? 'text-[#E05252]' : 'text-[#172033]'}`}>
+                  {card.value}
+                </span>
+                <span className="text-[11px] font-sans text-[#68758A] font-medium">
+                  {card.unit}
+                </span>
+              </div>
             </div>
 
-            <span className="text-[9px] text-[#717480] font-mono">{card.sub}</span>
+            <span className="text-[10px] text-[#8A97AB] font-mono truncate">
+              {card.sub}
+            </span>
           </div>
         );
       })}
     </div>
   );
 }
-

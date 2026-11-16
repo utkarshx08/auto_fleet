@@ -96,7 +96,7 @@ export default function AddVehicleModal({ isOpen, onClose, onAddVehicle }) {
       <form onSubmit={handleSubmit} className="space-y-3.5 text-xs font-sans">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
               Plate Identifier *
             </label>
             <input
@@ -104,25 +104,25 @@ export default function AddVehicleModal({ isOpen, onClose, onAddVehicle }) {
               placeholder="e.g. RST-301"
               value={formData.plate}
               onChange={(e) => setFormData({ ...formData, plate: e.target.value })}
-              className={`w-full bg-[#20222a] border ${
-                errors.plate ? 'border-red-500/80' : 'border-[#30333d]'
-              } focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs uppercase`}
+              className={`w-full bg-[#F8FAFD] border ${
+                errors.plate ? 'border-red-500/80' : 'border-[#E2E8F0]'
+              } focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs uppercase shadow-2xs transition-all`}
             />
             {errors.plate && (
-              <span className="text-red-400 text-[9px] mt-0.5 block flex items-center gap-1">
-                <AlertCircle className="w-2.5 h-2.5" /> {errors.plate}
+              <span className="text-red-500 text-[10px] mt-1 flex items-center gap-1 font-medium">
+                <AlertCircle className="w-3 h-3" /> {errors.plate}
               </span>
             )}
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
               Vehicle Make
             </label>
             <select
               value={formData.make}
               onChange={(e) => setFormData({ ...formData, make: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#E2E8F0] focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs transition-all"
             >
               <option value="Mercedes-Benz">Mercedes-Benz</option>
               <option value="Ford">Ford</option>
@@ -136,7 +136,7 @@ export default function AddVehicleModal({ isOpen, onClose, onAddVehicle }) {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
               Model Name *
             </label>
             <input
@@ -144,72 +144,87 @@ export default function AddVehicleModal({ isOpen, onClose, onAddVehicle }) {
               placeholder="e.g. Sprinter 3500 Cargo"
               value={formData.model}
               onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-              className={`w-full bg-[#20222a] border ${
-                errors.model ? 'border-red-500/80' : 'border-[#30333d]'
-              } focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs`}
+              className={`w-full bg-[#F8FAFD] border ${
+                errors.model ? 'border-red-500/80' : 'border-[#E2E8F0]'
+              } focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs transition-all`}
             />
             {errors.model && (
-              <span className="text-red-400 text-[9px] mt-0.5 block flex items-center gap-1">
-                <AlertCircle className="w-2.5 h-2.5" /> {errors.model}
+              <span className="text-red-500 text-[10px] mt-1 flex items-center gap-1 font-medium">
+                <AlertCircle className="w-3 h-3" /> {errors.model}
               </span>
             )}
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
-              Initial Operational Status
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
+              Vehicle Type
             </label>
             <select
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              className="w-full bg-[#F8FAFD] border border-[#E2E8F0] focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs transition-all"
             >
-              <option value="active">Active (On Road)</option>
-              <option value="service">In Service / Maintenance</option>
-              <option value="idle">Idle / Standby Depot</option>
+              <option value="Van">Cargo Van</option>
+              <option value="Box Truck">Box Truck</option>
+              <option value="Pickup">Pickup</option>
+              <option value="Flatbed">Flatbed Heavy</option>
+              <option value="Reefer">Refrigerated Truck</option>
             </select>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
-              Assigned Driver *
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
+              Assigned Operator *
             </label>
             <input
               type="text"
-              placeholder="e.g. Marcus Vance"
+              placeholder="e.g. Aarav Sharma"
               value={formData.driver}
               onChange={(e) => setFormData({ ...formData, driver: e.target.value })}
-              className={`w-full bg-[#20222a] border ${
-                errors.driver ? 'border-red-500/80' : 'border-[#30333d]'
-              } focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs`}
+              className={`w-full bg-[#F8FAFD] border ${
+                errors.driver ? 'border-red-500/80' : 'border-[#E2E8F0]'
+              } focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs transition-all`}
             />
             {errors.driver && (
-              <span className="text-red-400 text-[9px] mt-0.5 block flex items-center gap-1">
-                <AlertCircle className="w-2.5 h-2.5" /> {errors.driver}
+              <span className="text-red-500 text-[10px] mt-1 flex items-center gap-1 font-medium">
+                <AlertCircle className="w-3 h-3" /> {errors.driver}
               </span>
             )}
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
-              Assigned Hub / City
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
+              Driver Phone
             </label>
             <input
               type="text"
-              placeholder="e.g. New York, NY"
-              value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
+              placeholder="+1 (555) 019-2834"
+              value={formData.driverPhone}
+              onChange={(e) => setFormData({ ...formData, driverPhone: e.target.value })}
+              className="w-full bg-[#F8FAFD] border border-[#E2E8F0] focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs transition-all"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
-              Current Fuel Level (%)
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
+              Base Location / Hub
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Brooklyn Depot"
+              value={formData.location}
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              className="w-full bg-[#F8FAFD] border border-[#E2E8F0] focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-1 font-semibold">
+              Initial Fuel Level (%)
             </label>
             <input
               type="number"
@@ -217,26 +232,12 @@ export default function AddVehicleModal({ isOpen, onClose, onAddVehicle }) {
               max="100"
               value={formData.fuel}
               onChange={(e) => setFormData({ ...formData, fuel: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
-              Odometer Reading (km)
-            </label>
-            <input
-              type="number"
-              min="0"
-              value={formData.odometer}
-              onChange={(e) => setFormData({ ...formData, odometer: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#E2E8F0] focus:border-[#2879E8] focus:bg-white rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs transition-all"
             />
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#252730] mt-4">
+        <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[#E2E8F0] mt-4">
           <Button variant="default" size="sm" onClick={onClose}>
             Cancel
           </Button>
@@ -248,4 +249,3 @@ export default function AddVehicleModal({ isOpen, onClose, onAddVehicle }) {
     </Modal>
   );
 }
-

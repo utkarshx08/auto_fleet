@@ -70,14 +70,15 @@
   --soft-blue: #EEF2FF;
 }
 
-[data-theme="dark-liquid-glass"] {
-  --bg-primary: #0B1120;
-  --bg-surface: #131E36;
-  --bg-surface-subtle: #182644;
-  --bg-surface-hover: #1F325A;
+[data-theme="dark-liquid-glass"],
+.dark {
+  --bg-primary: #080D1A;
+  --bg-surface: #101728;
+  --bg-surface-subtle: #172033;
+  --bg-surface-hover: #1E293B;
   --primary-blue: #38BDF8;
   --blue-hover: #0EA5E9;
-  --soft-blue: rgba(56, 189, 248, 0.15);
+  --soft-blue: rgba(56, 189, 248, 0.18);
   --text-primary: #F8FAFC;
   --text-secondary: #CBD5E1;
   --text-muted: #94A3B8;
@@ -85,37 +86,166 @@
   --border-highlight: rgba(255, 255, 255, 0.18);
 }
 
-[data-theme="dark-liquid-glass"] body {
-  background-color: #0B1120;
-  color: #F8FAFC;
+/* ==========================================================================
+   Full Dark Obsidian Theme Transformations
+   ========================================================================== */
+[data-theme="dark-liquid-glass"] body,
+.dark body,
+[data-theme="dark-liquid-glass"] .autrail-layout-shell,
+.dark .autrail-layout-shell {
+  background-color: #080D1A !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark-liquid-glass"] .glass-card,
+.dark .glass-card,
+[data-theme="dark-liquid-glass"] .glass-panel,
+.dark .glass-panel,
+[data-theme="dark-liquid-glass"] aside,
+.dark aside,
+[data-theme="dark-liquid-glass"] .bg-white,
+.dark .bg-white,
+[data-theme="dark-liquid-glass"] .bg-white\/95,
+.dark .bg-white\/95,
+[data-theme="dark-liquid-glass"] .bg-white\/90,
+.dark .bg-white\/90,
+[data-theme="dark-liquid-glass"] .bg-white\/98,
+.dark .bg-white\/98,
+[data-theme="dark-liquid-glass"] .bg-white\/80,
+.dark .bg-white\/80 {
+  background: linear-gradient(145deg, #101728 0%, #0d1322 100%) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #F8FAFC !important;
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.55),
+    0 3px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark-liquid-glass"] .glass-card::before,
+.dark .glass-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    transparent 45%,
+    rgba(56, 189, 248, 0.04) 100%
+  ) !important;
 }
 
 [data-theme="dark-liquid-glass"] h1,
+.dark h1,
 [data-theme="dark-liquid-glass"] h2,
+.dark h2,
 [data-theme="dark-liquid-glass"] h3,
+.dark h3,
 [data-theme="dark-liquid-glass"] h4,
+.dark h4,
 [data-theme="dark-liquid-glass"] h5,
-[data-theme="dark-liquid-glass"] h6 {
-  color: #F8FAFC;
+.dark h5,
+[data-theme="dark-liquid-glass"] h6,
+.dark h6,
+[data-theme="dark-liquid-glass"] .text-\[\#0B132B\],
+.dark .text-\[\#0B132B\],
+[data-theme="dark-liquid-glass"] .text-\[\#0F172A\],
+.dark .text-\[\#0F172A\],
+[data-theme="dark-liquid-glass"] .text-\[\#172033\],
+.dark .text-\[\#172033\],
+[data-theme="dark-liquid-glass"] .text-\[\#1E293B\],
+.dark .text-\[\#1E293B\] {
+  color: #F8FAFC !important;
 }
 
-[data-theme="dark-liquid-glass"] .glass-card {
-  background: linear-gradient(145deg, #131e36 0%, #16233f 55%, #0f182c 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.4),
-    0 3px 10px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+[data-theme="dark-liquid-glass"] .text-\[\#475569\],
+.dark .text-\[\#475569\],
+[data-theme="dark-liquid-glass"] .text-\[\#68758A\],
+.dark .text-\[\#68758A\],
+[data-theme="dark-liquid-glass"] .text-\[\#64748B\],
+.dark .text-\[\#64748B\],
+[data-theme="dark-liquid-glass"] .text-\[\#8A97AB\],
+.dark .text-\[\#8A97AB\] {
+  color: #94A3B8 !important;
 }
 
-[data-theme="dark-liquid-glass"] .glass-card::before {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1),
-    transparent 45%,
-    rgba(56, 189, 248, 0.05) 100%
-  );
+[data-theme="dark-liquid-glass"] .bg-\[\#F8FAFD\],
+.dark .bg-\[\#F8FAFD\],
+[data-theme="dark-liquid-glass"] .bg-\[\#F0F5FC\],
+.dark .bg-\[\#F0F5FC\],
+[data-theme="dark-liquid-glass"] .bg-\[\#F1F5F9\],
+.dark .bg-\[\#F1F5F9\] {
+  background-color: #172033 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark-liquid-glass"] .border-\[\#E2E8F0\],
+.dark .border-\[\#E2E8F0\],
+[data-theme="dark-liquid-glass"] .border-\[\#E2E8F0\]\/80,
+.dark .border-\[\#E2E8F0\]\/80,
+[data-theme="dark-liquid-glass"] .border-\[\#D5E2F1\],
+.dark .border-\[\#D5E2F1\],
+[data-theme="dark-liquid-glass"] .border-\[\#CBD5E1\],
+.dark .border-\[\#CBD5E1\],
+[data-theme="dark-liquid-glass"] .border-white\/95,
+.dark .border-white\/95,
+[data-theme="dark-liquid-glass"] .border-white\/90,
+.dark .border-white\/90 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark-liquid-glass"] table thead tr,
+.dark table thead tr,
+[data-theme="dark-liquid-glass"] table th,
+.dark table th {
+  background-color: #162035 !important;
+  color: #F8FAFC !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark-liquid-glass"] table td,
+.dark table td {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  color: #CBD5E1 !important;
+}
+
+[data-theme="dark-liquid-glass"] table tbody tr:hover,
+.dark table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark-liquid-glass"] input:not([type="checkbox"]):not([type="radio"]),
+.dark input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="dark-liquid-glass"] select,
+.dark select,
+[data-theme="dark-liquid-glass"] textarea,
+.dark textarea {
+  background-color: #131d31 !important;
+  color: #F8FAFC !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Ice Liquid Glass Transformations */
+[data-theme="ice-liquid-glass"] body,
+[data-theme="ice-liquid-glass"] .autrail-layout-shell {
+  background-color: #EDF6FC !important;
+}
+
+[data-theme="ice-liquid-glass"] .glass-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f8ff 55%, #e1f0fe 100%) !important;
+  border-color: rgba(186, 230, 253, 0.7) !important;
+  box-shadow: 0 12px 35px rgba(2, 132, 199, 0.12), inset 0 1px 0 #ffffff, inset 0 -1px 0 rgba(186, 230, 253, 0.8) !important;
+}
+
+/* Crystal Platinum Glass Transformations */
+[data-theme="crystal-liquid-glass"] body,
+[data-theme="crystal-liquid-glass"] .autrail-layout-shell {
+  background-color: #F4F5FB !important;
+}
+
+[data-theme="crystal-liquid-glass"] .glass-card {
+  background: linear-gradient(145deg, #ffffff 0%, #fafafa 55%, #f3f4fd 100%) !important;
+  border-color: rgba(224, 231, 255, 0.8) !important;
+  box-shadow: 0 14px 40px rgba(79, 70, 229, 0.1), inset 0 1px 0 #ffffff, inset 0 -1px 0 rgba(199, 210, 254, 0.8) !important;
 }
 
 * {

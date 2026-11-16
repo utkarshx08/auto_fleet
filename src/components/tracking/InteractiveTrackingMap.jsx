@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
+
+if (typeof maplibregl.setWorkerUrl === 'function') {
+  maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
+}
 import {
   Navigation,
   Compass,
@@ -11,32 +15,13 @@ import {
 } from 'lucide-react';
 import { TRACKING_CONFIG, initialGeofences } from '../../data/trackingMockData';
 import { createGeoJsonFeature, getGeofenceZones } from '../../services/geofenceService.js';
-
-// Carto Dark Matter Style Specification (Free, open-source, no API key required)
-const DARK_MAP_STYLE = {
-  version: 8,
-  sources: {
-    'carto-dark': {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors, © CARTO'
-    }
-  },
-  layers: [
-    {
-      id: 'carto-dark-layer',
-      type: 'raster',
-      source: 'carto-dark',
-      minzoom: 0,
-      maxzoom: 19
-    }
-  ]
-};
+import { useTheme } from '../../context/ThemeContext';
+import {
+  CARTO_VOYAGER_STYLE,
+  CARTO_DARK_STYLE,
+  getMapStyle,
+  CARTO_API_KEY
+} from '../../config/mapConfig';
 
 export default function InteractiveTrackingMap({
   vehicles = [],
@@ -50,10 +35,18 @@ export default function InteractiveTrackingMap({
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef({});
+  const { theme } = useTheme();
+  const [basemapMode, setBasemapMode] = useState(() => (theme === 'dark-liquid-glass' ? 'dark' : 'voyager'));
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
+  const [styleVersion, setStyleVersion] = useState(0);
 
   const activeZones = geofences || getGeofenceZones();
+
+  // Sync basemap mode with theme changes
+  useEffect(() => {
+    setBasemapMode(theme === 'dark-liquid-glass' ? 'dark' : 'voyager');
+  }, [theme]);
 
   // Initialize MapLibre GL Map Instance
   useEffect(() => {
@@ -61,9 +54,10 @@ export default function InteractiveTrackingMap({
     let isMounted = true;
 
     try {
+      const initialStyle = basemapMode === 'dark' ? CARTO_DARK_STYLE : CARTO_VOYAGER_STYLE;
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
-        style: DARK_MAP_STYLE,
+        style: initialStyle,
         center: [TRACKING_CONFIG.MAP_DEFAULT_CENTER[1], TRACKING_CONFIG.MAP_DEFAULT_CENTER[0]], // [lng, lat]
         zoom: TRACKING_CONFIG.MAP_DEFAULT_ZOOM,
         attributionControl: false,
@@ -76,6 +70,11 @@ export default function InteractiveTrackingMap({
         if (!isMounted) return;
         setMapLoaded(true);
         map.resize();
+      });
+
+      map.on('style.load', () => {
+        if (!isMounted) return;
+        setStyleVersion((v) => v + 1);
       });
 
       map.on('error', (e) => {
@@ -111,6 +110,18 @@ export default function InteractiveTrackingMap({
     }
   }, []);
 
+  // Handle dynamic basemap style change
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    const targetStyle = basemapMode === 'dark' ? CARTO_DARK_STYLE : CARTO_VOYAGER_STYLE;
+    try {
+      map.setStyle(targetStyle);
+    } catch (e) {
+      console.warn('Error setting map style:', e);
+    }
+  }, [basemapMode]);
+2000000
   // Sync Vehicle Markers on Map
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
@@ -300,7 +311,7 @@ export default function InteractiveTrackingMap({
         }
       });
     }
-  }, [historicalPath, showRouteLine, mapLoaded]);
+  }, [historicalPath, showRouteLine, mapLoaded, styleVersion]);
 
   // Render Geofence Perimeters Layer
   useEffect(() => {
@@ -363,7 +374,7 @@ export default function InteractiveTrackingMap({
         });
       });
     }
-  }, [showGeofences, activeZones, mapLoaded]);
+  }, [showGeofences, activeZones, mapLoaded, styleVersion]);
 
   // Controls Handlers
   const handleZoomIn = () => {
@@ -372,6 +383,10 @@ export default function InteractiveTrackingMap({
 
   const handleZoomOut = () => {
     if (mapRef.current) mapRef.current.zoomOut();
+  };
+
+  const toggleBasemap = () => {
+    setBasemapMode((prev) => (prev === 'voyager' ? 'dark' : 'voyager'));
   };
 
   const handleRecenter = () => {
@@ -385,26 +400,26 @@ export default function InteractiveTrackingMap({
   };
 
   return (
-    <div className="relative w-full h-[540px] bg-[#0d0e13] rounded-lg overflow-hidden border border-[#252730] flex flex-col">
+    <div className="glass-card rounded-2xl relative overflow-hidden flex flex-col h-[540px] shadow-liquid-subtle">
       {/* MapLibre GL Canvas Container */}
       <div ref={mapContainerRef} className="w-full h-full flex-1" />
 
       {/* Top Map HUD Overlay */}
-      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 pointer-events-none">
-        <div className="bg-[#17191f]/90 border border-[#2b2e38] px-3 py-1.5 rounded-lg text-xs font-mono backdrop-blur-md flex items-center gap-2 pointer-events-auto shadow-xl">
-          <Compass className="w-3.5 h-3.5 text-[#b49aff]" />
-          <span className="text-[#e0e0e7] font-bold">METRO NY COMMAND QUADRANT</span>
-          <span className="text-[#555]">|</span>
-          <span className="text-[#8be0b3] font-bold">{vehicles.length} ACTIVE TRANSPONDERS</span>
+      <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-2 pointer-events-none">
+        <div className="bg-white/95 border border-white/90 px-3.5 py-2 rounded-xl text-xs font-mono backdrop-blur-xl flex items-center gap-2 pointer-events-auto shadow-liquid-subtle">
+          <Compass className="w-4 h-4 text-[#2879E8]" />
+          <span className="text-[#172033] font-bold">METRO NY COMMAND QUADRANT</span>
+          <span className="text-[#CBD5E1]">|</span>
+          <span className="text-[#16A36A] font-bold">{vehicles.length} ACTIVE TRANSPONDERS</span>
         </div>
       </div>
 
       {/* Floating Tactical Zoom & View Controls */}
-      <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 bg-[#17191f]/90 border border-[#2b2e38] p-1 rounded-lg backdrop-blur-md shadow-xl">
+      <div className="absolute top-3.5 right-3.5 z-10 flex flex-col gap-1.5 bg-white/95 border border-white/90 p-1.5 rounded-xl backdrop-blur-xl shadow-liquid-subtle text-[#172033]">
         <button
           type="button"
           onClick={handleZoomIn}
-          className="p-1.5 text-[#a7a9b5] hover:text-white rounded hover:bg-[#22242d] transition-colors"
+          className="p-1.5 text-[#68758A] hover:text-[#172033] rounded-lg hover:bg-[#F0F5FC] transition-colors cursor-pointer"
           title="Zoom in"
           aria-label="Zoom in"
         >
@@ -413,17 +428,30 @@ export default function InteractiveTrackingMap({
         <button
           type="button"
           onClick={handleZoomOut}
-          className="p-1.5 text-[#a7a9b5] hover:text-white rounded hover:bg-[#22242d] transition-colors"
+          className="p-1.5 text-[#68758A] hover:text-[#172033] rounded-lg hover:bg-[#F0F5FC] transition-colors cursor-pointer"
           title="Zoom out"
           aria-label="Zoom out"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
-        <div className="h-px bg-[#2b2e38] mx-1 my-0.5" />
+        <button
+          type="button"
+          onClick={toggleBasemap}
+          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            basemapMode === 'voyager'
+              ? 'text-[#2879E8] bg-[#EAF3FF] hover:bg-[#D5E6FB]'
+              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
+          }`}
+          title={basemapMode === 'voyager' ? 'Switch to CARTO Dark Matter' : 'Switch to CARTO Voyager'}
+          aria-label="Toggle map basemap style"
+        >
+          <Layers className="w-4 h-4" />
+        </button>
+        <div className="h-px bg-[#E2E8F0] mx-1 my-0.5" />
         <button
           type="button"
           onClick={handleRecenter}
-          className="p-1.5 text-[#a7a9b5] hover:text-white rounded hover:bg-[#22242d] transition-colors"
+          className="p-1.5 text-[#68758A] hover:text-[#172033] rounded-lg hover:bg-[#F0F5FC] transition-colors cursor-pointer"
           title="Recenter Metro Area"
           aria-label="Recenter Metro Area"
         >
@@ -432,16 +460,18 @@ export default function InteractiveTrackingMap({
       </div>
 
       {/* Bottom Map Status Bar */}
-      <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between text-[9px] font-mono pointer-events-none">
-        <div className="bg-[#17191f]/90 border border-[#2b2e38] px-2.5 py-1 rounded backdrop-blur-md text-[#858894] pointer-events-auto flex items-center gap-3">
-          <span>TILE SOURCE: CARTO DARK MATTER (VECTOR GL)</span>
-          <span className="text-[#555]">•</span>
-          <span className="text-[#8be0b3]">HDOP: 0.8m ACCURACY</span>
+      <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 flex items-center justify-between text-[10px] font-mono pointer-events-none">
+        <div className="bg-white/95 border border-white/90 px-3 py-1.5 rounded-xl backdrop-blur-xl text-[#68758A] pointer-events-auto flex items-center gap-3 shadow-2xs font-semibold">
+          <span>TILE SOURCE: CARTO ({basemapMode === 'voyager' ? 'VOYAGER NAVIGATION' : 'DARK MATTER TACTICAL'})</span>
+          <span className="text-[#CBD5E1]">•</span>
+          <span className="text-[#16A36A]">API KEY: ACTIVE (5M REQ/MO)</span>
+          <span className="text-[#CBD5E1]">•</span>
+          <span className="text-[#2879E8]">HDOP: 0.8m</span>
         </div>
 
-        <div className="bg-[#17191f]/90 border border-[#2b2e38] px-2.5 py-1 rounded backdrop-blur-md text-[#858894] pointer-events-auto flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#8be0b3] shadow-[0_0_6px_#8be0b3] beacon-pulse" />
-          <span className="text-[#e0e0e7]">SIMULATED REALTIME TELEMETRY ENGINE</span>
+        <div className="bg-white/95 border border-white/90 px-3 py-1.5 rounded-xl backdrop-blur-xl text-[#68758A] pointer-events-auto flex items-center gap-2 shadow-2xs font-semibold">
+          <span className="w-2 h-2 rounded-full bg-[#16A36A] shadow-[0_0_6px_#16A36A] beacon-pulse" />
+          <span className="text-[#172033]">REALTIME TELEMETRY ENGINE</span>
         </div>
       </div>
     </div>

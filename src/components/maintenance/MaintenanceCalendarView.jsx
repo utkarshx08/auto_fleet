@@ -105,18 +105,18 @@ export default function MaintenanceCalendarView({
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5 space-y-4">
+    <div className="glass-card rounded-2xl p-6 space-y-4 shadow-liquid-subtle">
       {/* Calendar Header with Navigation & Filters */}
       <div className="flex items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#24212f] text-[#b49aff] flex items-center justify-center">
+          <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#2879E8] border border-[#D5E6FB] flex items-center justify-center shadow-2xs">
             <CalendarIcon className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#f0f0f4] m-0">
+            <h3 className="text-base font-bold text-[#172033] tracking-tight m-0">
               {monthNames[month]} {year}
             </h3>
-            <span className="font-mono text-[9px] text-[#858894]">
+            <span className="font-mono text-[10px] text-[#68758A]">
               Fleet Preventative Maintenance & Service Bookings
             </span>
           </div>
@@ -125,14 +125,14 @@ export default function MaintenanceCalendarView({
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="p-1 rounded text-[#858894] hover:text-white hover:bg-[#20222a] transition-colors"
+              className="p-1.5 rounded-lg text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC] transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               type="button"
               onClick={handleNextMonth}
-              className="p-1 rounded text-[#858894] hover:text-white hover:bg-[#20222a] transition-colors"
+              className="p-1.5 rounded-lg text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC] transition-colors cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -140,12 +140,12 @@ export default function MaintenanceCalendarView({
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 flex-wrap text-xs">
+        <div className="flex items-center gap-2.5 flex-wrap text-xs">
           {/* Vehicle Filter */}
           <select
             value={selectedVehicle}
             onChange={(e) => setSelectedVehicle(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-xs text-[#eee] outline-none font-mono cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-mono cursor-pointer shadow-2xs"
           >
             <option value="ALL">All Vehicles</option>
             {vehicles.map((v) => (
@@ -159,7 +159,7 @@ export default function MaintenanceCalendarView({
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-xs text-[#eee] outline-none text-xs cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none text-xs cursor-pointer shadow-2xs"
           >
             <option value="ALL">All Categories</option>
             {MAINTENANCE_CATEGORIES.map((cat) => (
@@ -172,28 +172,28 @@ export default function MaintenanceCalendarView({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 text-[10px] font-mono text-[#858894] border-b border-[#252730] pb-2.5 flex-wrap">
+      <div className="flex items-center gap-4 text-[10px] font-mono text-[#68758A] border-b border-[#E2E8F0] pb-2.5 flex-wrap">
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-red-400" /> Overdue Service
+          <span className="w-2 h-2 rounded-full bg-[#E05252]" /> Overdue Service
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-[#e5a46e]" /> Due Service
+          <span className="w-2 h-2 rounded-full bg-[#E7A329]" /> Due Service
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-[#8dc8ed]" /> Scheduled Appointment
+          <span className="w-2 h-2 rounded-full bg-[#2879E8]" /> Scheduled Appointment
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-[#8be0b3]" /> Completed Work Order
+          <span className="w-2 h-2 rounded-full bg-[#16A36A]" /> Completed Work Order
         </span>
       </div>
 
       {/* Days Grid */}
-      <div className="grid grid-cols-7 gap-px bg-[#252730] rounded-lg overflow-hidden border border-[#252730]">
+      <div className="grid grid-cols-7 gap-px bg-[#E2E8F0] rounded-xl overflow-hidden border border-[#E2E8F0] shadow-2xs">
         {/* Days of week header */}
         {daysOfWeek.map((day) => (
           <div
             key={day}
-            className="bg-[#121319] py-2 text-center font-mono text-[9px] uppercase text-[#747783]"
+            className="bg-[#F8FAFD] py-2.5 text-center font-mono text-[10px] uppercase font-semibold text-[#68758A]"
           >
             {day}
           </div>
@@ -201,7 +201,7 @@ export default function MaintenanceCalendarView({
 
         {/* Empty cells before month start */}
         {Array.from({ length: firstDayIndex }).map((_, i) => (
-          <div key={`empty-${i}`} className="bg-[#101116]/60 min-h-[90px] p-1.5" />
+          <div key={`empty-${i}`} className="bg-[#F4F7FB]/70 min-h-[90px] p-2" />
         ))}
 
         {/* Days of month */}
@@ -212,12 +212,12 @@ export default function MaintenanceCalendarView({
           return (
             <div
               key={`day-${dayNum}`}
-              className="bg-[#17191f] min-h-[95px] p-1.5 flex flex-col justify-between hover:bg-[#1c1e26] transition-colors"
+              className="bg-white min-h-[95px] p-2 flex flex-col justify-between hover:bg-[#F0F5FC]/60 transition-colors"
             >
               <div className="flex justify-between items-start font-mono text-[10px]">
-                <span className="text-[#858894] font-bold">{dayNum}</span>
+                <span className="text-[#172033] font-bold">{dayNum}</span>
                 {events.length > 0 && (
-                  <span className="text-[8px] bg-[#24212f] text-[#c4b3ff] px-1 rounded">
+                  <span className="text-[9px] bg-[#EAF3FF] text-[#2879E8] font-bold px-1.5 py-0.2 rounded-full border border-[#D5E6FB]">
                     {events.length}
                   </span>
                 )}
@@ -226,20 +226,20 @@ export default function MaintenanceCalendarView({
               {/* Event Pills */}
               <div className="space-y-1 my-1 overflow-y-auto max-h-[60px]">
                 {events.map((ev) => {
-                  let pillClass = 'bg-[#1c302a] text-[#83d7a9] border-[#2c493d]';
+                  let pillClass = 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]';
                   if (ev.type === 'overdue') {
-                    pillClass = 'bg-red-500/20 text-red-300 border-red-500/30';
+                    pillClass = 'bg-[#FDF2F2] text-[#E05252] border-[#FAD2D2]';
                   } else if (ev.type === 'due') {
-                    pillClass = 'bg-[#382c25] text-[#e5a46e] border-[#523d30]';
+                    pillClass = 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DFB4]';
                   } else if (ev.type === 'scheduled') {
-                    pillClass = 'bg-[#182736] text-[#8dc8ed] border-[#223b52]';
+                    pillClass = 'bg-[#EAF3FF] text-[#2879E8] border-[#D5E6FB]';
                   }
 
                   return (
                     <div
                       key={ev.id}
                       onClick={() => setInspectedEvent(ev)}
-                      className={`px-1.5 py-0.5 rounded text-[8px] font-mono truncate border cursor-pointer hover:opacity-90 transition-opacity ${pillClass}`}
+                      className={`px-1.5 py-0.5 rounded-md text-[9px] font-mono truncate border cursor-pointer hover:opacity-90 transition-opacity font-medium ${pillClass}`}
                       title={`${ev.title}\n${ev.meta}`}
                     >
                       {ev.title}
@@ -254,22 +254,22 @@ export default function MaintenanceCalendarView({
 
       {/* Popover / Detail modal for inspected event */}
       {inspectedEvent && (
-        <div className="p-3.5 bg-[#121319] border border-[#3b354d] rounded-lg text-xs space-y-2 animate-in fade-in">
+        <div className="p-4 bg-gradient-to-br from-white to-[#F8FAFD] border border-[#D5E2F1] rounded-xl text-xs space-y-2 shadow-liquid-subtle animate-in fade-in">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase text-[#b49aff] font-bold">
+            <span className="font-mono text-[10px] uppercase text-[#2879E8] font-bold tracking-wider">
               Appointment Details
             </span>
             <button
               type="button"
               onClick={() => setInspectedEvent(null)}
-              className="text-[#858894] hover:text-white font-mono text-[10px]"
+              className="text-[#8A97AB] hover:text-[#172033] font-mono text-[11px] p-1 rounded hover:bg-[#F0F5FC] transition-colors cursor-pointer"
             >
               ✕ Close
             </button>
           </div>
-          <b className="text-[#f0f0f4] text-xs block">{inspectedEvent.title}</b>
-          <p className="text-[10px] text-[#aeb0ba] font-mono m-0">{inspectedEvent.meta}</p>
-          <span className="text-[9px] text-[#717480] font-mono block">
+          <b className="text-[#172033] text-xs font-bold block">{inspectedEvent.title}</b>
+          <p className="text-[11px] text-[#68758A] font-mono m-0">{inspectedEvent.meta}</p>
+          <span className="text-[10px] text-[#8A97AB] font-mono block">
             Scheduled Milestone: {inspectedEvent.dateStr}
           </span>
         </div>

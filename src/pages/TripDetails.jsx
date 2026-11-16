@@ -100,9 +100,9 @@ export default function TripDetails({
 
   if (!trip) {
     return (
-      <div className="py-16 text-center space-y-4">
-        <h2 className="text-xl font-bold text-[#f0f0f4]">Trip Not Found</h2>
-        <p className="text-sm text-[#858894]">No trip record exists matching identifier "{tripId}".</p>
+      <div className="py-20 text-center space-y-4">
+        <h2 className="text-xl font-bold text-[#172033]">Trip Not Found</h2>
+        <p className="text-sm text-[#68758A]">No trip record exists matching identifier "{tripId}".</p>
         <Button variant="primary" onClick={() => navigate('/trips')} icon={ArrowLeft}>
           Return to Trips
         </Button>
@@ -175,19 +175,19 @@ export default function TripDetails({
   );
 
   return (
-    <div className="space-y-6 text-xs text-[#d4d4dc]">
+    <div className="space-y-6 text-xs text-[#172033]">
       {/* Top Navigation & Actions Bar */}
-      <div className="flex items-center justify-between gap-4 flex-wrap pt-2">
+      <div className="flex items-center justify-between gap-4 flex-wrap pt-1">
         <button
           type="button"
           onClick={() => navigate('/trips')}
-          className="flex items-center gap-2 text-xs text-[#ad91ff] hover:text-[#c4b3ff] transition-colors font-medium cursor-pointer"
+          className="flex items-center gap-2 text-xs text-[#2879E8] hover:text-[#1765CC] transition-colors font-semibold cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to All Trips</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Button
             variant="primary"
             onClick={() => setIsReportModalOpen(true)}
@@ -198,7 +198,7 @@ export default function TripDetails({
 
           {trip.status !== 'Completed' && trip.status !== 'Cancelled' && (
             <Button
-              variant="quiet"
+              variant="default"
               onClick={() => setIsEditModalOpen(true)}
               icon={Edit2}
             >
@@ -207,10 +207,9 @@ export default function TripDetails({
           )}
 
           <Button
-            variant="quiet"
+            variant="danger"
             onClick={handleDelete}
             icon={Trash2}
-            className="text-[#f87171] hover:text-[#fca5a5]"
           >
             Delete Trip
           </Button>
@@ -218,30 +217,30 @@ export default function TripDetails({
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-6 space-y-4">
+      <div className="glass-card rounded-2xl p-6 space-y-5 shadow-liquid-subtle">
         <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:items-start">
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-sm font-bold text-[#b49aff] bg-[#24212f] px-2.5 py-1 rounded border border-[#3b3252]">
+              <span className="font-mono text-xs font-bold text-[#2879E8] bg-[#EAF3FF] px-2.5 py-1 rounded-lg border border-[#D5E6FB]">
                 {trip.id}
               </span>
               <TripStatusBadge status={trip.status} size="md" />
-              <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-[#20232e] text-[#a0a3b1] border border-[#313544]">
+              <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-lg bg-[#F8FAFD] text-[#68758A] border border-[#E2E8F0] font-semibold">
                 {trip.priority} Priority
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-[#f0f0f4] m-0 leading-snug">
+            <h1 className="text-2xl font-black text-[#0B132B] m-0 tracking-tight leading-snug">
               {trip.tripName}
             </h1>
-            <p className="text-xs text-[#858894] m-0">
-              Customer: <b className="text-[#e0e0e7] font-semibold">{trip.customerName}</b>
+            <p className="text-xs text-[#475569] m-0 font-medium">
+              Customer: <b className="text-[#0B132B] font-bold">{trip.customerName}</b>
             </p>
           </div>
 
           {/* Quick Transition Controls */}
           {availableTransitions.length > 0 && (
-            <div className="bg-[#121319] border border-[#2b2e38] p-3 rounded-[8px] space-y-2">
-              <span className="text-[10px] font-mono text-[#858894] uppercase tracking-[1px] block">
+            <div className="bg-[#F8FAFD] border border-[#D5E2F1] p-3 rounded-xl space-y-2 shadow-2xs">
+              <span className="text-[10px] font-mono text-[#68758A] uppercase tracking-wider block font-semibold">
                 Update Trip Status:
               </span>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -250,7 +249,7 @@ export default function TripDetails({
                     key={target}
                     type="button"
                     onClick={() => handleOpenTransition(target)}
-                    className="px-2.5 py-1 rounded bg-[#24212f] hover:bg-[#322c42] text-[#c4b3ff] border border-[#3f3558] text-xs font-medium transition-colors cursor-pointer"
+                    className="px-3 py-1 rounded-lg bg-white hover:bg-[#EAF3FF] text-[#2879E8] border border-[#D5E6FB] text-xs font-semibold transition-all shadow-2xs cursor-pointer"
                   >
                     → Mark {target}
                   </button>
@@ -261,43 +260,43 @@ export default function TripDetails({
         </div>
 
         {/* Quick KPI Metric Bar */}
-        <div className="grid grid-cols-4 gap-3 pt-4 border-t border-[#252834] max-lg:grid-cols-2 max-sm:grid-cols-1 font-mono">
-          <div className="bg-[#121319] p-3 rounded-[7px] border border-[#232530]">
-            <span className="text-[10px] text-[#747683] uppercase block">Departure</span>
-            <div className="text-sm font-bold text-[#f0f0f4] my-0.5">
+        <div className="grid grid-cols-4 gap-3.5 pt-4 border-t border-[#E2E8F0] max-lg:grid-cols-2 max-sm:grid-cols-1 font-mono">
+          <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+            <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Departure</span>
+            <div className="text-sm font-bold text-[#172033] my-1">
               {formatDateTime(trip.actualDeparture || trip.scheduledDeparture)}
             </div>
-            <span className="text-[10px] text-[#858894]">
+            <span className="text-[10px] text-[#8A97AB]">
               {trip.actualDeparture ? 'Actual Departure' : 'Scheduled Departure'}
             </span>
           </div>
 
-          <div className="bg-[#121319] p-3 rounded-[7px] border border-[#232530]">
-            <span className="text-[10px] text-[#747683] uppercase block">Arrival</span>
-            <div className="text-sm font-bold text-[#f0f0f4] my-0.5">
+          <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+            <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Arrival</span>
+            <div className="text-sm font-bold text-[#172033] my-1">
               {formatDateTime(trip.actualArrival || trip.scheduledArrival)}
             </div>
-            <span className="text-[10px] text-[#858894]">
+            <span className="text-[10px] text-[#8A97AB]">
               {trip.actualArrival ? 'Actual Arrival' : 'Expected Arrival'}
             </span>
           </div>
 
-          <div className="bg-[#121319] p-3 rounded-[7px] border border-[#232530]">
-            <span className="text-[10px] text-[#747683] uppercase block">Distance</span>
-            <div className="text-sm font-bold text-[#b49aff] my-0.5">
+          <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+            <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Distance</span>
+            <div className="text-sm font-bold text-[#2879E8] my-1">
               {Number(trip.actualDistanceKm) > 0 ? `${trip.actualDistanceKm} km` : `${trip.estimatedDistanceKm} km (Est.)`}
             </div>
-            <span className="text-[10px] text-[#858894]">
+            <span className="text-[10px] text-[#8A97AB]">
               Planned: {trip.estimatedDistanceKm} km
             </span>
           </div>
 
-          <div className="bg-[#121319] p-3 rounded-[7px] border border-[#232530]">
-            <span className="text-[10px] text-[#747683] uppercase block">Expenses & Unit Cost</span>
-            <div className="text-sm font-bold text-[#6ee7b7] my-0.5">
+          <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+            <span className="text-[10px] text-[#68758A] uppercase block font-semibold">Expenses & Unit Cost</span>
+            <div className="text-sm font-bold text-[#16A36A] my-1">
               ${totalExpense.toFixed(2)}
             </div>
-            <span className="text-[10px] text-[#858894]">
+            <span className="text-[10px] text-[#8A97AB]">
               {costPerKm > 0 ? `$${costPerKm} / km` : 'Cost/km pending'}
             </span>
           </div>
@@ -309,34 +308,34 @@ export default function TripDetails({
         {/* Left Column (2 Cols wide): Route Waypoints, Map & Fleet Profiles */}
         <div className="col-span-2 space-y-6">
           {/* Live Route & Tracking Map */}
-          <div className="bg-[#17191f] border border-[#292c35] p-5 rounded-[10px] space-y-3">
+          <div className="glass-card rounded-2xl p-5 space-y-3.5 shadow-liquid-subtle">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#b49aff] m-0 flex items-center gap-2">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-[#2879E8] m-0 flex items-center gap-2 font-bold">
                 <MapPin className="w-3.5 h-3.5" />
                 <span>Live Route & GPS Telemetry Tracking</span>
               </h3>
-              <span className="font-mono text-[10px] text-[#858894]">MapLibre Vector Engine</span>
+              <span className="font-mono text-[10px] text-[#8A97AB]">MapLibre Vector Engine</span>
             </div>
             <TripMap trip={trip} vehicle={assignedVehicle} height="360px" />
           </div>
 
           {/* Route & Waypoint Navigation */}
-          <div className="bg-[#17191f] border border-[#292c35] p-5 rounded-[10px] space-y-4">
-            <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#b49aff] m-0 flex items-center gap-2">
+          <div className="glass-card rounded-2xl p-5 space-y-4 shadow-liquid-subtle">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[#2879E8] m-0 flex items-center gap-2 font-bold">
               <MapPin className="w-3.5 h-3.5" />
               <span>Route & Waypoint Progress</span>
             </h3>
 
-            <div className="space-y-3 bg-[#121319] border border-[#252834] p-4 rounded-[8px]">
+            <div className="space-y-3 bg-[#F8FAFD] border border-[#D5E2F1] p-4 rounded-xl shadow-2xs">
               {/* Origin */}
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-[#182a22] border border-[#234b3c] text-[#6ee7b7] flex items-center justify-center shrink-0 font-mono text-[10px] font-bold">
+                <div className="w-6 h-6 rounded-full bg-[#E8F7F0] border border-[#C2E8D7] text-[#16A36A] flex items-center justify-center shrink-0 font-mono text-[10px] font-bold shadow-2xs">
                   A
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="font-mono text-[10px] text-[#747683] uppercase">Starting Pickup</span>
-                  <p className="text-sm font-medium text-[#f0f0f4] m-0">{trip.pickupLocation}</p>
-                  <span className="text-[10px] text-[#858894] font-mono">
+                  <span className="font-mono text-[10px] text-[#68758A] uppercase font-semibold">Starting Pickup</span>
+                  <p className="text-sm font-semibold text-[#172033] m-0">{trip.pickupLocation}</p>
+                  <span className="text-[10px] text-[#8A97AB] font-mono">
                     Coords: {trip.pickupCoords?.lat || 40.7128}, {trip.pickupCoords?.lng || -74.006}
                   </span>
                 </div>
@@ -344,15 +343,15 @@ export default function TripDetails({
 
               {/* Intermediate Stops */}
               {Array.isArray(trip.stops) && trip.stops.length > 0 && (
-                <div className="pl-9 space-y-3 border-l-2 border-dashed border-[#2f3240] ml-3 my-2">
+                <div className="pl-9 space-y-3 border-l-2 border-dashed border-[#CBD5E1] ml-3 my-2">
                   {trip.stops.map((stop, idx) => (
-                    <div key={stop.id || idx} className="bg-[#17191f] border border-[#272935] p-2.5 rounded-[6px]">
+                    <div key={stop.id || idx} className="bg-white border border-[#E2E8F0] p-3 rounded-xl shadow-2xs">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] text-[#ad91ff]">Stop #{stop.order || idx + 1}</span>
-                        <span className="font-mono text-[10px] text-[#70cbb7]">{stop.status || 'Pending'}</span>
+                        <span className="font-mono text-[10px] text-[#2879E8] font-bold">Stop #{stop.order || idx + 1}</span>
+                        <span className="font-mono text-[10px] text-[#16A36A] font-semibold">{stop.status || 'Pending'}</span>
                       </div>
-                      <p className="text-xs font-medium text-[#e0e0e7] my-0.5">{stop.locationName}</p>
-                      {stop.notes && <p className="text-[11px] text-[#858894] m-0">{stop.notes}</p>}
+                      <p className="text-xs font-semibold text-[#172033] my-0.5">{stop.locationName}</p>
+                      {stop.notes && <p className="text-[11px] text-[#68758A] m-0">{stop.notes}</p>}
                     </div>
                   ))}
                 </div>
@@ -360,13 +359,13 @@ export default function TripDetails({
 
               {/* Destination */}
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-[#321d22] border border-[#542931] text-[#f87171] flex items-center justify-center shrink-0 font-mono text-[10px] font-bold">
+                <div className="w-6 h-6 rounded-full bg-[#FDF2F2] border border-[#FAD2D2] text-[#E05252] flex items-center justify-center shrink-0 font-mono text-[10px] font-bold shadow-2xs">
                   B
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="font-mono text-[10px] text-[#747683] uppercase">Final Destination</span>
-                  <p className="text-sm font-medium text-[#f0f0f4] m-0">{trip.destinationLocation}</p>
-                  <span className="text-[10px] text-[#858894] font-mono">
+                  <span className="font-mono text-[10px] text-[#68758A] uppercase font-semibold">Final Destination</span>
+                  <p className="text-sm font-semibold text-[#172033] m-0">{trip.destinationLocation}</p>
+                  <span className="text-[10px] text-[#8A97AB] font-mono">
                     Coords: {trip.destinationCoords?.lat || 40.7589}, {trip.destinationCoords?.lng || -73.9851}
                   </span>
                 </div>
@@ -377,14 +376,14 @@ export default function TripDetails({
           {/* Vehicle & Driver Details Grid */}
           <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
             {/* Vehicle Profile */}
-            <div className="bg-[#17191f] border border-[#292c35] p-4 rounded-[10px] space-y-3">
+            <div className="glass-card rounded-2xl p-5 space-y-3 shadow-liquid-subtle">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-mono uppercase tracking-[1px] text-[#858894] m-0 flex items-center gap-1.5">
-                  <Truck className="w-3.5 h-3.5 text-[#ad91ff]" />
+                <h4 className="text-xs font-mono uppercase tracking-wider text-[#68758A] m-0 flex items-center gap-1.5 font-semibold">
+                  <Truck className="w-3.5 h-3.5 text-[#2879E8]" />
                   <span>Assigned Vehicle</span>
                 </h4>
                 {assignedVehicle && (
-                  <span className="font-mono text-[10px] text-[#6ee7b7] bg-[#122822] px-1.5 py-0.5 rounded border border-[#1d4c3e]">
+                  <span className="font-mono text-[10px] text-[#16A36A] bg-[#E8F7F0] px-2 py-0.5 rounded-full border border-[#C2E8D7] font-semibold">
                     {assignedVehicle.status}
                   </span>
                 )}
@@ -392,37 +391,37 @@ export default function TripDetails({
 
               {assignedVehicle ? (
                 <div className="space-y-2 font-mono text-xs">
-                  <div className="flex justify-between border-b border-[#242631] pb-1.5">
-                    <span className="text-[#858894]">Plate:</span>
-                    <b className="text-[#f0f0f4]">{assignedVehicle.plate}</b>
+                  <div className="flex justify-between border-b border-[#F1F5F9] pb-1.5">
+                    <span className="text-[#68758A]">Plate:</span>
+                    <b className="text-[#172033]">{assignedVehicle.plate}</b>
                   </div>
-                  <div className="flex justify-between border-b border-[#242631] pb-1.5">
-                    <span className="text-[#858894]">Model:</span>
-                    <span className="text-[#e0e0e7]">{assignedVehicle.model} ({assignedVehicle.year})</span>
+                  <div className="flex justify-between border-b border-[#F1F5F9] pb-1.5">
+                    <span className="text-[#68758A]">Model:</span>
+                    <span className="text-[#172033] font-medium">{assignedVehicle.model} ({assignedVehicle.year})</span>
                   </div>
-                  <div className="flex justify-between border-b border-[#242631] pb-1.5">
-                    <span className="text-[#858894]">Fuel Level:</span>
-                    <span className="text-[#8be0b3]">{assignedVehicle.fuel}%</span>
+                  <div className="flex justify-between border-b border-[#F1F5F9] pb-1.5">
+                    <span className="text-[#68758A]">Fuel Level:</span>
+                    <span className="text-[#16A36A] font-bold">{assignedVehicle.fuel}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#858894]">Odometer:</span>
-                    <span className="text-[#e0e0e7]">{assignedVehicle.odometer?.toLocaleString()} km</span>
+                    <span className="text-[#68758A]">Odometer:</span>
+                    <span className="text-[#172033] font-medium">{assignedVehicle.odometer?.toLocaleString()} km</span>
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-[#747683] italic">No vehicle assigned to this trip.</p>
+                <p className="text-xs text-[#8A97AB] italic">No vehicle assigned to this trip.</p>
               )}
             </div>
 
             {/* Driver Profile */}
-            <div className="bg-[#17191f] border border-[#292c35] p-4 rounded-[10px] space-y-3">
+            <div className="glass-card rounded-2xl p-5 space-y-3 shadow-liquid-subtle">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-mono uppercase tracking-[1px] text-[#858894] m-0 flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-[#8be0b3]" />
+                <h4 className="text-xs font-mono uppercase tracking-wider text-[#68758A] m-0 flex items-center gap-1.5 font-semibold">
+                  <User className="w-3.5 h-3.5 text-[#16A36A]" />
                   <span>Assigned Driver</span>
                 </h4>
                 {assignedDriver && (
-                  <span className="font-mono text-[10px] text-[#ad91ff] bg-[#24212f] px-1.5 py-0.5 rounded border border-[#38314e]">
+                  <span className="font-mono text-[10px] text-[#2879E8] bg-[#EAF3FF] px-2 py-0.5 rounded-full border border-[#D5E6FB] font-semibold">
                     ★ {assignedDriver.rating || 4.9}
                   </span>
                 )}
@@ -430,45 +429,45 @@ export default function TripDetails({
 
               {assignedDriver ? (
                 <div className="space-y-2 font-mono text-xs">
-                  <div className="flex justify-between border-b border-[#242631] pb-1.5">
-                    <span className="text-[#858894]">Name:</span>
-                    <b className="text-[#f0f0f4]">{assignedDriver.name}</b>
+                  <div className="flex justify-between border-b border-[#F1F5F9] pb-1.5">
+                    <span className="text-[#68758A]">Name:</span>
+                    <b className="text-[#172033]">{assignedDriver.name}</b>
                   </div>
-                  <div className="flex justify-between border-b border-[#242631] pb-1.5">
-                    <span className="text-[#858894]">Phone:</span>
-                    <span className="text-[#e0e0e7]">{assignedDriver.phone}</span>
+                  <div className="flex justify-between border-b border-[#F1F5F9] pb-1.5">
+                    <span className="text-[#68758A]">Phone:</span>
+                    <span className="text-[#172033] font-medium">{assignedDriver.phone}</span>
                   </div>
-                  <div className="flex justify-between border-b border-[#242631] pb-1.5">
-                    <span className="text-[#858894]">License:</span>
-                    <span className="text-[#e0e0e7]">{assignedDriver.license}</span>
+                  <div className="flex justify-between border-b border-[#F1F5F9] pb-1.5">
+                    <span className="text-[#68758A]">License:</span>
+                    <span className="text-[#172033] font-medium">{assignedDriver.license}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#858894]">Completed Trips:</span>
-                    <span className="text-[#6ee7b7]">{assignedDriver.tripsCompleted || 0}</span>
+                    <span className="text-[#68758A]">Completed Trips:</span>
+                    <span className="text-[#16A36A] font-bold">{assignedDriver.tripsCompleted || 0}</span>
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-[#747683] italic">No driver assigned to this trip.</p>
+                <p className="text-xs text-[#8A97AB] italic">No driver assigned to this trip.</p>
               )}
             </div>
           </div>
 
           {/* Cargo Details & Notes */}
-          <div className="bg-[#17191f] border border-[#292c35] p-4 rounded-[10px] space-y-3">
-            <h4 className="text-xs font-mono uppercase tracking-[1px] text-[#858894] m-0 flex items-center gap-1.5">
-              <Package className="w-3.5 h-3.5 text-[#fcd34d]" />
+          <div className="glass-card rounded-2xl p-5 space-y-3 shadow-liquid-subtle">
+            <h4 className="text-xs font-mono uppercase tracking-wider text-[#68758A] m-0 flex items-center gap-1.5 font-semibold">
+              <Package className="w-3.5 h-3.5 text-[#E7A329]" />
               <span>Cargo Specifications & Dispatch Notes</span>
             </h4>
             <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
-              <div className="bg-[#121319] p-3 rounded-[7px] border border-[#242631]">
-                <span className="text-[10px] font-mono uppercase text-[#747683] block mb-1">Cargo Description</span>
-                <p className="text-xs text-[#e0e0e7] m-0">
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="text-[10px] font-mono uppercase text-[#68758A] block mb-1 font-semibold">Cargo Description</span>
+                <p className="text-xs text-[#172033] font-medium m-0">
                   {trip.cargoDetails || 'Standard commercial package cargo.'}
                 </p>
               </div>
-              <div className="bg-[#121319] p-3 rounded-[7px] border border-[#242631]">
-                <span className="text-[10px] font-mono uppercase text-[#747683] block mb-1">Operational Instructions</span>
-                <p className="text-xs text-[#e0e0e7] m-0">
+              <div className="bg-[#F8FAFD] p-3.5 rounded-xl border border-[#E2E8F0] shadow-2xs">
+                <span className="text-[10px] font-mono uppercase text-[#68758A] block mb-1 font-semibold">Operational Instructions</span>
+                <p className="text-xs text-[#172033] font-medium m-0">
                   {trip.notes || 'No special handling instructions provided.'}
                 </p>
               </div>
@@ -476,8 +475,8 @@ export default function TripDetails({
           </div>
 
           {/* Activity Timeline */}
-          <div className="bg-[#17191f] border border-[#292c35] p-5 rounded-[10px] space-y-4">
-            <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#b49aff] m-0 flex items-center gap-2">
+          <div className="glass-card rounded-2xl p-5 space-y-4 shadow-liquid-subtle">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[#2879E8] m-0 flex items-center gap-2 font-bold">
               <Clock className="w-3.5 h-3.5" />
               <span>Lifecycle Status History & Activity Timeline</span>
             </h3>
@@ -488,20 +487,20 @@ export default function TripDetails({
         {/* Right Column (1 Col wide): Expenses, Correlated Geofences, Report Trigger */}
         <div className="space-y-6">
           {/* Trip Expense Summary */}
-          <div className="bg-[#17191f] border border-[#292c35] p-4 rounded-[10px] space-y-3">
+          <div className="glass-card rounded-2xl p-5 space-y-3.5 shadow-liquid-subtle">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#858894] m-0 flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-[#6ee7b7]" />
+              <h3 className="text-xs font-mono uppercase tracking-wider text-[#68758A] m-0 flex items-center gap-1.5 font-semibold">
+                <DollarSign className="w-3.5 h-3.5 text-[#16A36A]" />
                 <span>Recorded Expenses</span>
               </h3>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-sm font-bold text-[#6ee7b7]">
+                <span className="font-mono text-sm font-bold text-[#16A36A]">
                   ${totalExpense.toFixed(2)}
                 </span>
                 <button
                   type="button"
                   onClick={() => setIsExpenseModalOpen(true)}
-                  className="p-1 rounded bg-[#24212f] hover:bg-[#322c42] text-[#c4b3ff] border border-[#3f3558] transition-colors"
+                  className="p-1 rounded-lg bg-[#EAF3FF] hover:bg-[#D5E6FB] text-[#2879E8] border border-[#D5E6FB] transition-colors cursor-pointer"
                   title="Add Expense"
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -510,29 +509,29 @@ export default function TripDetails({
             </div>
 
             {Array.isArray(trip.expenses) && trip.expenses.length > 0 ? (
-              <div className="divide-y divide-[#242631] text-xs">
+              <div className="divide-y divide-[#F1F5F9] text-xs">
                 {trip.expenses.map((exp, idx) => (
-                  <div key={exp.id || idx} className="py-2 flex items-center justify-between gap-2 group">
+                  <div key={exp.id || idx} className="py-2.5 flex items-center justify-between gap-2 group">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[9px] px-1.5 py-0.2 rounded bg-[#20232e] text-[#a0a3b1] border border-[#313544]">
+                        <span className="font-mono text-[9px] px-2 py-0.5 rounded-md bg-[#F8FAFD] text-[#68758A] border border-[#E2E8F0] font-semibold">
                           {exp.type}
                         </span>
-                        <b className="text-[#f0f0f4] text-[11px] truncate">{exp.description || 'Receipt logged'}</b>
+                        <b className="text-[#172033] text-[11px] truncate">{exp.description || 'Receipt logged'}</b>
                       </div>
-                      <span className="text-[10px] text-[#747683] font-mono">
+                      <span className="text-[10px] text-[#8A97AB] font-mono">
                         {new Date(exp.recordedAt).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="font-mono text-xs font-semibold text-[#e0e0e7]">
+                      <span className="font-mono text-xs font-bold text-[#172033]">
                         ${Number(exp.amount).toFixed(2)}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleDeleteExpense(exp.id)}
-                        className="text-[#686a77] hover:text-[#f87171] p-1 transition-colors"
+                        className="text-[#8A97AB] hover:text-[#E05252] p-1 rounded hover:bg-[#FDF2F2] transition-colors cursor-pointer"
                         title="Delete Expense"
                       >
                         <Trash2 className="w-3 h-3" />
@@ -542,50 +541,50 @@ export default function TripDetails({
                 ))}
               </div>
             ) : (
-              <div className="py-3 text-center">
-                <p className="text-xs text-[#747683] italic mb-2">No expenses recorded for this trip.</p>
+              <div className="py-4 text-center">
+                <p className="text-xs text-[#8A97AB] italic mb-2">No expenses recorded for this trip.</p>
                 <button
                   type="button"
                   onClick={() => setIsExpenseModalOpen(true)}
-                  className="text-xs text-[#ad91ff] hover:text-[#c4b3ff] font-medium"
+                  className="text-xs text-[#2879E8] hover:underline font-semibold cursor-pointer"
                 >
                   + Add First Expense
                 </button>
               </div>
             )}
 
-            <div className="pt-2 border-t border-[#252834] font-mono text-[11px] flex justify-between text-[#858894]">
+            <div className="pt-2.5 border-t border-[#E2E8F0] font-mono text-[11px] flex justify-between text-[#68758A]">
               <span>Cost Per Kilometer:</span>
-              <span className="text-[#6ee7b7] font-bold">
+              <span className="text-[#16A36A] font-bold">
                 {costPerKm > 0 ? `$${costPerKm} / km` : 'N/A'}
               </span>
             </div>
           </div>
 
           {/* Correlated Geofence Alerts for Vehicle */}
-          <div className="bg-[#17191f] border border-[#292c35] p-4 rounded-[10px] space-y-3">
-            <h3 className="text-xs font-mono uppercase tracking-[1px] text-[#858894] m-0 flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-[#f87171]" />
+          <div className="glass-card rounded-2xl p-5 space-y-3.5 shadow-liquid-subtle">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[#68758A] m-0 flex items-center gap-1.5 font-semibold">
+              <ShieldAlert className="w-3.5 h-3.5 text-[#E05252]" />
               <span>Geofence & Safety Events</span>
             </h3>
 
             {correlatedGeofenceEvents.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {correlatedGeofenceEvents.map((evt) => (
                   <div
                     key={evt.id}
-                    className="p-2.5 rounded-[7px] bg-[#1a1417] border border-[#44232a] space-y-1 text-xs"
+                    className="p-3 rounded-xl bg-[#FDF2F2] border border-[#FAD2D2] space-y-1 text-xs shadow-2xs"
                   >
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#f87171]">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-[#E05252] font-semibold">
                       <span>{evt.geofenceName}</span>
                       <span>{evt.timestamp}</span>
                     </div>
-                    <p className="text-[11px] text-[#e0e0e7] m-0 leading-tight">{evt.message}</p>
+                    <p className="text-[11px] text-[#172033] m-0 leading-tight font-medium">{evt.message}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#747683] italic">No geofence breaches or safety violations recorded.</p>
+              <p className="text-xs text-[#8A97AB] italic">No geofence breaches or safety violations recorded.</p>
             )}
           </div>
         </div>
@@ -593,18 +592,18 @@ export default function TripDetails({
 
       {/* Status Transition Modal */}
       {isTransitionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-[#17191f] border border-[#2b2e38] rounded-xl shadow-2xl p-6 text-[#f0f0f4] space-y-4">
-            <h3 className="text-base font-bold text-[#f0f0f4] m-0">
-              Confirm Status Transition: <span className="text-[#b49aff]">{targetStatus}</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/40 backdrop-blur-md">
+          <div className="w-full max-w-md glass-card rounded-2xl shadow-liquid-dropdown p-6 text-[#172033] space-y-4 animate-in fade-in zoom-in-95">
+            <h3 className="text-base font-bold text-[#172033] m-0 tracking-tight">
+              Confirm Status Transition: <span className="text-[#2879E8]">{targetStatus}</span>
             </h3>
-            <p className="text-xs text-[#858894]">
-              You are about to change trip <span className="font-mono text-[#e0e0e7]">{trip.id}</span> from{' '}
-              <b className="text-[#f0f0f4]">{trip.status}</b> to <b className="text-[#b49aff]">{targetStatus}</b>.
+            <p className="text-xs text-[#68758A]">
+              You are about to change trip <span className="font-mono font-bold text-[#172033]">{trip.id}</span> from{' '}
+              <b className="text-[#172033]">{trip.status}</b> to <b className="text-[#2879E8]">{targetStatus}</b>.
             </p>
 
             <div>
-              <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
+              <label className="block text-[10px] font-mono text-[#68758A] uppercase tracking-wider mb-1.5 font-semibold">
                 Transition Notes / Reason
               </label>
               <textarea
@@ -612,19 +611,21 @@ export default function TripDetails({
                 value={statusNote}
                 onChange={(e) => setStatusNote(e.target.value)}
                 placeholder="Provide mandatory dispatch audit notes for this status change..."
-                className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] p-2.5 rounded-[7px] focus:outline-none focus:border-[#ad91ff] resize-none"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] text-xs text-[#172033] p-3 rounded-xl focus:outline-none focus:border-[#2879E8] resize-none shadow-2xs"
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-[#252834]">
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
               <Button
-                variant="quiet"
+                variant="default"
+                size="sm"
                 onClick={() => setIsTransitionModalOpen(false)}
               >
                 Cancel
               </Button>
               <Button
                 variant="primary"
+                size="sm"
                 onClick={handleConfirmTransition}
               >
                 Confirm Transition

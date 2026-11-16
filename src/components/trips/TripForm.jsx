@@ -286,12 +286,12 @@ export default function TripForm({
 
       {/* Conflict / Maintenance Warning Box */}
       {conflictWarnings.length > 0 && (
-        <div className="bg-[#2c1d1a] border border-[#592c24] p-3.5 rounded-[9px] flex items-start gap-3 text-xs">
-          <AlertTriangle className="w-4 h-4 text-[#f87171] shrink-0 mt-0.5" />
+        <div className="bg-[#FEF2F2] border border-[#FCA5A5] p-3.5 rounded-xl flex items-start gap-3 text-xs">
+          <AlertTriangle className="w-4 h-4 text-[#E05252] shrink-0 mt-0.5" />
           <div className="flex-1 space-y-1">
-            <b className="text-[#fca5a5] block">Assignment Conflict Alert</b>
+            <b className="text-[#991B1B] block font-bold">Assignment Conflict Alert</b>
             {conflictWarnings.map((warn, i) => (
-              <p key={i} className="text-[#e2b5b5] text-[11px] m-0">
+              <p key={i} className="text-[#B91C1C] text-[11px] m-0 font-medium">
                 • {warn}
               </p>
             ))}
@@ -302,45 +302,45 @@ export default function TripForm({
       {/* Section 1: Trip Profile & Customer */}
       <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Trip Name <span className="text-[#f87171]">*</span>
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
+            Trip Name <span className="text-[#E05252]">*</span>
           </label>
           <input
             type="text"
             value={formData.tripName}
             onChange={(e) => setFormData({ ...formData, tripName: e.target.value })}
             placeholder="e.g. Midtown Medical Priority Express"
-            className={`w-full bg-[#121319] border ${
-              formErrors.tripName ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-            } text-sm text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff]`}
+            className={`w-full bg-white border ${
+              formErrors.tripName ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+            } text-sm text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] shadow-xs`}
           />
           {formErrors.tripName && (
-            <p className="text-[11px] text-[#f87171] mt-1">{formErrors.tripName}</p>
+            <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.tripName}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Customer / Client Name <span className="text-[#f87171]">*</span>
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
+            Customer / Client Name <span className="text-[#E05252]">*</span>
           </label>
           <input
             type="text"
             value={formData.customerName}
             onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
             placeholder="e.g. BioHealth Diagnostics & Pharma"
-            className={`w-full bg-[#121319] border ${
-              formErrors.customerName ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-            } text-sm text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff]`}
+            className={`w-full bg-white border ${
+              formErrors.customerName ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+            } text-sm text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] shadow-xs`}
           />
           {formErrors.customerName && (
-            <p className="text-[11px] text-[#f87171] mt-1">{formErrors.customerName}</p>
+            <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.customerName}</p>
           )}
         </div>
       </div>
 
       {/* Section 2: Locations & Route */}
-      <div className="bg-[#121319] border border-[#272935] p-4 rounded-[10px] space-y-4">
-        <h4 className="text-xs font-mono uppercase text-[#b49aff] tracking-[1px] m-0 flex items-center gap-2">
+      <div className="glass-card p-4 space-y-4">
+        <h4 className="text-xs font-mono uppercase text-[#2879E8] tracking-[1px] m-0 flex items-center gap-2 font-bold">
           <MapPin className="w-3.5 h-3.5" />
           <span>Origin, Waypoints & Destination</span>
         </h4>
@@ -348,53 +348,53 @@ export default function TripForm({
         <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
           {/* Pickup */}
           <div>
-            <label className="block text-[11px] text-[#8e919f] mb-1">
-              Starting Pickup Location <span className="text-[#f87171]">*</span>
+            <label className="block text-[11px] text-[#475569] mb-1 font-semibold">
+              Starting Pickup Location <span className="text-[#E05252]">*</span>
             </label>
             <input
               type="text"
               value={formData.pickupLocation}
               onChange={(e) => setFormData({ ...formData, pickupLocation: e.target.value })}
               placeholder="e.g. JFK Air Cargo Hub, Queens, NY"
-              className={`w-full bg-[#17191f] border ${
-                formErrors.pickupLocation ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-              } text-xs text-[#f0f0f4] px-3 py-2 rounded-[6px] focus:outline-none focus:border-[#ad91ff]`}
+              className={`w-full bg-white border ${
+                formErrors.pickupLocation ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+              } text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] shadow-xs`}
             />
             {formErrors.pickupLocation && (
-              <p className="text-[11px] text-[#f87171] mt-1">{formErrors.pickupLocation}</p>
+              <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.pickupLocation}</p>
             )}
           </div>
 
           {/* Destination */}
           <div>
-            <label className="block text-[11px] text-[#8e919f] mb-1">
-              Final Destination Location <span className="text-[#f87171]">*</span>
+            <label className="block text-[11px] text-[#475569] mb-1 font-semibold">
+              Final Destination Location <span className="text-[#E05252]">*</span>
             </label>
             <input
               type="text"
               value={formData.destinationLocation}
               onChange={(e) => setFormData({ ...formData, destinationLocation: e.target.value })}
               placeholder="e.g. Upper East Side Health Network, New York, NY"
-              className={`w-full bg-[#17191f] border ${
-                formErrors.destinationLocation ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-              } text-xs text-[#f0f0f4] px-3 py-2 rounded-[6px] focus:outline-none focus:border-[#ad91ff]`}
+              className={`w-full bg-white border ${
+                formErrors.destinationLocation ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+              } text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] shadow-xs`}
             />
             {formErrors.destinationLocation && (
-              <p className="text-[11px] text-[#f87171] mt-1">{formErrors.destinationLocation}</p>
+              <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.destinationLocation}</p>
             )}
           </div>
         </div>
 
         {/* Dynamic Intermediate Waypoints */}
-        <div className="space-y-2 pt-2 border-t border-[#222430]">
+        <div className="space-y-2 pt-2 border-t border-[#E2E8F0]">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] text-[#858894] font-mono uppercase">
+            <span className="text-[11px] text-[#475569] font-mono uppercase font-bold">
               Intermediate Waypoints ({formData.stops.length})
             </span>
             <button
               type="button"
               onClick={handleAddStop}
-              className="flex items-center gap-1 text-[11px] text-[#ad91ff] hover:text-[#c4b3ff] transition-colors"
+              className="flex items-center gap-1 text-[11px] text-[#2879E8] hover:text-[#1765CC] transition-colors font-bold"
             >
               <Plus className="w-3 h-3" />
               <span>Add Waypoint</span>
@@ -404,9 +404,9 @@ export default function TripForm({
           {formData.stops.map((stop, idx) => (
             <div
               key={stop.id || idx}
-              className="flex items-center gap-2 bg-[#17191f] p-2.5 rounded-[7px] border border-[#292c37]"
+              className="flex items-center gap-2 bg-[#F8FAFD] p-2.5 rounded-xl border border-[#E2E8F0]"
             >
-              <span className="w-5 h-5 rounded-full bg-[#24212f] text-[#c4b3ff] font-mono text-[10px] flex items-center justify-center shrink-0">
+              <span className="w-5 h-5 rounded-full bg-[#EAF3FF] text-[#2879E8] font-mono text-[10px] flex items-center justify-center shrink-0 font-bold">
                 {stop.order || idx + 1}
               </span>
               <input
@@ -414,19 +414,19 @@ export default function TripForm({
                 value={stop.locationName}
                 onChange={(e) => handleStopChange(idx, 'locationName', e.target.value)}
                 placeholder="Waypoint address / facility..."
-                className="flex-1 bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-2.5 py-1.5 rounded focus:outline-none focus:border-[#ad91ff]"
+                className="flex-1 bg-white border border-[#E2E8F0] text-xs text-[#0B132B] font-semibold px-2.5 py-1.5 rounded-lg focus:outline-none focus:border-[#2879E8]"
               />
               <input
                 type="text"
                 value={stop.notes || ''}
                 onChange={(e) => handleStopChange(idx, 'notes', e.target.value)}
                 placeholder="Stop instructions (optional)"
-                className="w-1/3 bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-2.5 py-1.5 rounded focus:outline-none focus:border-[#ad91ff]"
+                className="w-1/3 bg-white border border-[#E2E8F0] text-xs text-[#0B132B] font-semibold px-2.5 py-1.5 rounded-lg focus:outline-none focus:border-[#2879E8]"
               />
               <button
                 type="button"
                 onClick={() => handleRemoveStop(idx)}
-                className="text-[#747683] hover:text-[#f87171] p-1"
+                className="text-[#64748B] hover:text-[#E05252] p-1 transition-colors"
                 title="Remove Stop"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -439,42 +439,42 @@ export default function TripForm({
       {/* Section 3: Schedule & Distance */}
       <div className="grid grid-cols-3 gap-4 max-md:grid-cols-1">
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Scheduled Departure <span className="text-[#f87171]">*</span>
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
+            Scheduled Departure <span className="text-[#E05252]">*</span>
           </label>
           <input
             type="datetime-local"
             value={formData.scheduledDeparture}
             onChange={(e) => setFormData({ ...formData, scheduledDeparture: e.target.value })}
-            className={`w-full bg-[#121319] border ${
-              formErrors.scheduledDeparture ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-            } text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] font-mono`}
+            className={`w-full bg-white border ${
+              formErrors.scheduledDeparture ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+            } text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] font-mono shadow-xs`}
           />
           {formErrors.scheduledDeparture && (
-            <p className="text-[11px] text-[#f87171] mt-1">{formErrors.scheduledDeparture}</p>
+            <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.scheduledDeparture}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Expected Arrival <span className="text-[#f87171]">*</span>
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
+            Expected Arrival <span className="text-[#E05252]">*</span>
           </label>
           <input
             type="datetime-local"
             value={formData.scheduledArrival}
             onChange={(e) => setFormData({ ...formData, scheduledArrival: e.target.value })}
-            className={`w-full bg-[#121319] border ${
-              formErrors.scheduledArrival ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-            } text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] font-mono`}
+            className={`w-full bg-white border ${
+              formErrors.scheduledArrival ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+            } text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] font-mono shadow-xs`}
           />
           {formErrors.scheduledArrival && (
-            <p className="text-[11px] text-[#f87171] mt-1">{formErrors.scheduledArrival}</p>
+            <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.scheduledArrival}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Estimated Distance (KM) <span className="text-[#f87171]">*</span>
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
+            Estimated Distance (KM) <span className="text-[#E05252]">*</span>
           </label>
           <input
             type="number"
@@ -483,12 +483,12 @@ export default function TripForm({
             value={formData.estimatedDistanceKm}
             onChange={(e) => setFormData({ ...formData, estimatedDistanceKm: e.target.value })}
             placeholder="e.g. 48.5"
-            className={`w-full bg-[#121319] border ${
-              formErrors.estimatedDistanceKm ? 'border-[#ef4444]' : 'border-[#2b2e38]'
-            } text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] font-mono`}
+            className={`w-full bg-white border ${
+              formErrors.estimatedDistanceKm ? 'border-[#EF4444]' : 'border-[#E2E8F0]'
+            } text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] font-mono shadow-xs`}
           />
           {formErrors.estimatedDistanceKm && (
-            <p className="text-[11px] text-[#f87171] mt-1">{formErrors.estimatedDistanceKm}</p>
+            <p className="text-[11px] text-[#EF4444] mt-1 font-semibold">{formErrors.estimatedDistanceKm}</p>
           )}
         </div>
       </div>
@@ -497,14 +497,14 @@ export default function TripForm({
       <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
         {/* Vehicle Select */}
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
             Assign Vehicle
           </label>
           <div className="relative">
             <select
               value={formData.assignedVehicleId}
               onChange={(e) => setFormData({ ...formData, assignedVehicleId: e.target.value })}
-              className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] cursor-pointer"
+              className="w-full bg-white border border-[#E2E8F0] text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] cursor-pointer shadow-xs"
             >
               <option value="">— Select Available Vehicle —</option>
               {vehicles.map((v) => {
@@ -514,7 +514,7 @@ export default function TripForm({
                     key={v.id}
                     value={v.id}
                     disabled={isUnderService}
-                    className={isUnderService ? 'text-[#f87171] bg-[#1a1315]' : ''}
+                    className={isUnderService ? 'text-[#E05252] bg-[#FEF2F2]' : ''}
                   >
                     {v.plate} · {v.model} {isUnderService ? '⚠️ [MAINTENANCE HOLD]' : `(${v.status})`}
                   </option>
@@ -522,21 +522,21 @@ export default function TripForm({
               })}
             </select>
           </div>
-          <span className="text-[10px] text-[#747683] mt-1 block">
+          <span className="text-[10px] text-[#64748B] mt-1 block font-medium">
             Vehicles under maintenance are locked from assignment.
           </span>
         </div>
 
         {/* Driver Select */}
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
             Assign Driver
           </label>
           <div className="relative">
             <select
               value={formData.assignedDriverId}
               onChange={(e) => setFormData({ ...formData, assignedDriverId: e.target.value })}
-              className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] cursor-pointer"
+              className="w-full bg-white border border-[#E2E8F0] text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] cursor-pointer shadow-xs"
             >
               <option value="">— Select Available Driver —</option>
               {drivers.map((d) => (
@@ -546,7 +546,7 @@ export default function TripForm({
               ))}
             </select>
           </div>
-          <span className="text-[10px] text-[#747683] mt-1 block">
+          <span className="text-[10px] text-[#64748B] mt-1 block font-medium">
             Overlapping assignments will be flagged immediately.
           </span>
         </div>
@@ -555,7 +555,7 @@ export default function TripForm({
       {/* Section 5: Cargo Details & Operational Notes */}
       <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
             Cargo & Load Description
           </label>
           <textarea
@@ -563,12 +563,12 @@ export default function TripForm({
             value={formData.cargoDetails}
             onChange={(e) => setFormData({ ...formData, cargoDetails: e.target.value })}
             placeholder="e.g. 3 pallets cold-chain vaccine vials (280 kg, 2-8°C)"
-            className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] resize-none"
+            className="w-full bg-white border border-[#E2E8F0] text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] resize-none shadow-xs"
           />
         </div>
 
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
+          <label className="block text-[11px] font-mono text-[#475569] uppercase tracking-[1px] mb-1.5 font-bold">
             Operational Dispatch Notes
           </label>
           <textarea
@@ -576,13 +576,13 @@ export default function TripForm({
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             placeholder="Special loading bay instructions, security clearance or client notes..."
-            className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] resize-none"
+            className="w-full bg-white border border-[#E2E8F0] text-xs text-[#0B132B] font-semibold px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] resize-none shadow-xs"
           />
         </div>
       </div>
 
       {/* Form Action Controls */}
-      <div className="pt-4 border-t border-[#272935] flex items-center justify-end gap-3">
+      <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-end gap-3">
         {onCancel && (
           <Button
             type="button"

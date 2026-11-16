@@ -29,21 +29,21 @@ export default function Toast({
             <div
               key={t.id}
               role="status"
-              className="pointer-events-auto flex items-center justify-between gap-3 bg-[#24212f]/95 border border-[#3f3b52] hover:border-primary/50 text-[#e8ddff] px-4 py-3 rounded-xl shadow-2xl shadow-black/60 backdrop-blur-md transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
+              className="pointer-events-auto flex items-center justify-between gap-3 bg-white/95 border border-[#E2E8F0] hover:border-[#2879E8]/40 text-[#172033] px-4 py-3 rounded-2xl shadow-liquid-dropdown backdrop-blur-xl transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                {toastType === 'success' && <CheckCircle2 className="w-4 h-4 text-[#8be0b3] shrink-0" />}
-                {toastType === 'warning' && <AlertCircle className="w-4 h-4 text-[#e5a46e] shrink-0" />}
+                {toastType === 'success' && <CheckCircle2 className="w-4 h-4 text-[#16A36A] shrink-0" />}
+                {toastType === 'warning' && <AlertCircle className="w-4 h-4 text-[#E7A329] shrink-0" />}
                 {(toastType === 'danger' || toastType === 'error') && (
-                  <AlertOctagon className="w-4 h-4 text-[#ef4444] shrink-0" />
+                  <AlertOctagon className="w-4 h-4 text-[#E05252] shrink-0" />
                 )}
-                {toastType === 'info' && <Info className="w-4 h-4 text-[#b49aff] shrink-0" />}
-                <span className="font-medium text-text-primary break-words">{t.message}</span>
+                {toastType === 'info' && <Info className="w-4 h-4 text-[#2879E8] shrink-0" />}
+                <span className="font-medium text-[#172033] break-words">{t.message}</span>
               </div>
               {onDismiss && (
                 <button
                   onClick={() => onDismiss(t.id)}
-                  className="text-text-muted hover:text-text-primary p-0.5 rounded transition-colors shrink-0"
+                  className="text-[#8A97AB] hover:text-[#172033] p-1 rounded-lg hover:bg-[#F0F5FC] transition-colors shrink-0"
                   aria-label="Dismiss notification"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -62,19 +62,19 @@ export default function Toast({
   return (
     <div
       role="status"
-      className="fixed right-6 bottom-6 z-[70] flex items-center gap-2.5 bg-[#24212f]/95 border border-[#3f3b52] hover:border-primary/50 text-[#e8ddff] px-4 py-3 rounded-xl shadow-2xl shadow-black/60 backdrop-blur-md transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
+      className="fixed right-6 bottom-6 z-[70] flex items-center gap-2.5 bg-white/95 border border-[#E2E8F0] hover:border-[#2879E8]/40 text-[#172033] px-4 py-3 rounded-2xl shadow-liquid-dropdown backdrop-blur-xl transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
     >
-      {type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#8be0b3] shrink-0" />}
-      {type === 'warning' && <AlertCircle className="w-4 h-4 text-[#e5a46e] shrink-0" />}
+      {type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#16A36A] shrink-0" />}
+      {type === 'warning' && <AlertCircle className="w-4 h-4 text-[#E7A329] shrink-0" />}
       {(type === 'danger' || type === 'error') && (
-        <AlertOctagon className="w-4 h-4 text-[#ef4444] shrink-0" />
+        <AlertOctagon className="w-4 h-4 text-[#E05252] shrink-0" />
       )}
-      {type === 'info' && <Info className="w-4 h-4 text-[#b49aff] shrink-0" />}
-      <span className="font-medium text-text-primary break-words">{message}</span>
+      {type === 'info' && <Info className="w-4 h-4 text-[#2879E8] shrink-0" />}
+      <span className="font-medium text-[#172033] break-words">{message}</span>
       {onClose && (
         <button
           onClick={onClose}
-          className="ml-2 text-text-muted hover:text-text-primary p-0.5 rounded transition-colors"
+          className="ml-2 text-[#8A97AB] hover:text-[#172033] p-1 rounded-lg hover:bg-[#F0F5FC] transition-colors"
           aria-label="Dismiss notification"
         >
           <X className="w-3.5 h-3.5" />

@@ -43,6 +43,9 @@ const ThemeContext = createContext({
   theme: 'light-liquid-glass',
   setTheme: () => {},
   toggleTheme: () => {},
+  toggleDayNight: () => {},
+  isDark: false,
+  currentTheme: GLASS_THEMES[0],
   themes: GLASS_THEMES
 });
 
@@ -58,6 +61,11 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     try {
       document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'dark-liquid-glass') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
       localStorage.setItem('autrail_theme_pref', theme);
     } catch (e) {
       console.warn('Theme storage unavailable:', e);
@@ -72,8 +80,25 @@ export function ThemeProvider({ children }) {
     });
   };
 
+  const toggleDayNight = () => {
+    setTheme((prev) => (prev === 'dark-liquid-glass' ? 'light-liquid-glass' : 'dark-liquid-glass'));
+  };
+
+  const isDark = theme === 'dark-liquid-glass';
+  const currentTheme = GLASS_THEMES.find((t) => t.id === theme) || GLASS_THEMES[0];
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, themes: GLASS_THEMES }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+        toggleTheme,
+        toggleDayNight,
+        isDark,
+        currentTheme,
+        themes: GLASS_THEMES
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );

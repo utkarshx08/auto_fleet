@@ -62,19 +62,19 @@ Verification: Signed & Archived in Autrail Telemetry Cloud.`;
   };
 
   return (
-    <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5 space-y-4">
+    <div className="glass-card rounded-2xl p-6 space-y-4 shadow-liquid-subtle">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <div>
-          <span className="font-mono text-[9px] text-[#858894] uppercase tracking-wider block">
+          <span className="font-mono text-[10px] text-[#2879E8] font-semibold uppercase tracking-wider block">
             Archived Work Orders & Invoices
           </span>
-          <h3 className="text-sm font-bold text-[#f0f0f4] m-0">
+          <h3 className="text-base font-bold text-[#172033] tracking-tight mt-0.5">
             Completed Maintenance History
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <SearchBar
             value={search}
             onChange={setSearch}
@@ -86,7 +86,7 @@ Verification: Signed & Archived in Autrail Telemetry Cloud.`;
           <select
             value={selectedVehicle}
             onChange={(e) => setSelectedVehicle(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-xs text-[#eee] outline-none font-mono cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-mono cursor-pointer shadow-2xs"
           >
             <option value="ALL">All Fleet Vehicles</option>
             {vehicles.map((v) => (
@@ -99,82 +99,84 @@ Verification: Signed & Archived in Autrail Telemetry Cloud.`;
       </div>
 
       {/* Summary Filter Pill */}
-      <div className="flex items-center justify-between text-[10px] font-mono text-[#858894] border-b border-[#252730] pb-3">
+      <div className="flex items-center justify-between text-[11px] font-mono text-[#68758A] border-b border-[#E2E8F0] pb-3">
         <span>Showing {filteredRecords.length} completed work order records</span>
         <span>
-          Total Filtered Spend: <b className="text-[#8be0b3] font-bold">${totalCostFiltered.toFixed(2)}</b>
+          Total Filtered Spend: <b className="text-[#16A36A] font-bold">${totalCostFiltered.toFixed(2)}</b>
         </span>
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-[11px] whitespace-nowrap font-sans">
+        <table className="w-full text-left border-collapse text-xs whitespace-nowrap font-sans">
           <thead>
-            <tr className="border-b border-[#30323b] text-[#747783] font-mono text-[8px] uppercase">
-              <th className="py-2.5 px-3">Order ID</th>
-              <th className="py-2.5 px-3">Vehicle</th>
-              <th className="py-2.5 px-3">Service Performed</th>
-              <th className="py-2.5 px-3">Date</th>
-              <th className="py-2.5 px-3">Odometer</th>
-              <th className="py-2.5 px-3">Facility & Tech</th>
-              <th className="py-2.5 px-3">Cost</th>
-              <th className="py-2.5 px-3 text-right">Invoice</th>
+            <tr className="border-b border-[#E2E8F0] text-[#68758A] font-mono text-[10px] uppercase tracking-wider">
+              <th className="py-3 px-3.5">Order ID</th>
+              <th className="py-3 px-3.5">Vehicle</th>
+              <th className="py-3 px-3.5">Service Performed</th>
+              <th className="py-3 px-3.5">Date</th>
+              <th className="py-3 px-3.5">Odometer</th>
+              <th className="py-3 px-3.5">Facility & Tech</th>
+              <th className="py-3 px-3.5">Cost</th>
+              <th className="py-3 px-3.5 text-right">Invoice</th>
             </tr>
           </thead>
           <tbody>
             {filteredRecords.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-[#747783]">
-                  No maintenance records match your search criteria.
+                <td colSpan={8} className="py-12 text-center text-[#8A97AB]">
+                  <FileText className="w-8 h-8 mx-auto text-[#CBD5E1] mb-2" />
+                  <p className="font-semibold text-sm text-[#172033]">No maintenance records found</p>
+                  <p className="text-xs text-[#68758A]">Try adjusting your search query or vehicle filter.</p>
                 </td>
               </tr>
             ) : (
               filteredRecords.map((rec) => (
                 <tr
                   key={rec.id}
-                  className="border-b border-[#242633] hover:bg-[#1b1d26] transition-colors last:border-0"
+                  className="border-b border-[#F1F5F9] hover:bg-[#F0F5FC]/60 transition-colors last:border-0"
                 >
                   {/* Order ID */}
-                  <td className="py-3 px-3 font-mono text-xs text-[#b49aff] font-bold">
+                  <td className="py-3.5 px-3.5 font-mono text-xs text-[#2879E8] font-bold">
                     {rec.id}
                   </td>
 
                   {/* Vehicle */}
-                  <td className="py-3 px-3 font-mono text-xs text-[#f0f0f4]">
+                  <td className="py-3.5 px-3.5 font-mono text-xs font-semibold text-[#172033]">
                     {rec.vehicleId}
                   </td>
 
                   {/* Service & Notes */}
-                  <td className="py-3 px-3">
-                    <b className="text-[#d1d1da] block text-xs">{rec.serviceType}</b>
-                    <span className="text-[10px] text-[#747783] truncate block max-w-xs">
+                  <td className="py-3.5 px-3.5">
+                    <b className="text-[#172033] block text-xs">{rec.serviceType}</b>
+                    <span className="text-[11px] text-[#68758A] truncate block max-w-xs">
                       {rec.description}
                     </span>
                   </td>
 
                   {/* Date */}
-                  <td className="py-3 px-3 font-mono text-[10px] text-[#aeb0ba]">
+                  <td className="py-3.5 px-3.5 font-mono text-[11px] text-[#68758A]">
                     {rec.serviceDate}
                   </td>
 
                   {/* Odometer */}
-                  <td className="py-3 px-3 font-mono text-[10px] text-[#8be0b3]">
+                  <td className="py-3.5 px-3.5 font-mono text-[11px] text-[#16A36A] font-medium">
                     {rec.odometerReading ? rec.odometerReading.toLocaleString() : '—'} km
                   </td>
 
                   {/* Facility & Tech */}
-                  <td className="py-3 px-3 text-[10px] text-[#aeb0ba]">
-                    <span className="block text-[#d1d1da]">{rec.serviceProvider}</span>
-                    <span className="text-[9px] text-[#747783]">Tech: {rec.technician || 'Certified'}</span>
+                  <td className="py-3.5 px-3.5 text-[11px] text-[#68758A]">
+                    <span className="block font-medium text-[#172033]">{rec.serviceProvider}</span>
+                    <span className="text-[10px] text-[#8A97AB]">Tech: {rec.technician || 'Certified'}</span>
                   </td>
 
                   {/* Cost */}
-                  <td className="py-3 px-3 font-mono text-xs font-bold text-[#f0f0f4]">
+                  <td className="py-3.5 px-3.5 font-mono text-xs font-bold text-[#172033]">
                     ${Number(rec.serviceCost).toFixed(2)}
                   </td>
 
                   {/* Invoice Download */}
-                  <td className="py-3 px-3 text-right">
+                  <td className="py-3.5 px-3.5 text-right">
                     <Button
                       variant="quiet"
                       size="sm"

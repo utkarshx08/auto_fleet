@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-import { Plus, Wrench } from 'lucide-react';
+import { Plus, Wrench, Calendar, DollarSign, Truck, Building } from 'lucide-react';
 
 export default function ScheduleServiceModal({
   isOpen,
@@ -15,7 +15,7 @@ export default function ScheduleServiceModal({
     date: new Date().toISOString().split('T')[0],
     provider: 'Manhattan Fleet Hub',
     cost: '$180.00',
-    technician: 'Marcus Vance'
+    technician: 'Vikram Singh'
   });
 
   const handleSubmit = (e) => {
@@ -37,15 +37,15 @@ export default function ScheduleServiceModal({
       subtitle="Preventative Fleet Care Order"
       maxWidth="max-w-md"
     >
-      <form onSubmit={handleSubmit} className="space-y-3 text-xs font-sans">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
             Target Vehicle
           </label>
           <select
             value={formData.vehicle}
             onChange={(e) => setFormData({ ...formData, vehicle: e.target.value })}
-            className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
           >
             {vehicles.map((v) => (
               <option key={v.id} value={v.plate}>
@@ -56,7 +56,7 @@ export default function ScheduleServiceModal({
         </div>
 
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
             Service Description
           </label>
           <input
@@ -64,13 +64,13 @@ export default function ScheduleServiceModal({
             required
             value={formData.serviceType}
             onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
-            className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Scheduled Date
             </label>
             <input
@@ -78,12 +78,12 @@ export default function ScheduleServiceModal({
               required
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Estimated Cost
             </label>
             <input
@@ -91,25 +91,40 @@ export default function ScheduleServiceModal({
               required
               value={formData.cost}
               onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
             />
           </div>
         </div>
 
-        <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
-            Service Provider / Bay
-          </label>
-          <input
-            type="text"
-            required
-            value={formData.provider}
-            onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
-            className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
-          />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
+              Service Bay / Hub
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.provider}
+              onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs"
+            />
+          </div>
+
+          <div>
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
+              Assigned Specialist
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.technician}
+              onChange={(e) => setFormData({ ...formData, technician: e.target.value })}
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs shadow-2xs"
+            />
+          </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#252730] mt-3">
+        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0] mt-3">
           <Button variant="default" size="sm" onClick={onClose}>
             Cancel
           </Button>

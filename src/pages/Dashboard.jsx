@@ -45,7 +45,7 @@ export default function Dashboard({
       {/* Page Heading */}
       <section className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#68758A] uppercase mb-1.5 font-semibold">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1.5 font-bold">
             {formattedDate} <span className="text-[#2879E8] px-1 font-bold">•</span> {getGreeting()}, {operatorGreetingName}
           </p>
           <div className="-ml-3 py-1">
@@ -64,10 +64,10 @@ export default function Dashboard({
               animationDuration={0.5}
               pauseBetweenAnimations={1.4}
               fontSize="1.85rem"
-              wordClassName="text-[#172033] font-black tracking-tight"
+              wordClassName="text-[#0B132B] font-black tracking-tight"
             />
           </div>
-          <p className="text-[13px] text-[#68758A] mt-1 mb-0 font-medium">
+          <p className="text-[13px] text-[#334155] mt-1 mb-0 font-semibold">
             Real-time telemetry, asset utilization and operational intelligence across active logistics.
           </p>
         </div>

@@ -133,22 +133,22 @@ export default function MobileGpsBroadcasterModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#17191f] border border-[#2b2e38] rounded-xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
+      <div className="glass-card w-full max-w-lg shadow-2xl overflow-hidden flex flex-col bg-white">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#252730] bg-[#13141a]">
+        <div className="flex items-center justify-between p-4 border-b border-[#E2E8F0] bg-[#F8FAFD]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#8be0b3]/10 border border-[#8be0b3]/20 flex items-center justify-center text-[#8be0b3]">
+            <div className="w-8 h-8 rounded-xl bg-[#E8F7F0] border border-[#B7E4CF] flex items-center justify-center text-[#16A36A]">
               <Smartphone className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-[#f4f3f8] flex items-center gap-2">
+              <h2 className="text-base font-bold text-[#0B132B] flex items-center gap-2 m-0">
                 <span>Phone / Browser GPS Transponder</span>
                 {isBroadcasting && (
-                  <span className="w-2 h-2 rounded-full bg-[#8be0b3] animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-[#16A36A] animate-ping" />
                 )}
               </h2>
-              <p className="text-[11px] text-[#8b8d98]">
+              <p className="text-[11px] text-[#475569] font-medium m-0">
                 Broadcast your physical device coordinates live to the fleet map
               </p>
             </div>
@@ -159,7 +159,7 @@ export default function MobileGpsBroadcasterModal({
               handleStopBroadcasting();
               onClose();
             }}
-            className="p-1.5 text-[#8b8d98] hover:text-[#f4f3f8] rounded-lg hover:bg-[#22242d] transition-colors"
+            className="p-1.5 text-[#64748B] hover:text-[#0B132B] rounded-xl hover:bg-[#F1F5F9] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -168,26 +168,26 @@ export default function MobileGpsBroadcasterModal({
         {/* Content */}
         <div className="p-5 space-y-4 text-xs font-mono">
           {/* Instructions Banner */}
-          <div className="p-3 bg-[#101116] border border-[#252730] rounded-lg text-[#8b8d98] text-[11px] leading-relaxed">
-            <div className="flex items-center gap-2 text-[#f4f3f8] font-bold mb-1">
-              <Radio className="w-3.5 h-3.5 text-[#b49aff]" />
+          <div className="p-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl text-[#334155] text-[11px] leading-relaxed">
+            <div className="flex items-center gap-2 text-[#0B132B] font-bold mb-1">
+              <Radio className="w-3.5 h-3.5 text-[#2879E8]" />
               <span>How Mobile Live Tracking Works</span>
             </div>
             <span>
-              This feature reads your phone or laptop's physical GPS chip via <code className="text-[#8be0b3]">HTML5 Geolocation</code> and streams live coordinates to <code className="text-[#b49aff]">POST /api/tracking/location</code>. As you walk or drive, the vehicle marker moves on the map in real time!
+              This feature reads your phone or laptop's physical GPS chip via <code className="text-[#16A36A] font-bold">HTML5 Geolocation</code> and streams live coordinates to <code className="text-[#2879E8] font-bold">POST /api/tracking/location</code>. As you walk or drive, the vehicle marker moves on the map in real time!
             </span>
           </div>
 
           {/* Target Vehicle Selector */}
           <div>
-            <label className="block text-[11px] text-[#8b8d98] mb-1.5 uppercase">
+            <label className="block text-[11px] text-[#475569] mb-1.5 uppercase font-bold">
               BIND BROADCAST TO VEHICLE TRANSPONDER:
             </label>
             <select
               value={selectedVehicleId}
               disabled={isBroadcasting}
               onChange={(e) => setSelectedVehicleId(e.target.value)}
-              className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs text-[#f4f3f8] focus:outline-none focus:border-[#b49aff] disabled:opacity-50"
+              className="w-full bg-white border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs text-[#0B132B] font-bold focus:outline-none focus:border-[#2879E8] disabled:opacity-50 shadow-xs"
             >
               {vehicles.map((v) => (
                 <option key={v.vehicleId || v.plate} value={v.vehicleId || v.plate}>
@@ -199,64 +199,64 @@ export default function MobileGpsBroadcasterModal({
 
           {/* Error Notice */}
           {geoError && (
-            <div className="p-3 bg-[#ef4444]/10 border border-[#ef4444]/30 rounded-lg text-[#fca5a5] text-[11px] flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-[#ef4444] shrink-0" />
+            <div className="p-3 bg-[#FEF2F2] border border-[#FCA5A5] rounded-xl text-[#B91C1C] text-[11px] flex items-center gap-2 font-bold">
+              <AlertTriangle className="w-4 h-4 text-[#E05252] shrink-0" />
               <span>{geoError}</span>
             </div>
           )}
 
           {/* Telemetry Telemetry HUD */}
           {deviceCoords ? (
-            <div className="bg-[#101116] border border-[#252730] p-3.5 rounded-lg space-y-2.5">
-              <div className="flex items-center justify-between pb-2 border-b border-[#20222a]">
-                <span className="text-[#8be0b3] font-bold flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#8be0b3] animate-pulse" />
+            <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl space-y-2.5">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                <span className="text-[#16A36A] font-bold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#16A36A] animate-pulse" />
                   PHYSICAL SENSOR LOCKED
                 </span>
-                <span className="text-[#b49aff] font-bold">
+                <span className="text-[#2879E8] font-bold">
                   {packetsSent} PACKETS TRANSMITTED
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div className="bg-[#17191f] p-2 rounded border border-[#20222a]">
-                  <span className="text-[#71737e] block text-[9px]">DEVICE LATITUDE</span>
-                  <span className="text-[#f4f3f8] font-bold">{deviceCoords.latitude.toFixed(6)}°</span>
+                <div className="bg-white p-2.5 rounded-xl border border-[#E2E8F0]">
+                  <span className="text-[#64748B] block text-[9px] font-bold">DEVICE LATITUDE</span>
+                  <span className="text-[#0B132B] font-bold">{deviceCoords.latitude.toFixed(6)}°</span>
                 </div>
-                <div className="bg-[#17191f] p-2 rounded border border-[#20222a]">
-                  <span className="text-[#71737e] block text-[9px]">DEVICE LONGITUDE</span>
-                  <span className="text-[#f4f3f8] font-bold">{deviceCoords.longitude.toFixed(6)}°</span>
+                <div className="bg-white p-2.5 rounded-xl border border-[#E2E8F0]">
+                  <span className="text-[#64748B] block text-[9px] font-bold">DEVICE LONGITUDE</span>
+                  <span className="text-[#0B132B] font-bold">{deviceCoords.longitude.toFixed(6)}°</span>
                 </div>
-                <div className="bg-[#17191f] p-2 rounded border border-[#20222a]">
-                  <span className="text-[#71737e] block text-[9px]">SPEED</span>
-                  <span className="text-[#8be0b3] font-bold">{deviceCoords.speed} km/h</span>
+                <div className="bg-white p-2.5 rounded-xl border border-[#E2E8F0]">
+                  <span className="text-[#64748B] block text-[9px] font-bold">SPEED</span>
+                  <span className="text-[#16A36A] font-bold">{deviceCoords.speed} km/h</span>
                 </div>
-                <div className="bg-[#17191f] p-2 rounded border border-[#20222a]">
-                  <span className="text-[#71737e] block text-[9px]">GPS ACCURACY</span>
-                  <span className="text-[#e5a46e] font-bold">±{Math.round(deviceCoords.accuracy)} meters</span>
+                <div className="bg-white p-2.5 rounded-xl border border-[#E2E8F0]">
+                  <span className="text-[#64748B] block text-[9px] font-bold">GPS ACCURACY</span>
+                  <span className="text-[#D97706] font-bold">±{Math.round(deviceCoords.accuracy)} meters</span>
                 </div>
               </div>
 
               {lastResponse && (
-                <div className="p-2 bg-[#17191f] rounded border border-[#20222a] text-[10px] text-[#8b8d98] flex items-center justify-between">
+                <div className="p-2 bg-white rounded-xl border border-[#E2E8F0] text-[10px] text-[#475569] flex items-center justify-between font-medium">
                   <span>Server Ingestion Gateway:</span>
-                  <span className={lastResponse.success ? 'text-[#8be0b3] font-bold' : 'text-[#ef4444]'}>
+                  <span className={lastResponse.success ? 'text-[#16A36A] font-bold' : 'text-[#E05252] font-bold'}>
                     {lastResponse.success ? 'HTTP 200 OK (Ingested)' : 'Error Sending'}
                   </span>
                 </div>
               )}
             </div>
           ) : (
-            <div className="p-4 bg-[#101116] border border-[#20222a] rounded-lg text-center text-[#71737e]">
+            <div className="p-4 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl text-center text-[#64748B] font-medium">
               Transponder is idle. Click "Start Live Broadcast" below to activate your sensor.
             </div>
           )}
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-[#252730] bg-[#13141a] flex items-center justify-between">
-          <div className="text-[11px] font-mono text-[#71737e]">
-            Gateway: <code className="text-[#b49aff]">/api/tracking/location</code>
+        <div className="p-4 border-t border-[#E2E8F0] bg-[#F8FAFD] flex items-center justify-between">
+          <div className="text-[11px] font-mono text-[#64748B] font-medium">
+            Gateway: <code className="text-[#2879E8] font-bold">/api/tracking/location</code>
           </div>
 
           <div className="flex items-center gap-2">
@@ -264,7 +264,7 @@ export default function MobileGpsBroadcasterModal({
               <button
                 type="button"
                 onClick={handleStartBroadcasting}
-                className="px-4 py-2 rounded-lg bg-[#8be0b3] hover:bg-[#7ad0a0] text-[#13141a] font-bold font-mono text-xs transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(139,224,179,0.3)]"
+                className="px-4 py-2 rounded-xl bg-[#16A36A] hover:bg-[#138656] text-white font-bold font-mono text-xs transition-all flex items-center gap-2 shadow-sm"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
                 <span>START LIVE BROADCAST</span>
@@ -273,7 +273,7 @@ export default function MobileGpsBroadcasterModal({
               <button
                 type="button"
                 onClick={handleStopBroadcasting}
-                className="px-4 py-2 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold font-mono text-xs transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(239,68,68,0.3)]"
+                className="px-4 py-2 rounded-xl bg-[#E05252] hover:bg-[#C93B3B] text-white font-bold font-mono text-xs transition-all flex items-center gap-2 shadow-sm"
               >
                 <Square className="w-3.5 h-3.5 fill-current" />
                 <span>STOP BROADCAST</span>

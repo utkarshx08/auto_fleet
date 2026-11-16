@@ -65,45 +65,45 @@ export default function MaintenanceScheduleTable({
   const getPriorityBadge = (priority) => {
     switch (priority) {
       case 'Critical':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
+        return 'bg-[#FDF2F2] text-[#E05252] border-[#FAD2D2]';
       case 'High':
-        return 'bg-[#382c25] text-[#e5a46e] border-[#523d30]';
+        return 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DFB4]';
       case 'Medium':
-        return 'bg-[#24212f] text-[#c4b3ff] border-[#40375b]';
+        return 'bg-[#EAF3FF] text-[#2879E8] border-[#D5E6FB]';
       case 'Low':
       default:
-        return 'bg-[#20222a] text-[#858894] border-[#30333d]';
+        return 'bg-[#F1F5F9] text-[#68758A] border-[#E2E8F0]';
     }
   };
 
   const getStatusBadge = (status) => {
     switch (status) {
       case 'Overdue':
-        return 'bg-red-500/20 text-red-400 border-red-500/30 animate-pulse';
+        return 'bg-[#FDF2F2] text-[#E05252] border-[#FAD2D2] font-semibold animate-pulse';
       case 'Due':
-        return 'bg-[#382c25] text-[#e5a46e] border-[#523d30]';
+        return 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DFB4] font-semibold';
       case 'Upcoming':
-        return 'bg-[#182736] text-[#8dc8ed] border-[#223b52]';
+        return 'bg-[#EAF3FF] text-[#2879E8] border-[#D5E6FB] font-semibold';
       case 'Active':
       default:
-        return 'bg-[#1c302a] text-[#83d7a9] border-[#2c493d]';
+        return 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7] font-semibold';
     }
   };
 
   return (
-    <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5 space-y-4">
+    <div className="glass-card rounded-2xl p-6 space-y-4 shadow-liquid-subtle">
       {/* Header and Controls */}
       <div className="flex items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <div>
-          <span className="font-mono text-[9px] text-[#858894] uppercase tracking-wider block">
+          <span className="font-mono text-[10px] text-[#2879E8] font-semibold uppercase tracking-wider block">
             Automated Preventive Engine
           </span>
-          <h3 className="text-sm font-bold text-[#f0f0f4] m-0">
+          <h3 className="text-base font-bold text-[#172033] tracking-tight mt-0.5">
             Active Maintenance Schedules
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <SearchBar
             value={search}
             onChange={setSearch}
@@ -119,17 +119,17 @@ export default function MaintenanceScheduleTable({
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center justify-between border-b border-[#252730] pb-3 flex-wrap gap-2 text-[10px] font-mono">
-        <div className="flex items-center gap-1 bg-[#20222a] border border-[#30333d] rounded-[6px] p-0.5">
+      <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3 flex-wrap gap-2 text-[11px] font-mono">
+        <div className="flex items-center gap-1 bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl p-1 shadow-2xs">
           {['ALL', 'Overdue', 'Due', 'Upcoming', 'Active'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1 rounded transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs transition-colors font-medium cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-[#40375b] text-[#c4b3ff] font-bold'
-                  : 'text-[#858894] hover:text-[#d1d1da]'
+                  ? 'bg-[#EAF3FF] text-[#2879E8] font-bold shadow-2xs'
+                  : 'text-[#68758A] hover:text-[#172033]'
               }`}
             >
               {st}
@@ -137,12 +137,12 @@ export default function MaintenanceScheduleTable({
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[#747783]">Priority:</span>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-[#68758A]">Priority:</span>
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] rounded-[6px] px-2 py-1 text-xs text-[#eee] outline-none font-mono cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-2.5 py-1 text-xs text-[#172033] outline-none font-mono cursor-pointer shadow-2xs"
           >
             <option value="ALL">All Priorities</option>
             <option value="Critical">Critical</option>
@@ -155,67 +155,69 @@ export default function MaintenanceScheduleTable({
 
       {/* Schedules Table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-[11px] whitespace-nowrap font-sans">
+        <table className="w-full text-left border-collapse text-xs whitespace-nowrap font-sans">
           <thead>
-            <tr className="border-b border-[#30323b] text-[#747783] font-mono text-[8px] uppercase">
-              <th className="py-2.5 px-3">Vehicle</th>
-              <th className="py-2.5 px-3">Category</th>
-              <th className="py-2.5 px-3">Configured Interval</th>
-              <th className="py-2.5 px-3">Next Threshold</th>
-              <th className="py-2.5 px-3">Live Status</th>
-              <th className="py-2.5 px-3">Priority</th>
-              <th className="py-2.5 px-3">Service Centre</th>
-              <th className="py-2.5 px-3 text-right">Actions</th>
+            <tr className="border-b border-[#E2E8F0] text-[#68758A] font-mono text-[10px] uppercase tracking-wider">
+              <th className="py-3 px-3.5">Vehicle</th>
+              <th className="py-3 px-3.5">Category</th>
+              <th className="py-3 px-3.5">Configured Interval</th>
+              <th className="py-3 px-3.5">Next Threshold</th>
+              <th className="py-3 px-3.5">Live Status</th>
+              <th className="py-3 px-3.5">Priority</th>
+              <th className="py-3 px-3.5">Service Centre</th>
+              <th className="py-3 px-3.5 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredSchedules.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-[#747783]">
-                  No maintenance schedules match your criteria.
+                <td colSpan={8} className="py-12 text-center text-[#8A97AB]">
+                  <Wrench className="w-8 h-8 mx-auto text-[#CBD5E1] mb-2" />
+                  <p className="font-semibold text-sm text-[#172033]">No maintenance schedules found</p>
+                  <p className="text-xs text-[#68758A]">Try adjusting your search query or filter tags.</p>
                 </td>
               </tr>
             ) : (
               filteredSchedules.map((sch) => (
                 <tr
                   key={sch.id}
-                  className="border-b border-[#242633] hover:bg-[#1b1d26] transition-colors last:border-0"
+                  className="border-b border-[#F1F5F9] hover:bg-[#F0F5FC]/60 transition-colors last:border-0"
                 >
                   {/* Vehicle */}
-                  <td className="py-3 px-3">
-                    <b className="font-mono text-xs text-[#f0f0f4] block">{sch.vehicleId}</b>
-                    <span className="font-mono text-[9px] text-[#747783]">
+                  <td className="py-3.5 px-3.5">
+                    <b className="font-mono text-xs text-[#172033] font-bold block">{sch.vehicleId}</b>
+                    <span className="font-mono text-[10px] text-[#8A97AB]">
                       Current: {sch.currentVehicleOdo?.toLocaleString() || 0} km
                     </span>
                   </td>
 
                   {/* Category */}
-                  <td className="py-3 px-3">
-                    <div className="flex items-center gap-1.5 text-[#d1d1da] font-medium">
-                      <Wrench className="w-3.5 h-3.5 text-[#b49aff] shrink-0" />
+                  <td className="py-3.5 px-3.5">
+                    <div className="flex items-center gap-2 text-[#172033] font-medium">
+                      <Wrench className="w-3.5 h-3.5 text-[#2879E8] shrink-0" />
                       <span>{sch.maintenanceType}</span>
                     </div>
                   </td>
 
                   {/* Interval */}
-                  <td className="py-3 px-3 font-mono text-[10px] text-[#aeb0ba]">
+                  <td className="py-3.5 px-3.5 font-mono text-[11px] text-[#68758A]">
                     <span>{sch.intervalKm.toLocaleString()} km</span>
-                    <span className="text-[#656875] mx-1">/</span>
+                    <span className="text-[#CBD5E1] mx-1">/</span>
                     <span>{sch.intervalDays} days</span>
                   </td>
 
                   {/* Next Threshold */}
-                  <td className="py-3 px-3 font-mono text-[10px]">
-                    <span className="text-[#8be0b3] font-bold block">
+                  <td className="py-3.5 px-3.5 font-mono text-[11px]">
+                    <span className="text-[#16A36A] font-bold block">
                       {sch.nextServiceOdometer.toLocaleString()} km
                     </span>
-                    <span className="text-[#858894] text-[9px]">{sch.nextServiceDate}</span>
+                    <span className="text-[#8A97AB] text-[10px]">{sch.nextServiceDate}</span>
                   </td>
 
                   {/* Live Status */}
-                  <td className="py-3 px-3">
+                  <td className="py-3.5 px-3.5">
                     <span
-                      className={`font-mono text-[9px] px-2 py-0.5 rounded-full border ${getStatusBadge(
+                      className={`font-mono text-[10px] px-2.5 py-0.5 rounded-full border ${getStatusBadge(
                         sch.liveStatus
                       )}`}
                     >
@@ -224,9 +226,9 @@ export default function MaintenanceScheduleTable({
                   </td>
 
                   {/* Priority */}
-                  <td className="py-3 px-3">
+                  <td className="py-3.5 px-3.5">
                     <span
-                      className={`font-mono text-[9px] px-2 py-0.5 rounded border ${getPriorityBadge(
+                      className={`font-mono text-[10px] px-2.5 py-0.5 rounded-lg border font-medium ${getPriorityBadge(
                         sch.priority
                       )}`}
                     >
@@ -235,12 +237,12 @@ export default function MaintenanceScheduleTable({
                   </td>
 
                   {/* Service Centre */}
-                  <td className="py-3 px-3 text-[#aeb0ba] text-[10px]">
+                  <td className="py-3.5 px-3.5 text-[#68758A] text-xs font-medium">
                     {sch.serviceCenter || 'Central Bay'}
                   </td>
 
                   {/* Actions */}
-                  <td className="py-3 px-3 text-right">
+                  <td className="py-3.5 px-3.5 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <Button
                         variant="primary"
@@ -253,7 +255,7 @@ export default function MaintenanceScheduleTable({
                       <button
                         type="button"
                         onClick={() => onEditSchedule(sch)}
-                        className="p-1.5 rounded text-[#858894] hover:text-[#b49aff] hover:bg-[#20222a] transition-colors"
+                        className="p-1.5 rounded-lg text-[#68758A] hover:text-[#2879E8] hover:bg-[#F0F5FC] transition-colors cursor-pointer"
                         title="Edit schedule"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -261,7 +263,7 @@ export default function MaintenanceScheduleTable({
                       <button
                         type="button"
                         onClick={() => onDeleteSchedule(sch)}
-                        className="p-1.5 rounded text-[#858894] hover:text-red-400 hover:bg-[#20222a] transition-colors"
+                        className="p-1.5 rounded-lg text-[#68758A] hover:text-[#E05252] hover:bg-[#FDF2F2] transition-colors cursor-pointer"
                         title="Delete schedule"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

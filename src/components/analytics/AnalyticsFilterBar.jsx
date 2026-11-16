@@ -1,5 +1,5 @@
 import React from 'react';
-import { SlidersHorizontal, Calendar, RotateCcw, Filter } from 'lucide-react';
+import { Calendar, RotateCcw, Filter } from 'lucide-react';
 import { fuelTypes, expenseCategories } from '../../data/analyticsMockData';
 
 export default function AnalyticsFilterBar({
@@ -24,19 +24,19 @@ export default function AnalyticsFilterBar({
   ];
 
   return (
-    <div className="bg-[#17191f] border border-[#292c35] p-3 rounded-[9px] flex flex-wrap items-center justify-between gap-3 text-xs">
+    <div className="glass-card p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs shadow-liquid-subtle">
       {/* Date Range Tabs */}
-      <div className="flex items-center gap-1 bg-[#121319] border border-[#252730] p-1 rounded-lg overflow-x-auto">
-        <Calendar className="w-3.5 h-3.5 text-[#858894] ml-1.5 mr-0.5 shrink-0" />
+      <div className="flex items-center gap-1 bg-[#F8FAFD] border border-[#E2E8F0] p-1 rounded-xl overflow-x-auto">
+        <Calendar className="w-3.5 h-3.5 text-[#8A97AB] ml-1.5 mr-0.5 shrink-0" />
         {dateOptions.map((opt) => (
           <button
             key={opt.id}
             type="button"
             onClick={() => setDateFilter(opt.id)}
-            className={`px-2.5 py-1 rounded-[5px] text-[10px] font-sans whitespace-nowrap transition-colors ${
+            className={`px-3 py-1 rounded-lg text-[11px] font-sans font-semibold whitespace-nowrap transition-all cursor-pointer ${
               dateFilter === opt.id
-                ? 'bg-[#40375b] text-[#c7b6ff] font-bold shadow-sm'
-                : 'text-[#858894] hover:text-[#d1d1da]'
+                ? 'bg-[#2879E8] text-white shadow-2xs font-bold'
+                : 'text-[#68758A] hover:text-[#172033]'
             }`}
           >
             {opt.label}
@@ -45,12 +45,12 @@ export default function AnalyticsFilterBar({
       </div>
 
       {/* Select Dropdowns */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-2.5 flex-wrap">
         {/* Vehicle Filter */}
         <select
           value={selectedVehicleId}
           onChange={(e) => setSelectedVehicleId(e.target.value)}
-          className="bg-[#20222a] text-[#bdbec8] border border-[#343641] rounded-[6px] px-2.5 py-1.5 text-[10px] outline-none hover:border-[#4b4360] focus:border-[#b49aff] transition-colors cursor-pointer"
+          className="bg-[#F8FAFD] text-[#172033] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-semibold outline-none hover:border-[#2879E8]/30 focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
         >
           <option value="ALL">All Vehicles ({vehicles.length})</option>
           {vehicles.map((v) => (
@@ -64,7 +64,7 @@ export default function AnalyticsFilterBar({
         <select
           value={selectedFuelType}
           onChange={(e) => setSelectedFuelType(e.target.value)}
-          className="bg-[#20222a] text-[#bdbec8] border border-[#343641] rounded-[6px] px-2.5 py-1.5 text-[10px] outline-none hover:border-[#4b4360] focus:border-[#b49aff] transition-colors cursor-pointer"
+          className="bg-[#F8FAFD] text-[#172033] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-semibold outline-none hover:border-[#2879E8]/30 focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
         >
           <option value="ALL">All Fuel Types</option>
           {fuelTypes.map((type) => (
@@ -78,7 +78,7 @@ export default function AnalyticsFilterBar({
         <select
           value={selectedExpenseCategory}
           onChange={(e) => setSelectedExpenseCategory(e.target.value)}
-          className="bg-[#20222a] text-[#bdbec8] border border-[#343641] rounded-[6px] px-2.5 py-1.5 text-[10px] outline-none hover:border-[#4b4360] focus:border-[#b49aff] transition-colors cursor-pointer"
+          className="bg-[#F8FAFD] text-[#172033] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-semibold outline-none hover:border-[#2879E8]/30 focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
         >
           <option value="ALL">All Expense Categories</option>
           {expenseCategories.map((cat) => (
@@ -88,17 +88,17 @@ export default function AnalyticsFilterBar({
           ))}
         </select>
 
-        {/* Reset Filter Button */}
+        {/* Reset Filters Button */}
         <button
           type="button"
           onClick={onReset}
-          className="p-1.5 text-[#858894] hover:text-[#f0f0f4] rounded-[6px] hover:bg-[#22242d] transition-colors"
+          className="flex items-center gap-1.5 bg-[#F8FAFD] hover:bg-[#F0F5FC] text-[#68758A] hover:text-[#172033] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-semibold transition-all cursor-pointer shadow-2xs"
           title="Reset all filters"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-3.5 h-3.5 text-[#2879E8]" />
+          <span>Reset</span>
         </button>
       </div>
     </div>
   );
 }
-

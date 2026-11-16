@@ -18,8 +18,8 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
       unit: 'litres',
       sub: 'Cumulative fleet fuel volume',
       icon: Fuel,
-      color: 'text-[#b49aff]',
-      bg: 'bg-[#b49aff]/10'
+      color: 'text-[#2879E8]',
+      bg: 'bg-[#EAF3FF] border-[#2879E8]/20'
     },
     {
       id: 'expenditure',
@@ -28,8 +28,8 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
       unit: 'total spend',
       sub: 'All fleet card receipts',
       icon: DollarSign,
-      color: 'text-[#8be0b3]',
-      bg: 'bg-[#8be0b3]/10'
+      color: 'text-[#16A36A]',
+      bg: 'bg-[#DCFCE7] border-[#BBF7D0]'
     },
     {
       id: 'price',
@@ -38,8 +38,8 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
       unit: 'per litre',
       sub: 'Volume-weighted average',
       icon: TrendingDown,
-      color: 'text-[#8dc8ed]',
-      bg: 'bg-[#8dc8ed]/10'
+      color: 'text-[#2879E8]',
+      bg: 'bg-[#EAF3FF] border-[#2879E8]/20'
     },
     {
       id: 'monthly',
@@ -48,8 +48,8 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
       unit: 'litres',
       sub: 'Current billing period',
       icon: Calendar,
-      color: 'text-[#c4b3ff]',
-      bg: 'bg-[#c4b3ff]/10'
+      color: 'text-[#2879E8]',
+      bg: 'bg-[#EAF3FF] border-[#2879E8]/20'
     },
     {
       id: 'efficiency',
@@ -58,8 +58,8 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
       unit: 'L/100km',
       sub: `Fleet baseline: $${kpis.costPerKm}/km`,
       icon: Gauge,
-      color: 'text-[#82d4a8]',
-      bg: 'bg-[#82d4a8]/10'
+      color: 'text-[#16A36A]',
+      bg: 'bg-[#DCFCE7] border-[#BBF7D0]'
     },
     {
       id: 'anomalies',
@@ -68,13 +68,13 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
       unit: 'flagged',
       sub: kpis.anomalyCount > 0 ? 'Requires manager audit' : 'All transactions normal',
       icon: kpis.anomalyCount > 0 ? ShieldAlert : AlertTriangle,
-      color: kpis.anomalyCount > 0 ? 'text-red-400' : 'text-[#8be0b3]',
-      bg: kpis.anomalyCount > 0 ? 'bg-red-400/10' : 'bg-[#8be0b3]/10'
+      color: kpis.anomalyCount > 0 ? 'text-[#E05252]' : 'text-[#16A36A]',
+      bg: kpis.anomalyCount > 0 ? 'bg-[#FEF2F2] border-[#FECACA]' : 'bg-[#DCFCE7] border-[#BBF7D0]'
     }
   ];
 
   return (
-    <div className="grid grid-cols-6 max-xl:grid-cols-3 max-sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-6 max-xl:grid-cols-3 max-sm:grid-cols-2 gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
         const isSelected = activeFilter === card.id;
@@ -83,31 +83,32 @@ export default function FuelKPIGrid({ kpis, onCardClick, activeFilter }) {
           <div
             key={card.id}
             onClick={() => onCardClick && onCardClick(card.id)}
-            className={`bg-[#17191f] border rounded-[9px] p-3.5 flex flex-col justify-between transition-all group ${
-              onCardClick ? 'cursor-pointer hover:border-[#423d54] active:scale-[0.99]' : ''
+            className={`glass-card border rounded-2xl p-4 flex flex-col justify-between transition-all duration-200 group ${
+              onCardClick ? 'cursor-pointer hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]' : ''
             } ${
-              isSelected ? 'border-[#b49aff] bg-[#1d1929]' : 'border-[#292c35]'
+              isSelected
+                ? 'border-[#2879E8] bg-[#EAF3FF]/40 shadow-sm'
+                : 'border-white/95 shadow-md'
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[8px] text-[#858894] uppercase tracking-wider">
+              <span className="font-mono text-[9px] text-[#68758A] uppercase tracking-wider font-semibold">
                 {card.title}
               </span>
-              <div className={`w-5 h-5 rounded flex items-center justify-center ${card.bg}`}>
-                <Icon className={`w-3 h-3 ${card.color}`} />
+              <div className={`w-7 h-7 rounded-xl flex items-center justify-center border ${card.bg} shadow-2xs`}>
+                <Icon className={`w-3.5 h-3.5 ${card.color}`} />
               </div>
             </div>
 
-            <div className="my-2 flex items-baseline gap-1.5 flex-wrap">
-              <b className="text-xl font-bold font-mono text-[#f0f0f4]">{card.value}</b>
-              <small className="text-[10px] text-[#888b97] font-mono">{card.unit}</small>
+            <div className="my-2.5 flex items-baseline gap-1.5 flex-wrap">
+              <b className="text-xl font-black font-mono text-[#172033] tracking-tight">{card.value}</b>
+              <small className="text-[10px] text-[#8A97AB] font-mono font-medium">{card.unit}</small>
             </div>
 
-            <span className="text-[9px] text-[#717480] font-mono truncate">{card.sub}</span>
+            <span className="text-[10px] text-[#68758A] font-mono truncate font-medium">{card.sub}</span>
           </div>
         );
       })}
     </div>
   );
 }
-

@@ -17,6 +17,7 @@ import GeofenceListTable from '../components/geofencing/GeofenceListTable';
 import GeofenceAlertsTable from '../components/geofencing/GeofenceAlertsTable';
 import CreateGeofenceModal from '../components/geofencing/CreateGeofenceModal';
 import useRealtimeTracking from '../hooks/useRealtimeTracking';
+import Button from '../components/common/Button';
 import {
   getGeofenceZones,
   getGeofenceAlerts,
@@ -108,36 +109,35 @@ export default function Geofencing({ onShowToast }) {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6 animate-fade-in">
+    <div className="space-y-6">
       {/* Top Banner & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#252730]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-[#8be0b3] animate-pulse" />
-            <span className="text-[11px] font-mono tracking-widest text-[#8be0b3] uppercase font-bold">
+            <span className="w-2 h-2 rounded-full bg-[#16A36A] animate-pulse shadow-[0_0_8px_#16A36A]" />
+            <span className="text-[10px] font-mono tracking-widest text-[#16A36A] uppercase font-bold">
               PERIMETER SURVEILLANCE & RESTRICTED-ZONE MATRIX
             </span>
           </div>
-          <h1 className="text-2xl font-black text-[#f4f3f8] tracking-tight">
-            Geofencing & Security Zones
+          <h1 className="text-[28px] font-black text-[#0B132B] tracking-tight m-0">
+            Geofencing & Security Zones<span className="text-[#2879E8]">.</span>
           </h1>
-          <p className="text-xs text-[#8b8d98] font-mono mt-0.5">
-            Real-time Jordan Curve Ray-Casting & Haversine distance breach detection
+          <p className="text-[13px] text-[#334155] mt-1 font-semibold">
+            Real-time Jordan Curve Ray-Casting & Haversine distance breach detection across logistics corridors.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <button
-            type="button"
+          <Button
+            variant="primary"
             onClick={() => {
               setEditingGeofence(null);
               setIsModalOpen(true);
             }}
-            className="px-4 py-2 rounded-lg bg-[#b49aff] hover:bg-[#a384fa] text-[#17131f] text-xs font-bold font-mono transition-all shadow-[0_0_16px_rgba(180,154,255,0.35)] flex items-center gap-2"
+            icon={Plus}
           >
-            <Plus className="w-4 h-4" />
-            <span>CREATE GEOFENCE</span>
-          </button>
+            Create Geofence
+          </Button>
         </div>
       </div>
 
@@ -152,43 +152,43 @@ export default function Geofencing({ onShowToast }) {
       />
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#252730] pb-2 text-xs font-mono">
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-1 text-xs font-mono">
         <button
           type="button"
           onClick={() => setActiveTab('radar')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl transition-all cursor-pointer ${
             activeTab === 'radar'
-              ? 'bg-[#b49aff]/15 text-[#b49aff] border border-[#b49aff]/30 font-bold'
-              : 'text-[#8b8d98] hover:text-[#f4f3f8] hover:bg-[#1a1c24]'
+              ? 'bg-white text-[#2879E8] border-t-2 border-t-[#2879E8] border-x border-[#E2E8F0] font-bold shadow-2xs'
+              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
           }`}
         >
-          <Radio className="w-3.5 h-3.5" />
+          <Radio className="w-3.5 h-3.5 text-[#2879E8]" />
           <span>RADAR & LIVE MAP</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('zones')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl transition-all cursor-pointer ${
             activeTab === 'zones'
-              ? 'bg-[#b49aff]/15 text-[#b49aff] border border-[#b49aff]/30 font-bold'
-              : 'text-[#8b8d98] hover:text-[#f4f3f8] hover:bg-[#1a1c24]'
+              ? 'bg-white text-[#2879E8] border-t-2 border-t-[#2879E8] border-x border-[#E2E8F0] font-bold shadow-2xs'
+              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
           }`}
         >
-          <List className="w-3.5 h-3.5" />
+          <List className="w-3.5 h-3.5 text-[#16A36A]" />
           <span>ZONE PERIMETERS ({geofences.length})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('alerts')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl transition-all cursor-pointer ${
             activeTab === 'alerts'
-              ? 'bg-[#ef4444]/15 text-[#ef4444] border border-[#ef4444]/30 font-bold'
-              : 'text-[#8b8d98] hover:text-[#f4f3f8] hover:bg-[#1a1c24]'
+              ? 'bg-white text-[#E05252] border-t-2 border-t-[#E05252] border-x border-[#E2E8F0] font-bold shadow-2xs'
+              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
           }`}
         >
-          <AlertTriangle className="w-3.5 h-3.5" />
+          <AlertTriangle className="w-3.5 h-3.5 text-[#E05252]" />
           <span>
             BREACH INCIDENTS ({alerts.filter((a) => a.status === 'new').length} NEW)
           </span>
@@ -197,7 +197,7 @@ export default function Geofencing({ onShowToast }) {
 
       {/* Tab 1: Radar & Live Map View */}
       {activeTab === 'radar' && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in">
           <GeofenceMap
             geofences={geofences}
             vehicles={telemetryList}
@@ -208,49 +208,49 @@ export default function Geofencing({ onShowToast }) {
           />
 
           {/* Quick Real-Time Incident Ticker */}
-          <div className="bg-[#17191f] border border-[#252730] rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3 border-b border-[#252730] pb-2">
+          <div className="glass-card rounded-2xl p-5 shadow-liquid-subtle">
+            <div className="flex items-center justify-between mb-3.5 border-b border-[#E2E8F0]/80 pb-3">
               <div className="flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-[#ef4444]" />
-                <span className="text-xs font-mono font-bold text-[#f4f3f8]">
+                <ShieldAlert className="w-4 h-4 text-[#E05252]" />
+                <span className="text-xs font-mono font-bold text-[#172033]">
                   RECENT PERIMETER BREACHES & TRANSITIONS
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveTab('alerts')}
-                className="text-xs font-mono text-[#b49aff] hover:underline flex items-center gap-1"
+                className="text-xs font-mono text-[#2879E8] hover:underline flex items-center gap-1 font-semibold cursor-pointer"
               >
                 <span>View Full Alert Ledger</span>
-                <ExternalLink className="w-3 h-3" />
+                <ExternalLink className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
               {alerts.slice(0, 4).map((alt) => (
                 <div
                   key={alt.id}
                   onClick={() => handleFocusAlert(alt)}
-                  className="bg-[#121319] border border-[#252730] hover:border-[#b49aff]/50 p-3 rounded-lg cursor-pointer transition-all"
+                  className="bg-[#F8FAFD] border border-[#E2E8F0] hover:border-[#2879E8]/40 p-3.5 rounded-xl cursor-pointer transition-all shadow-2xs hover:shadow-sm"
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-xs font-bold text-[#f4f3f8]">
+                    <span className="font-mono text-xs font-bold text-[#172033]">
                       {alt.plate || alt.vehicleId}
                     </span>
                     <span
-                      className={`text-[9px] font-mono px-1.5 py-0.5 rounded uppercase font-bold ${
+                      className={`text-[9px] font-mono px-2 py-0.5 rounded-full uppercase font-bold border ${
                         alt.severity === 'critical'
-                          ? 'bg-[#ef4444]/20 text-[#ef4444]'
-                          : 'bg-[#f59e0b]/20 text-[#f59e0b]'
+                          ? 'bg-[#FDF2F2] text-[#E05252] border-[#F8D7DA]'
+                          : 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]'
                       }`}
                     >
                       {alt.severity}
                     </span>
                   </div>
-                  <div className="text-[11px] font-bold text-[#8b8d98] truncate">
+                  <div className="text-[11px] font-bold text-[#68758A] truncate">
                     {alt.geofenceName}
                   </div>
-                  <p className="text-[10px] text-[#71737e] mt-1 line-clamp-1">
+                  <p className="text-[11px] text-[#8A97AB] mt-1 line-clamp-1 font-medium">
                     {alt.message}
                   </p>
                 </div>
@@ -262,26 +262,30 @@ export default function Geofencing({ onShowToast }) {
 
       {/* Tab 2: Zone Perimeters Table */}
       {activeTab === 'zones' && (
-        <GeofenceListTable
-          geofences={geofences}
-          onEditGeofence={(zone) => {
-            setEditingGeofence(zone);
-            setIsModalOpen(true);
-          }}
-          onDeleteGeofence={handleDelete}
-          onToggleStatus={handleToggleStatus}
-          onFocusGeofence={handleFocusGeofence}
-        />
+        <div className="animate-in fade-in">
+          <GeofenceListTable
+            geofences={geofences}
+            onEditGeofence={(zone) => {
+              setEditingGeofence(zone);
+              setIsModalOpen(true);
+            }}
+            onDeleteGeofence={handleDelete}
+            onToggleStatus={handleToggleStatus}
+            onFocusGeofence={handleFocusGeofence}
+          />
+        </div>
       )}
 
       {/* Tab 3: Breach Alerts Ledger */}
       {activeTab === 'alerts' && (
-        <GeofenceAlertsTable
-          alerts={alerts}
-          onAcknowledgeAlert={handleAcknowledgeAlert}
-          onResolveAlert={handleResolveAlert}
-          onFocusAlert={handleFocusAlert}
-        />
+        <div className="animate-in fade-in">
+          <GeofenceAlertsTable
+            alerts={alerts}
+            onAcknowledgeAlert={handleAcknowledgeAlert}
+            onResolveAlert={handleResolveAlert}
+            onFocusAlert={handleFocusAlert}
+          />
+        </div>
       )}
 
       {/* Create / Edit Geofence Modal */}
@@ -297,4 +301,3 @@ export default function Geofencing({ onShowToast }) {
     </div>
   );
 }
-

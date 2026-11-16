@@ -35,7 +35,7 @@ export default function MainLayout({
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F4F7FB] text-[#172033] font-sans relative selection:bg-[#EAF3FF] selection:text-[#2879E8]">
+    <div className="flex min-h-screen bg-[#F4F7FB] text-[#172033] font-sans relative selection:bg-[#EAF3FF] selection:text-[#2879E8] autrail-layout-shell transition-colors duration-300">
       {/* Ambient Subtle Radial Blue Lighting */}
       <div
         className="fixed top-0 left-0 w-full h-[520px] pointer-events-none z-0 opacity-70"

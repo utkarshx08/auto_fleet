@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import Button from '../components/common/Button';
+import TrueFocus from '../components/common/TrueFocus';
 import FuelKPIGrid from '../components/fuel/FuelKPIGrid';
 import FuelHistoryTable from '../components/fuel/FuelHistoryTable';
 import FuelAnalyticsCharts from '../components/fuel/FuelAnalyticsCharts';
@@ -62,28 +63,27 @@ export default function Fuel({
       persistFuelRecords(updated);
       return updated;
     });
+    setIsPurchaseModalOpen(false);
     setEditingRecord(null);
-
-    // Cross-module hook: update operational expenses if provided
-    if (onAddFuelExpense) onAddFuelExpense(recordData);
   };
 
-  const handleOpenEdit = (record) => {
-    setEditingRecord(record);
+  const handleOpenEdit = (rec) => {
+    setEditingRecord(rec);
     setIsPurchaseModalOpen(true);
   };
 
-  const handleOpenDelete = (record) => {
-    setDeletingRecord(record);
+  const handleOpenDelete = (rec) => {
+    setDeletingRecord(rec);
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = (recordId) => {
+  const handleConfirmDelete = (id) => {
     setFuelRecords((prev) => {
-      const updated = prev.filter((r) => r.id !== recordId);
+      const updated = prev.filter((r) => r.id !== id);
       persistFuelRecords(updated);
       return updated;
     });
+    setIsDeleteModalOpen(false);
     setDeletingRecord(null);
   };
 
@@ -128,30 +128,44 @@ export default function Fuel({
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 pb-10">
       {/* Page Header */}
-      <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
+      <div className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-[9px] tracking-[1.2px] text-[#858894] uppercase">
+            <span className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase font-bold">
               Energy & Financial Operations
             </span>
-            <span className="bg-[#24212f] text-[#c4b3ff] text-[9px] font-mono px-2 py-0.5 rounded border border-[#40375b]">
-              ANOMALY AUDIT ENGINE ACTIVE
+            <span className="bg-[#DCFCE7] text-[#16A36A] text-[10px] font-mono px-2 py-0.5 rounded-md border border-[#BBF7D0] font-bold">
+              ANOMALY AUDIT ACTIVE
             </span>
           </div>
 
-          <h1 className="text-[28px] tracking-[-1px] font-bold text-[#f0f0f4] m-0">
-            Fuel management<span className="text-[#ad91ff]">.</span>
-          </h1>
-          <p className="text-[12px] text-[#898c98] mt-1 mb-0">
+          <div className="-ml-3 py-0.5">
+            <TrueFocus
+              sentence="Fuel & Energy Management"
+              manualMode={false}
+              focusStyle="brackets"
+              easing="smooth"
+              borderColor="#2879E8"
+              glowColor="rgba(40, 121, 232, 0.35)"
+              blurAmount={2}
+              focusScale={1.03}
+              cornerSize={14}
+              borderWidth={2.5}
+              frameGap={8}
+              fontSize="1.6rem"
+              wordClassName="text-[#0B132B] font-black tracking-tight"
+            />
+          </div>
+          <p className="text-xs text-[#334155] mt-1 mb-0 font-semibold">
             Monitor refueling transactions, fuel cards, station expenses, true consumption rates, and suspicious purchase flags.
           </p>
         </div>
 
         {/* Header Action Buttons */}
-        <div className="flex items-center gap-2.5 max-md:w-full">
-          <Button variant="quiet" size="sm" onClick={handleExportCSV} icon={Download}>
+        <div className="flex items-center gap-3 max-md:w-full">
+          <Button variant="quiet" size="sm" onClick={handleExportCSV} icon={Download} className="rounded-xl py-2 px-4">
             Export ledger
           </Button>
           <Button
@@ -162,14 +176,15 @@ export default function Fuel({
               setIsPurchaseModalOpen(true);
             }}
             icon={Plus}
+            className="rounded-xl py-2 px-4 font-bold shadow-md shadow-[#2879E8]/25 active:scale-[0.98]"
           >
             Add fuel purchase
           </Button>
         </div>
       </div>
 
-      {/* Sub-navigation Tabs: Fuel Dashboard, Purchase History, Fuel Analytics */}
-      <div className="flex items-center gap-2 border-b border-[#252730] pb-1 overflow-x-auto">
+      {/* Sub-navigation Tabs */}
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-1 overflow-x-auto">
         {[
           { id: 'dashboard', label: 'Fuel Dashboard' },
           { id: 'history', label: `Purchase History (${fuelRecords.length})` },
@@ -179,24 +194,23 @@ export default function Fuel({
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-xs font-mono rounded-t-lg transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-4 py-2.5 text-xs font-mono rounded-xl transition-all whitespace-nowrap cursor-pointer font-medium ${
               activeTab === tab.id
-                ? 'bg-[#17191f] text-[#f0f0f4] border-t-2 border-t-[#b49aff] border-x border-[#292c35] font-bold'
-                : 'text-[#858894] hover:text-[#d1d1da] hover:bg-[#15161c]'
+                ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
+                : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F8FAFD]'
             }`}
           >
             {tab.label}
           </button>
         ))}
 
-        {/* Quick modal trigger tab */}
         <button
           type="button"
           onClick={() => {
             setEditingRecord(null);
             setIsPurchaseModalOpen(true);
           }}
-          className="ml-auto px-3 py-1.5 text-[11px] font-mono text-[#b49aff] hover:text-[#eee] flex items-center gap-1.5 transition-colors cursor-pointer"
+          className="ml-auto px-3.5 py-1.5 text-xs font-mono text-[#2879E8] bg-[#EAF3FF] hover:bg-[#2879E8] hover:text-white rounded-xl border border-[#2879E8]/20 flex items-center gap-1.5 transition-all cursor-pointer font-bold"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>New Entry Form</span>
@@ -205,7 +219,7 @@ export default function Fuel({
 
       {/* TAB 1: FUEL DASHBOARD */}
       {activeTab === 'dashboard' && (
-        <div className="space-y-5 animate-in fade-in">
+        <div className="space-y-6 animate-in fade-in duration-200">
           {/* 6 Core Fuel KPIs */}
           <FuelKPIGrid
             kpis={kpis}
@@ -224,14 +238,16 @@ export default function Fuel({
 
           {/* Anomaly Warning Banner if any flagged */}
           {flaggedRecords.length > 0 && (
-            <div className="p-3.5 bg-amber-500/10 border border-amber-500/25 rounded-lg flex items-center justify-between gap-3 text-amber-200">
+            <div className="p-4 bg-[#FEF3C7] border border-[#FDE68A] rounded-2xl flex items-center justify-between gap-3 text-[#92400E] shadow-sm">
               <div className="flex items-center gap-3">
-                <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0" />
+                <div className="w-10 h-10 rounded-xl bg-white text-[#D97706] flex items-center justify-center shrink-0 shadow-2xs">
+                  <ShieldAlert className="w-5 h-5" />
+                </div>
                 <div>
-                  <b className="text-xs">
+                  <b className="text-xs font-bold text-[#78350F]">
                     {flaggedRecords.length} Refuelling Transactions Flagged for Review
                   </b>
-                  <p className="text-[10px] text-amber-300/80 m-0">
+                  <p className="text-[11px] text-[#92400E] m-0 mt-0.5">
                     Rule-based engine detected volume spikes, potential duplicate receipts, or odometer reading discrepancies.
                   </p>
                 </div>
@@ -240,7 +256,7 @@ export default function Fuel({
                 variant="quiet"
                 size="sm"
                 onClick={() => setIsAnomalyModalOpen(true)}
-                className="shrink-0"
+                className="shrink-0 bg-white border border-[#FDE68A] rounded-xl text-xs font-bold text-[#78350F]"
               >
                 Review Anomaly Queue ↗
               </Button>
@@ -248,29 +264,31 @@ export default function Fuel({
           )}
 
           {/* Live Fuel Level Monitor Table */}
-          <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5">
-            <div className="flex items-center justify-between mb-3">
+          <div className="glass-card border border-white/95 rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-4 border-b border-[#E2E8F0] pb-3">
               <div>
-                <span className="font-mono text-[9px] text-[#858894] uppercase tracking-wider block">
+                <span className="font-mono text-[10px] text-[#8A97AB] uppercase tracking-wider block font-semibold">
                   On-Board Tank Telemetry
                 </span>
-                <h3 className="text-sm font-bold text-[#f0f0f4] m-0">
+                <h3 className="text-base font-bold text-[#172033] m-0">
                   Live Fuel Level & Range Monitor
                 </h3>
               </div>
-              <span className="font-mono text-[10px] text-[#858894]">Real-time float sensor readings</span>
+              <span className="font-mono text-[11px] text-[#68758A] bg-[#F0F5FC] px-2.5 py-1 rounded-lg border border-[#D5E2F1]">
+                Real-time float sensor readings
+              </span>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left whitespace-nowrap font-sans">
+            <div className="overflow-x-auto rounded-xl border border-[#E2E8F0]">
+              <table className="w-full border-collapse text-left whitespace-nowrap font-sans text-xs">
                 <thead>
-                  <tr className="border-b border-[#30323b]">
-                    <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-3 uppercase">Vehicle</th>
-                    <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-3 uppercase">Operator</th>
-                    <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-3 uppercase">Tank Level</th>
-                    <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-3 uppercase">Gauge</th>
-                    <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-3 uppercase">Range Left</th>
-                    <th className="text-[#747783] font-mono text-[8px] tracking-[0.8px] py-2.5 px-3 uppercase text-right">Quick Refill</th>
+                  <tr className="border-b border-[#E2E8F0] bg-[#F8FAFD]">
+                    <th className="text-[#68758A] font-mono text-[10px] py-3 px-4 uppercase font-semibold">Vehicle</th>
+                    <th className="text-[#68758A] font-mono text-[10px] py-3 px-4 uppercase font-semibold">Operator</th>
+                    <th className="text-[#68758A] font-mono text-[10px] py-3 px-4 uppercase font-semibold">Tank Level</th>
+                    <th className="text-[#68758A] font-mono text-[10px] py-3 px-4 uppercase font-semibold">Gauge</th>
+                    <th className="text-[#68758A] font-mono text-[10px] py-3 px-4 uppercase font-semibold">Range Left</th>
+                    <th className="text-[#68758A] font-mono text-[10px] py-3 px-4 uppercase font-semibold text-right">Quick Refill</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -279,22 +297,22 @@ export default function Fuel({
                     const isLow = veh.fuel < 25;
 
                     return (
-                      <tr key={veh.id} className="border-b border-[#282a33] hover:bg-[#1f212a] transition-colors last:border-0">
-                        <td className="py-3 px-3 font-mono text-xs font-bold text-[#e0e0e7]">{veh.plate}</td>
-                        <td className="py-3 px-3 text-[11px] text-[#aeb0ba]">{veh.driver}</td>
-                        <td className="py-3 px-3 font-mono text-xs text-[#d1d1da]">{veh.fuel}%</td>
-                        <td className="py-3 px-3">
-                          <div className="w-36 h-2 rounded-full bg-[#343640] overflow-hidden">
+                      <tr key={veh.id} className="border-b border-[#E2E8F0] hover:bg-[#F8FAFD] transition-colors last:border-0">
+                        <td className="py-3.5 px-4 font-mono text-xs font-bold text-[#172033]">{veh.plate}</td>
+                        <td className="py-3.5 px-4 text-xs text-[#172033] font-medium">{veh.driver}</td>
+                        <td className="py-3.5 px-4 font-mono text-xs font-bold text-[#172033]">{veh.fuel}%</td>
+                        <td className="py-3.5 px-4">
+                          <div className="w-36 h-2 rounded-full bg-[#E2E8F0] overflow-hidden">
                             <div
                               style={{ width: `${veh.fuel}%` }}
                               className={`h-full rounded-full ${
-                                veh.fuel > 50 ? 'bg-[#82d4a8]' : veh.fuel > 20 ? 'bg-[#e5a46e]' : 'bg-[#e56868]'
+                                veh.fuel > 50 ? 'bg-[#16A36A]' : veh.fuel > 20 ? 'bg-[#D97706]' : 'bg-[#E05252]'
                               }`}
                             />
                           </div>
                         </td>
-                        <td className="py-3 px-3 font-mono text-xs text-[#b49aff]">~{range} km</td>
-                        <td className="py-3 px-3 text-right">
+                        <td className="py-3.5 px-4 font-mono text-xs text-[#2879E8] font-bold">~{range} km</td>
+                        <td className="py-3.5 px-4 text-right">
                           <Button
                             variant={isLow ? 'primary' : 'quiet'}
                             size="sm"
@@ -302,6 +320,7 @@ export default function Fuel({
                               setEditingRecord(null);
                               setIsPurchaseModalOpen(true);
                             }}
+                            className="rounded-xl py-1.5 px-3 text-xs"
                           >
                             {isLow ? 'Refuel Bay' : 'Log Refill'}
                           </Button>
@@ -332,7 +351,7 @@ export default function Fuel({
 
       {/* TAB 2: PURCHASE HISTORY */}
       {activeTab === 'history' && (
-        <div className="animate-in fade-in">
+        <div className="animate-in fade-in duration-200">
           <FuelHistoryTable
             records={fuelRecords}
             vehicles={vehicles}
@@ -350,7 +369,7 @@ export default function Fuel({
 
       {/* TAB 3: FUEL ANALYTICS */}
       {activeTab === 'analytics' && (
-        <div className="animate-in fade-in">
+        <div className="animate-in fade-in duration-200">
           <FuelAnalyticsCharts records={fuelRecords} vehicles={vehicles} />
         </div>
       )}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-import { Plus, User, AlertCircle } from 'lucide-react';
+import { Plus, User, AlertCircle, Phone, Mail, FileText, Calendar, Truck, Shield } from 'lucide-react';
 
 export default function AddDriverModal({ isOpen, onClose, onAddDriver, availableVehicles = [] }) {
   const [formData, setFormData] = useState({
@@ -69,113 +69,125 @@ export default function AddDriverModal({ isOpen, onClose, onAddDriver, available
       isOpen={isOpen}
       onClose={onClose}
       title="Onboard Fleet Operator"
-      subtitle="Driver Registry & Certification"
+      subtitle="Driver Registry & Safety Certification"
       maxWidth="max-w-md"
     >
-      <form onSubmit={handleSubmit} className="space-y-3 text-xs font-sans">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans text-[#172033]">
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
             Driver Full Name *
           </label>
-          <input
-            type="text"
-            placeholder="e.g. Samuel Bennett"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className={`w-full bg-[#20222a] border ${
-              errors.name ? 'border-red-500' : 'border-[#30333d]'
-            } focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs`}
-          />
-          {errors.name && <span className="text-red-400 text-[9px] mt-0.5 block">{errors.name}</span>}
+          <div className="flex items-center gap-2 bg-[#F8FAFD] border border-[#D5E2F1] focus-within:border-[#2879E8] focus-within:ring-2 focus-within:ring-[#2879E8]/15 rounded-xl px-3 py-2 transition-all">
+            <User className="w-4 h-4 text-[#8A97AB] shrink-0" />
+            <input
+              type="text"
+              placeholder="e.g. Samuel Bennett"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full bg-transparent border-0 outline-none text-[#172033] font-medium placeholder-[#94A3B8]"
+            />
+          </div>
+          {errors.name && <span className="text-[#E05252] text-[10px] mt-1 block font-medium">{errors.name}</span>}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
               Contact Phone *
             </label>
-            <input
-              type="text"
-              placeholder="+1 (555) 000-0000"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className={`w-full bg-[#20222a] border ${
-                errors.phone ? 'border-red-500' : 'border-[#30333d]'
-              } focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs`}
-            />
-            {errors.phone && <span className="text-red-400 text-[9px] mt-0.5 block">{errors.phone}</span>}
+            <div className="flex items-center gap-2 bg-[#F8FAFD] border border-[#D5E2F1] focus-within:border-[#2879E8] focus-within:ring-2 focus-within:ring-[#2879E8]/15 rounded-xl px-3 py-2 transition-all">
+              <Phone className="w-4 h-4 text-[#8A97AB] shrink-0" />
+              <input
+                type="text"
+                placeholder="+1 (555) 000-0000"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full bg-transparent border-0 outline-none text-[#172033] font-mono font-medium placeholder-[#94A3B8]"
+              />
+            </div>
+            {errors.phone && <span className="text-[#E05252] text-[10px] mt-1 block font-medium">{errors.phone}</span>}
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
               Email Address
             </label>
-            <input
-              type="email"
-              placeholder="operator@autrail.io"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
-            />
+            <div className="flex items-center gap-2 bg-[#F8FAFD] border border-[#D5E2F1] focus-within:border-[#2879E8] focus-within:ring-2 focus-within:ring-[#2879E8]/15 rounded-xl px-3 py-2 transition-all">
+              <Mail className="w-4 h-4 text-[#8A97AB] shrink-0" />
+              <input
+                type="email"
+                placeholder="operator@autrail.io"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full bg-transparent border-0 outline-none text-[#172033] font-medium placeholder-[#94A3B8]"
+              />
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
               License Number *
             </label>
-            <input
-              type="text"
-              placeholder="DL-88201-NY"
-              value={formData.license}
-              onChange={(e) => setFormData({ ...formData, license: e.target.value })}
-              className={`w-full bg-[#20222a] border ${
-                errors.license ? 'border-red-500' : 'border-[#30333d]'
-              } focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs`}
-            />
-            {errors.license && <span className="text-red-400 text-[9px] mt-0.5 block">{errors.license}</span>}
+            <div className="flex items-center gap-2 bg-[#F8FAFD] border border-[#D5E2F1] focus-within:border-[#2879E8] focus-within:ring-2 focus-within:ring-[#2879E8]/15 rounded-xl px-3 py-2 transition-all">
+              <Shield className="w-4 h-4 text-[#8A97AB] shrink-0" />
+              <input
+                type="text"
+                placeholder="DL-88201-NY"
+                value={formData.license}
+                onChange={(e) => setFormData({ ...formData, license: e.target.value })}
+                className="w-full bg-transparent border-0 outline-none text-[#172033] font-mono font-medium placeholder-[#94A3B8]"
+              />
+            </div>
+            {errors.license && <span className="text-[#E05252] text-[10px] mt-1 block font-medium">{errors.license}</span>}
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
               License Expiration
             </label>
-            <input
-              type="date"
-              value={formData.licenseExpiry}
-              onChange={(e) => setFormData({ ...formData, licenseExpiry: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
-            />
+            <div className="flex items-center gap-2 bg-[#F8FAFD] border border-[#D5E2F1] focus-within:border-[#2879E8] focus-within:ring-2 focus-within:ring-[#2879E8]/15 rounded-xl px-3 py-2 transition-all">
+              <Calendar className="w-4 h-4 text-[#8A97AB] shrink-0" />
+              <input
+                type="date"
+                value={formData.licenseExpiry}
+                onChange={(e) => setFormData({ ...formData, licenseExpiry: e.target.value })}
+                className="w-full bg-transparent border-0 outline-none text-[#172033] font-mono font-medium"
+              />
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
               Assign Vehicle
             </label>
-            <select
-              value={formData.vehicleAssigned}
-              onChange={(e) => setFormData({ ...formData, vehicleAssigned: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
-            >
-              {availableVehicles.map((v) => (
-                <option key={v.id} value={v.plate}>
-                  {v.plate} ({v.model})
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2 bg-[#F8FAFD] border border-[#D5E2F1] focus-within:border-[#2879E8] rounded-xl px-3 py-2">
+              <Truck className="w-4 h-4 text-[#8A97AB] shrink-0" />
+              <select
+                value={formData.vehicleAssigned}
+                onChange={(e) => setFormData({ ...formData, vehicleAssigned: e.target.value })}
+                className="w-full bg-transparent border-0 outline-none text-[#172033] font-mono font-medium cursor-pointer"
+              >
+                {availableVehicles.map((v) => (
+                  <option key={v.id} value={v.plate}>
+                    {v.plate} ({v.model})
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase block mb-1.5 font-semibold">
               Duty Status
             </label>
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15 rounded-xl px-3 py-2 text-[#172033] outline-none font-medium cursor-pointer"
             >
               <option value="On Duty">On Duty</option>
               <option value="Available">Available</option>
@@ -184,11 +196,11 @@ export default function AddDriverModal({ isOpen, onClose, onAddDriver, available
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#252730] mt-3">
-          <Button variant="default" size="sm" onClick={onClose}>
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#E2E8F0] mt-4">
+          <Button variant="default" size="sm" onClick={onClose} className="rounded-xl px-4 py-2">
             Cancel
           </Button>
-          <Button type="submit" variant="primary" size="sm" icon={Plus}>
+          <Button type="submit" variant="primary" size="sm" icon={Plus} className="rounded-xl px-5 py-2 font-bold shadow-md shadow-[#2879E8]/25 active:scale-[0.98]">
             Confirm Driver
           </Button>
         </div>
@@ -196,4 +208,3 @@ export default function AddDriverModal({ isOpen, onClose, onAddDriver, available
     </Modal>
   );
 }
-

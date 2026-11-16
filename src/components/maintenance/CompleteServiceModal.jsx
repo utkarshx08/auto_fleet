@@ -18,7 +18,7 @@ export default function CompleteServiceModal({
     odometerReading: vehicle ? vehicle.odometer : schedule.nextServiceOdometer || 15000,
     serviceCost: 240.00,
     serviceProvider: schedule.serviceCenter || SERVICE_CENTERS[0],
-    technician: 'Marcus Vance',
+    technician: 'Vikram Singh',
     description: `Completed scheduled ${schedule.maintenanceType}. Inspected all related components and verified operations.`,
     invoiceFileName: `INV-${schedule.vehicleId}-${new Date().toISOString().slice(0, 10)}.pdf`
   });
@@ -32,7 +32,7 @@ export default function CompleteServiceModal({
         odometerReading: vehicle ? vehicle.odometer : schedule.nextServiceOdometer || 15000,
         serviceCost: 240.00,
         serviceProvider: schedule.serviceCenter || SERVICE_CENTERS[0],
-        technician: 'Marcus Vance',
+        technician: 'Vikram Singh',
         description: `Completed scheduled ${schedule.maintenanceType}. Inspected all related components and verified operations.`,
         invoiceFileName: `INV-${schedule.vehicleId}-${new Date().toISOString().slice(0, 10)}.pdf`
       });
@@ -79,22 +79,22 @@ export default function CompleteServiceModal({
       subtitle={`${schedule.vehicleId} — ${schedule.maintenanceType}`}
       maxWidth="max-w-md"
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5 text-xs font-sans">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
         {/* Notice Card */}
-        <div className="p-3 bg-[#1c302a] border border-[#2c493d] rounded-lg flex items-center gap-2.5 text-[#83d7a9]">
-          <CheckCircle2 className="w-5 h-5 shrink-0" />
+        <div className="p-3 bg-[#E8F7F0] border border-[#C2E8D7] rounded-xl flex items-center gap-2.5 text-[#16A36A]">
+          <CheckCircle2 className="w-5 h-5 shrink-0 text-[#16A36A]" />
           <div className="text-[11px] leading-tight">
-            <b>Closing Service Order & Updating Odometer Baseline</b>
-            <p className="mt-0.5 text-[#83d7a9]/80 mb-0 text-[10px]">
+            <b className="font-semibold text-[#16A36A]">Closing Service Order & Updating Odometer Baseline</b>
+            <p className="mt-0.5 text-[#16A36A]/90 mb-0 text-[10px]">
               This will record maintenance expenses, attach invoice documentation, and roll over the schedule for the next interval.
             </p>
           </div>
         </div>
 
         {/* Date & Odometer */}
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Service Completion Date
             </label>
             <input
@@ -102,12 +102,12 @@ export default function CompleteServiceModal({
               required
               value={formData.serviceDate}
               onChange={(e) => setFormData({ ...formData, serviceDate: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Current Odometer at Service
             </label>
             <div className="relative">
@@ -117,17 +117,17 @@ export default function CompleteServiceModal({
                 required
                 value={formData.odometerReading}
                 onChange={(e) => setFormData({ ...formData, odometerReading: e.target.value })}
-                className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               />
-              <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">km</span>
+              <span className="absolute right-3 top-2.5 text-[10px] text-[#8A97AB] font-mono">km</span>
             </div>
           </div>
         </div>
 
         {/* Service Cost & Provider */}
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Final Work Order Cost
             </label>
             <div className="relative">
@@ -138,20 +138,20 @@ export default function CompleteServiceModal({
                 required
                 value={formData.serviceCost}
                 onChange={(e) => setFormData({ ...formData, serviceCost: e.target.value })}
-                className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] pl-6 pr-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl pl-6 pr-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               />
-              <span className="absolute left-2.5 top-2 text-[10px] text-[#717480] font-mono">$</span>
+              <span className="absolute left-2.5 top-2.5 text-[11px] text-[#8A97AB] font-mono">$</span>
             </div>
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Service Facility / Bay
             </label>
             <select
               value={formData.serviceProvider}
               onChange={(e) => setFormData({ ...formData, serviceProvider: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs cursor-pointer shadow-2xs"
             >
               {SERVICE_CENTERS.map((sc) => (
                 <option key={sc} value={sc}>
@@ -164,7 +164,7 @@ export default function CompleteServiceModal({
 
         {/* Technician */}
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
             Certified Technician
           </label>
           <input
@@ -172,55 +172,55 @@ export default function CompleteServiceModal({
             required
             value={formData.technician}
             onChange={(e) => setFormData({ ...formData, technician: e.target.value })}
-            className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-sans text-xs"
-            placeholder="e.g. Marcus Vance"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-sans text-xs shadow-2xs"
+            placeholder="e.g. Vikram Singh"
           />
         </div>
 
         {/* Description */}
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
             Service Notes & Replaced Parts
           </label>
           <textarea
             rows={2}
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-sans text-xs resize-none"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-sans text-xs resize-none shadow-2xs"
           />
         </div>
 
         {/* Invoice Upload */}
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
             Upload Service Invoice / Receipt
           </label>
-          <div className="border border-dashed border-[#353846] hover:border-[#b49aff] rounded-lg p-3 text-center transition-colors cursor-pointer relative bg-[#121319]">
+          <div className="border border-dashed border-[#D5E2F1] hover:border-[#2879E8] rounded-xl p-3.5 text-center transition-colors cursor-pointer relative bg-gradient-to-br from-[#F8FAFD] to-[#FFFFFF] shadow-2xs group">
             <input
               type="file"
               accept=".pdf,.png,.jpg,.jpeg"
               onChange={handleFileUpload}
               className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
             />
-            <div className="flex flex-col items-center gap-1 text-[11px] text-[#858894]">
-              <Upload className="w-4 h-4 text-[#b49aff]" />
+            <div className="flex flex-col items-center gap-1.5 text-[11px] text-[#68758A]">
+              <Upload className="w-5 h-5 text-[#2879E8] group-hover:scale-110 transition-transform" />
               <span>
                 {uploadedFile ? (
-                  <b className="text-[#8be0b3] font-mono">{uploadedFile} (Attached)</b>
+                  <b className="text-[#16A36A] font-mono">{uploadedFile} (Attached)</b>
                 ) : (
                   <>
-                    <span className="text-[#eee] underline">Click to upload</span> or drag invoice PDF
+                    <span className="text-[#2879E8] font-semibold underline">Click to upload</span> or drag invoice PDF
                   </>
                 )}
               </span>
-              <span className="text-[9px] text-[#636674]">PDF, JPEG or PNG up to 10MB</span>
+              <span className="text-[10px] text-[#8A97AB]">PDF, JPEG or PNG up to 10MB</span>
             </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="pt-2 border-t border-[#252730] flex justify-end gap-2">
-          <Button variant="quiet" size="sm" type="button" onClick={onClose}>
+        <div className="pt-3 border-t border-[#E2E8F0] flex justify-end gap-2.5">
+          <Button variant="default" size="sm" type="button" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" type="submit" icon={CheckCircle2}>

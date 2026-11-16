@@ -15,57 +15,57 @@ export default function TripStatusBadge({ status, size = 'md', className = '' })
     switch (status) {
       case 'Draft':
         return {
-          bg: 'bg-[#21232c] text-[#a0a3b1] border-[#343847]',
-          dot: 'bg-[#7e8294]',
+          bg: 'bg-[#F1F5F9] text-[#68758A] border-[#E2E8F0]',
+          dot: 'bg-[#94A3B8]',
           icon: FileEdit,
           label: 'Draft'
         };
       case 'Scheduled':
         return {
-          bg: 'bg-[#182338] text-[#8cb4ff] border-[#293d66]',
-          dot: 'bg-[#5b96ff]',
+          bg: 'bg-[#EAF3FF] text-[#2879E8] border-[#D5E6FB]',
+          dot: 'bg-[#2879E8]',
           icon: Calendar,
           label: 'Scheduled'
         };
       case 'Assigned':
         return {
-          bg: 'bg-[#271e3d] text-[#c4b3ff] border-[#44336b]',
-          dot: 'bg-[#ad91ff]',
+          bg: 'bg-[#F0F5FC] text-[#1765CC] border-[#D5E2F1]',
+          dot: 'bg-[#1765CC]',
           icon: UserCheck,
           label: 'Assigned'
         };
       case 'In Progress':
         return {
-          bg: 'bg-[#122822] text-[#6ee7b7] border-[#1d4c3e]',
-          dot: 'bg-[#10b981] animate-pulse',
+          bg: 'bg-[#EAF3FF] text-[#2879E8] border-[#D5E6FB]',
+          dot: 'bg-[#2879E8] animate-pulse',
           icon: Navigation,
           label: 'In Progress'
         };
       case 'Completed':
         return {
-          bg: 'bg-[#142921] text-[#70cbb7] border-[#20493b]',
-          dot: 'bg-[#34d399]',
+          bg: 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]',
+          dot: 'bg-[#16A36A]',
           icon: CheckCircle2,
           label: 'Completed'
         };
       case 'Delayed':
         return {
-          bg: 'bg-[#332214] text-[#fcd34d] border-[#5c3e21]',
-          dot: 'bg-[#f59e0b] animate-ping',
+          bg: 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DFB4]',
+          dot: 'bg-[#E7A329] animate-ping',
           icon: AlertTriangle,
           label: 'Delayed'
         };
       case 'Cancelled':
         return {
-          bg: 'bg-[#321719] text-[#fca5a5] border-[#5e272a]',
-          dot: 'bg-[#ef4444]',
+          bg: 'bg-[#FDF2F2] text-[#E05252] border-[#FAD2D2]',
+          dot: 'bg-[#E05252]',
           icon: XCircle,
           label: 'Cancelled'
         };
       default:
         return {
-          bg: 'bg-[#21232c] text-[#a0a3b1] border-[#343847]',
-          dot: 'bg-[#7e8294]',
+          bg: 'bg-[#F1F5F9] text-[#68758A] border-[#E2E8F0]',
+          dot: 'bg-[#94A3B8]',
           icon: Clock,
           label: status || 'Unknown'
         };
@@ -76,9 +76,9 @@ export default function TripStatusBadge({ status, size = 'md', className = '' })
   const Icon = config.icon;
 
   const sizeClasses = {
-    sm: 'text-[10px] px-2 py-0.5 gap-1',
-    md: 'text-[11px] px-2.5 py-1 gap-1.5',
-    lg: 'text-[12px] px-3 py-1.5 gap-2'
+    sm: 'text-[10px] px-2 py-0.5 gap-1 rounded-md font-mono',
+    md: 'text-[11px] px-2.5 py-1 gap-1.5 rounded-lg font-mono font-medium',
+    lg: 'text-[12px] px-3 py-1.5 gap-2 rounded-xl font-mono font-medium'
   };
 
   const iconSizes = {
@@ -89,7 +89,7 @@ export default function TripStatusBadge({ status, size = 'md', className = '' })
 
   return (
     <span
-      className={`inline-flex items-center font-medium border rounded-[6px] transition-colors select-none ${
+      className={`inline-flex items-center font-medium border transition-colors select-none shadow-2xs ${
         config.bg
       } ${sizeClasses[size] || sizeClasses.md} ${className}`}
     >
@@ -99,4 +99,3 @@ export default function TripStatusBadge({ status, size = 'md', className = '' })
     </span>
   );
 }
-

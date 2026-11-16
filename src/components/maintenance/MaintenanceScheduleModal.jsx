@@ -114,17 +114,17 @@ export default function MaintenanceScheduleModal({
       subtitle="Proactive Interval & Odometer Triggers"
       maxWidth="max-w-lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5 text-xs font-sans">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
         {/* Vehicle Selection & Category */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Target Vehicle
             </label>
             <select
               value={formData.vehicleId}
               onChange={(e) => handleVehicleChange(e.target.value)}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             >
               {vehicles.map((v) => (
                 <option key={v.id || v.plate} value={v.plate}>
@@ -135,13 +135,13 @@ export default function MaintenanceScheduleModal({
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Maintenance Category
             </label>
             <select
               value={formData.maintenanceType}
               onChange={(e) => setFormData({ ...formData, maintenanceType: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs cursor-pointer shadow-2xs"
             >
               {MAINTENANCE_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -155,7 +155,7 @@ export default function MaintenanceScheduleModal({
         {/* Intervals: Kilometres and Days */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Service Interval (Kilometres)
             </label>
             <div className="relative">
@@ -166,15 +166,15 @@ export default function MaintenanceScheduleModal({
                 required
                 value={formData.intervalKm}
                 onChange={(e) => setFormData({ ...formData, intervalKm: e.target.value })}
-                className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               />
-              <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">km</span>
+              <span className="absolute right-3 top-2.5 text-[10px] text-[#8A97AB] font-mono">km</span>
             </div>
-            {errors.intervalKm && <p className="text-red-400 text-[10px] mt-0.5">{errors.intervalKm}</p>}
+            {errors.intervalKm && <p className="text-[#E05252] text-[10px] mt-0.5">{errors.intervalKm}</p>}
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Service Interval (Days)
             </label>
             <div className="relative">
@@ -185,18 +185,18 @@ export default function MaintenanceScheduleModal({
                 required
                 value={formData.intervalDays}
                 onChange={(e) => setFormData({ ...formData, intervalDays: e.target.value })}
-                className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               />
-              <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">days</span>
+              <span className="absolute right-3 top-2.5 text-[10px] text-[#8A97AB] font-mono">days</span>
             </div>
-            {errors.intervalDays && <p className="text-red-400 text-[10px] mt-0.5">{errors.intervalDays}</p>}
+            {errors.intervalDays && <p className="text-[#E05252] text-[10px] mt-0.5">{errors.intervalDays}</p>}
           </div>
         </div>
 
         {/* Last Service Baseline */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Last Service Odometer
             </label>
             <div className="relative">
@@ -206,14 +206,14 @@ export default function MaintenanceScheduleModal({
                 required
                 value={formData.lastServiceOdometer}
                 onChange={(e) => setFormData({ ...formData, lastServiceOdometer: e.target.value })}
-                className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               />
-              <span className="absolute right-2.5 top-2 text-[10px] text-[#717480] font-mono">km</span>
+              <span className="absolute right-3 top-2.5 text-[10px] text-[#8A97AB] font-mono">km</span>
             </div>
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Last Service Date
             </label>
             <input
@@ -221,35 +221,35 @@ export default function MaintenanceScheduleModal({
               required
               value={formData.lastServiceDate}
               onChange={(e) => setFormData({ ...formData, lastServiceDate: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             />
           </div>
         </div>
 
         {/* Calculated Next Trigger Milestone Card */}
-        <div className="p-3 bg-[#121319] border border-[#272935] rounded-lg">
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-mono text-[9px] text-[#b49aff] uppercase font-bold flex items-center gap-1">
-              <Gauge className="w-3 h-3" /> Auto-Calculated Triggers
+        <div className="p-3.5 bg-gradient-to-br from-[#EAF3FF] to-[#F0F7FF] border border-[#D5E6FB] rounded-xl shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="font-mono text-[10px] text-[#2879E8] uppercase font-bold flex items-center gap-1.5 tracking-wider">
+              <Gauge className="w-3.5 h-3.5" /> Auto-Calculated Triggers
             </span>
-            <span className="font-mono text-[9px] text-[#747783]">System Milestone</span>
+            <span className="font-mono text-[9px] text-[#68758A]">System Milestone</span>
           </div>
-          <div className="flex items-center justify-between mt-1 text-[11px] font-mono">
-            <span>Next Odometer: <b className="text-[#8be0b3]">{computedNextOdo.toLocaleString()} km</b></span>
-            <span>Next Date: <b className="text-[#c4b3ff]">{computedNextDate}</b></span>
+          <div className="flex items-center justify-between mt-1 text-xs font-mono">
+            <span className="text-[#172033]">Next Odometer: <b className="text-[#16A36A]">{computedNextOdo.toLocaleString()} km</b></span>
+            <span className="text-[#172033]">Next Date: <b className="text-[#2879E8]">{computedNextDate}</b></span>
           </div>
         </div>
 
         {/* Reminders & Service Center */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Assigned Service Centre
             </label>
             <select
               value={formData.serviceCenter}
               onChange={(e) => setFormData({ ...formData, serviceCenter: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs cursor-pointer shadow-2xs"
             >
               {SERVICE_CENTERS.map((sc) => (
                 <option key={sc} value={sc}>
@@ -260,13 +260,13 @@ export default function MaintenanceScheduleModal({
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Maintenance Priority
             </label>
             <select
               value={formData.priority}
               onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none text-xs cursor-pointer shadow-2xs"
             >
               <option value="Low">Low Priority</option>
               <option value="Medium">Medium Priority</option>
@@ -279,7 +279,7 @@ export default function MaintenanceScheduleModal({
         {/* Reminder Thresholds */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Mileage Reminder Buffer
             </label>
             <input
@@ -288,13 +288,13 @@ export default function MaintenanceScheduleModal({
               step={100}
               value={formData.reminderKm}
               onChange={(e) => setFormData({ ...formData, reminderKm: Number(e.target.value) })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               placeholder="e.g. 1000 km before"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Date Reminder Buffer
             </label>
             <input
@@ -303,19 +303,19 @@ export default function MaintenanceScheduleModal({
               max={60}
               value={formData.reminderDays}
               onChange={(e) => setFormData({ ...formData, reminderDays: Number(e.target.value) })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
               placeholder="e.g. 14 days before"
             />
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-2 border-t border-[#252730] flex justify-end gap-2">
-          <Button variant="quiet" size="sm" type="button" onClick={onClose}>
+        <div className="pt-3 border-t border-[#E2E8F0] flex justify-end gap-2.5">
+          <Button variant="default" size="sm" type="button" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" type="submit">
-            {isEditing ? 'Update schedule' : 'Save schedule'}
+            {isEditing ? 'Update Schedule' : 'Save Schedule'}
           </Button>
         </div>
       </form>

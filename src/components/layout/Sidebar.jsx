@@ -155,10 +155,10 @@ export default function Sidebar({
           A
         </span>
         <div className="max-md:hidden flex flex-col">
-          <span className="text-[#172033] text-[14px] font-black tracking-[1.5px] leading-tight">
+          <span className="text-[#0B132B] text-[15px] font-black tracking-[1.5px] leading-tight">
             AUTRAIL
           </span>
-          <span className="text-[9px] font-mono tracking-wider text-[#8A97AB] uppercase">
+          <span className="text-[9px] font-mono tracking-wider text-[#475569] uppercase font-bold">
             Fleet OS
           </span>
         </div>
@@ -167,16 +167,16 @@ export default function Sidebar({
       {/* Workspace Switcher */}
       <div
         onClick={() => navigate('/settings')}
-        className="max-md:hidden flex items-center gap-2.5 bg-[#F8FAFD] border border-[#E2E8F0] p-2.5 rounded-xl text-[12px] text-[#172033] mb-6 hover:border-[#2879E8]/40 hover:bg-[#F0F5FC] transition-all cursor-pointer shadow-sm"
+        className="max-md:hidden flex items-center gap-2.5 bg-[#F8FAFD] border border-[#E2E8F0] p-2.5 rounded-xl text-[12px] text-[#0B132B] mb-6 hover:border-[#2879E8]/40 hover:bg-[#F0F5FC] transition-all cursor-pointer shadow-sm"
         title="Workspace settings"
       >
         <span className="w-2 h-2 rounded-full bg-[#2879E8] shadow-[0_0_8px_#2879E8] shrink-0" />
-        <span className="truncate font-semibold text-[#172033]">Northstar Logistics</span>
-        <ChevronDown className="w-3.5 h-3.5 ml-auto text-[#8A97AB] shrink-0" />
+        <span className="truncate font-bold text-[#0B132B]">Northstar Logistics</span>
+        <ChevronDown className="w-3.5 h-3.5 ml-auto text-[#64748B] shrink-0" />
       </div>
 
       {/* Section: WORKSPACE */}
-      <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] px-2 mb-2 uppercase font-medium">
+      <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#475569] px-2 mb-2 uppercase font-bold">
         Workspace
       </p>
       <nav className="flex flex-col gap-1">
@@ -225,7 +225,7 @@ export default function Sidebar({
       {/* Section: TRIP MANAGEMENT */}
       <div className="mt-5 mb-2">
         <div className="flex items-center justify-between px-2 mb-1.5">
-          <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase m-0 font-medium">
+          <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase m-0 font-bold">
             Trip Management
           </p>
           <button
@@ -298,7 +298,7 @@ export default function Sidebar({
       </div>
 
       {/* Section: MANAGEMENT */}
-      <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] px-2 mt-4 mb-2 uppercase font-medium">
+      <p className="max-md:hidden font-mono text-[10px] tracking-[1.2px] text-[#475569] px-2 mt-4 mb-2 uppercase font-bold">
         Management
       </p>
       <nav className="flex flex-col gap-1 max-md:mt-4">

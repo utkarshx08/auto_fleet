@@ -29,17 +29,17 @@ export default function VehicleOverview({
       {/* Panel Heading */}
       <div className="flex items-center justify-between mb-2">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
             Fleet spotlight
           </p>
-          <h2 className="text-[15px] font-bold tracking-tight text-[#172033] m-0">
+          <h2 className="text-[16px] font-black tracking-tight text-[#0B132B] m-0">
             Vehicle Overview
           </h2>
         </div>
         <button
           type="button"
           onClick={onMoreActions}
-          className="text-[#8A97AB] hover:text-[#172033] p-1.5 rounded-xl hover:bg-[#F0F5FC] border border-transparent hover:border-[#E2E8F0] transition-all cursor-pointer"
+          className="text-[#64748B] hover:text-[#0B132B] p-1.5 rounded-xl hover:bg-[#F0F5FC] border border-transparent hover:border-[#E2E8F0] transition-all cursor-pointer"
           aria-label="Spotlight options"
         >
           <MoreHorizontal className="w-5 h-5" />
@@ -52,27 +52,27 @@ export default function VehicleOverview({
         <div className="z-10 w-[52%] max-md:w-[60%] pt-2 flex flex-col">
           <StatusBadge status={current.status} type="pill" className="w-fit" />
 
-          <h3 className="text-[25px] font-black tracking-tight text-[#172033] mt-3 mb-0.5 leading-tight">
+          <h3 className="text-[25px] font-black tracking-tight text-[#0B132B] mt-3 mb-0.5 leading-tight">
             {current.plate}
           </h3>
-          <p className="text-[12px] text-[#68758A] m-0 font-medium truncate">
+          <p className="text-[12px] text-[#334155] m-0 font-semibold truncate">
             {current.model}
           </p>
 
           <div className="grid grid-cols-2 gap-4 mt-4 bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-2xs">
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="font-mono text-[9px] tracking-[0.8px] text-[#8A97AB] uppercase">
+              <span className="font-mono text-[9px] tracking-[0.8px] text-[#475569] uppercase font-bold">
                 Driver
               </span>
-              <b className="text-[11px] font-bold text-[#172033] truncate">
+              <b className="text-[11px] font-bold text-[#0B132B] truncate">
                 {current.driver}
               </b>
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="font-mono text-[9px] tracking-[0.8px] text-[#8A97AB] uppercase">
+              <span className="font-mono text-[9px] tracking-[0.8px] text-[#475569] uppercase font-bold">
                 Location
               </span>
-              <b className="text-[11px] font-bold text-[#172033] truncate">
+              <b className="text-[11px] font-bold text-[#0B132B] truncate">
                 {current.location}
               </b>
             </div>

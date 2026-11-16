@@ -1,6 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Command, WifiOff, User, Settings, LogOut, ChevronDown, Sparkles, Palette, Check } from 'lucide-react';
+import {
+  Bell,
+  Command,
+  WifiOff,
+  User,
+  Settings,
+  LogOut,
+  ChevronDown,
+  Sparkles,
+  Palette,
+  Check,
+  Sun,
+  Moon,
+  Layers
+} from 'lucide-react';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -15,7 +29,7 @@ export default function Navbar({
   const navigate = useNavigate();
   const { isOnline } = useNetworkStatus();
   const { profile, logout } = useAuth();
-  const { theme, setTheme, themes } = useTheme();
+  const { theme, setTheme, toggleDayNight, isDark, themes } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -103,27 +117,50 @@ export default function Navbar({
           )}
         </div>
 
-        {/* Theme Quick Switcher Button */}
-        <div className="relative" ref={themeDropdownRef}>
-          <button
-            type="button"
-            onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
-            aria-label="Change theme"
-            title="Liquid Glass Theme Options"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[#475569] hover:text-[#0B132B] transition-all rounded-xl bg-white/90 border border-[#E2E8F0] hover:bg-[#F0F5FC] shadow-2xs hover:shadow-sm cursor-pointer"
-          >
-            <Palette className="w-4 h-4 text-[#2879E8]" />
-            <span className="hidden sm:inline font-sans font-bold text-[11px] text-[#0B132B]">Theme</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2879E8] shadow-[0_0_6px_#2879E8]" />
-          </button>
+        {/* Theme Quick Switcher & Day/Night 1-Click Toggle */}
+        <div className="relative flex items-center" ref={themeDropdownRef}>
+          <div className="flex items-center rounded-xl bg-white/90 border border-[#E2E8F0] shadow-2xs hover:shadow-sm overflow-hidden p-0.5">
+            {/* Quick 1-Click Day / Night Toggle */}
+            <button
+              type="button"
+              onClick={toggleDayNight}
+              aria-label={isDark ? "Switch to Liquid Glass (Day)" : "Switch to Liquid Obsidian (Night)"}
+              title={isDark ? "Quick switch: Return to Liquid Glass (Day)" : "Quick switch: Liquid Obsidian (Night Flight)"}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-[#475569] hover:text-[#0B132B] transition-all rounded-lg hover:bg-[#F0F5FC] cursor-pointer"
+            >
+              {theme === 'dark-liquid-glass' ? (
+                <Moon className="w-4 h-4 text-[#38BDF8] animate-pulse" />
+              ) : theme === 'ice-liquid-glass' ? (
+                <Sparkles className="w-4 h-4 text-[#0284C7]" />
+              ) : theme === 'crystal-liquid-glass' ? (
+                <Layers className="w-4 h-4 text-[#4F46E5]" />
+              ) : (
+                <Sun className="w-4 h-4 text-[#E7A329]" />
+              )}
+              <span className="hidden sm:inline font-sans font-bold text-[11px] text-[#0B132B] truncate max-w-[85px]">
+                {theme === 'dark-liquid-glass' ? 'Obsidian' : theme === 'ice-liquid-glass' ? 'Ice Glass' : theme === 'crystal-liquid-glass' ? 'Crystal' : 'Day Glass'}
+              </span>
+            </button>
+
+            {/* Specular Variants Dropdown Trigger */}
+            <button
+              type="button"
+              onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+              aria-label="Select glass finish"
+              title="Select specular glass finish"
+              className={`p-1.5 rounded-lg hover:bg-[#F0F5FC] text-[#64748B] hover:text-[#0B132B] transition-all cursor-pointer border-l border-[#E2E8F0] ${themeDropdownOpen ? 'bg-[#EAF3FF] text-[#2879E8]' : ''}`}
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${themeDropdownOpen ? 'rotate-180 text-[#2879E8]' : ''}`} />
+            </button>
+          </div>
 
           {/* Liquid Glass Theme Dropdown Menu */}
           {themeDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-72 bg-white/98 backdrop-blur-2xl border border-white/95 rounded-2xl shadow-liquid-dropdown p-2 text-xs text-[#172033] animate-fadeIn z-50">
+            <div className="absolute right-0 top-full mt-2 w-76 bg-white/98 backdrop-blur-2xl border border-white/95 rounded-2xl shadow-liquid-dropdown p-2 text-xs text-[#172033] animate-fadeIn z-50">
               <div className="px-2.5 py-2 border-b border-[#E2E8F0]/80 mb-1.5 flex items-center justify-between">
                 <div>
-                  <span className="font-extrabold text-[12px] text-[#0B132B] block">Surface Themes</span>
-                  <span className="text-[10px] text-[#64748B]">Base Liquid Glass is default</span>
+                  <span className="font-extrabold text-[12px] text-[#0B132B] block">Specular Glass Finishes</span>
+                  <span className="text-[10px] text-[#64748B]">Click to switch surface material</span>
                 </div>
                 <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/20">
                   GLASS UI
@@ -133,6 +170,7 @@ export default function Navbar({
               <div className="space-y-1">
                 {themes.map((t) => {
                   const isActive = theme === t.id;
+                  const Icon = t.icon === 'Sun' ? Sun : t.icon === 'Sparkles' ? Sparkles : t.icon === 'Layers' ? Layers : Moon;
                   return (
                     <button
                       key={t.id}
@@ -148,9 +186,11 @@ export default function Navbar({
                       }`}
                     >
                       <div
-                        className="w-3.5 h-3.5 rounded-full mt-0.5 shrink-0 border border-white shadow-xs"
-                        style={{ backgroundColor: t.accentColor }}
-                      />
+                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border border-white/80 shadow-xs"
+                        style={{ backgroundColor: `${t.accentColor}18`, color: t.accentColor }}
+                      >
+                        <Icon className="w-3.5 h-3.5" />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
                           <span className={`text-[11px] font-bold truncate ${isActive ? 'text-[#0B132B]' : 'text-[#334155]'}`}>

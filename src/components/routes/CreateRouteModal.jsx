@@ -51,15 +51,15 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
       subtitle="Dispatch & Waypoint Sequencing"
       maxWidth="max-w-md"
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5 text-xs font-sans">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
         {error && (
-          <div className="p-2.5 rounded bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-[11px]">
+          <div className="p-3 rounded-xl bg-[#FDF2F2] border border-[#FAD2D2] text-[#E05252] font-mono text-xs">
             {error}
           </div>
         )}
 
         <div>
-          <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+          <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
             Route Name / Corridor Description
           </label>
           <input
@@ -68,13 +68,13 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="e.g. Midtown Express Corridor"
-            className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Origin Depot
             </label>
             <input
@@ -83,11 +83,11 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
               value={formData.origin}
               onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
               placeholder="e.g. Queens Cargo Terminal"
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
             />
           </div>
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Destination Hub
             </label>
             <input
@@ -96,14 +96,14 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
               value={formData.destination}
               onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
               placeholder="e.g. Financial District Bay"
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2.5">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Waypoints (Stops)
             </label>
             <input
@@ -112,12 +112,12 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
               max={30}
               value={formData.stops}
               onChange={(e) => setFormData({ ...formData, stops: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Distance (km)
             </label>
             <input
@@ -125,12 +125,12 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
               step="0.1"
               value={formData.distance}
               onChange={(e) => setFormData({ ...formData, distance: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Est. Duration
             </label>
             <input
@@ -138,20 +138,20 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
               value={formData.eta}
               onChange={(e) => setFormData({ ...formData, eta: e.target.value })}
               placeholder="e.g. 50 mins"
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2 py-1.5 text-[#eee] outline-none font-mono text-xs"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs shadow-2xs"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Assigned Vehicle
             </label>
             <select
               value={formData.assignedVehicle}
               onChange={(e) => setFormData({ ...formData, assignedVehicle: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             >
               {initialVehicles.map((v) => (
                 <option key={v.id} value={v.plate}>
@@ -162,13 +162,13 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
           </div>
 
           <div>
-            <label className="font-mono text-[9px] text-[#858894] uppercase block mb-1">
+            <label className="font-mono text-[10px] text-[#68758A] uppercase tracking-wider block mb-1">
               Assigned Driver
             </label>
             <select
               value={formData.assignedDriver}
               onChange={(e) => setFormData({ ...formData, assignedDriver: e.target.value })}
-              className="w-full bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1.5 text-[#eee] outline-none font-mono text-xs cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             >
               {initialDrivers.map((d) => (
                 <option key={d.id} value={d.name}>
@@ -179,16 +179,15 @@ export default function CreateRouteModal({ isOpen, onClose, onCreateRoute }) {
           </div>
         </div>
 
-        <div className="pt-2 border-t border-[#252730] flex justify-end gap-2">
-          <Button variant="quiet" size="sm" type="button" onClick={onClose}>
+        <div className="pt-3 border-t border-[#E2E8F0] flex justify-end gap-2.5">
+          <Button variant="default" size="sm" type="button" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" type="submit" icon={Plus}>
-            Create corridor
+            Create Corridor
           </Button>
         </div>
       </form>
     </Modal>
   );
 }
-

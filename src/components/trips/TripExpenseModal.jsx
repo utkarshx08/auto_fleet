@@ -76,23 +76,23 @@ export default function TripExpenseModal({
       subtitle="FUEL, TOLL, ALLOWANCE & TRANSIT DISBURSEMENT"
       maxWidth="max-w-md"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs text-[#d4d4dc]">
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
         {error && (
-          <div className="p-3 rounded-[7px] bg-[#2a171a] border border-[#522930] text-[#fca5a5] text-xs">
+          <div className="p-3 rounded-xl bg-[#FDF2F2] border border-[#FAD2D2] text-[#E05252] text-xs font-mono">
             {error}
           </div>
         )}
 
         {/* Expense Category */}
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Expense Category <span className="text-[#f87171]">*</span>
+          <label className="block text-[10px] font-mono text-[#68758A] uppercase tracking-wider mb-1 font-semibold">
+            Expense Category <span className="text-[#E05252]">*</span>
           </label>
           <div className="relative">
             <select
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] cursor-pointer"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] text-xs text-[#172033] px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] cursor-pointer shadow-2xs"
             >
               {EXPENSE_TYPES.map((type) => (
                 <option key={type} value={type}>
@@ -105,11 +105,11 @@ export default function TripExpenseModal({
 
         {/* Amount */}
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Expense Amount ($ USD) <span className="text-[#f87171]">*</span>
+          <label className="block text-[10px] font-mono text-[#68758A] uppercase tracking-wider mb-1 font-semibold">
+            Expense Amount ($ USD) <span className="text-[#E05252]">*</span>
           </label>
           <div className="relative">
-            <DollarSign className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#747683]" />
+            <DollarSign className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8A97AB]" />
             <input
               type="number"
               step="0.01"
@@ -117,43 +117,44 @@ export default function TripExpenseModal({
               value={formData.amount}
               onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
               placeholder="0.00"
-              className="w-full bg-[#121319] border border-[#2b2e38] text-sm text-[#f0f0f4] pl-9 pr-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] font-mono"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] text-sm text-[#172033] pl-9 pr-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] font-mono shadow-2xs font-bold"
             />
           </div>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
-            Description / Vendor Memo <span className="text-[#f87171]">*</span>
+          <label className="block text-[10px] font-mono text-[#68758A] uppercase tracking-wider mb-1 font-semibold">
+            Description / Vendor Memo <span className="text-[#E05252]">*</span>
           </label>
           <input
             type="text"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder="e.g. Shell Queens - 45L Ultra Low Diesel, or Tunnel Toll"
-            className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff]"
+            placeholder="e.g. Shell Fuel Station - 45L Diesel, or Bridge Toll"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] text-xs text-[#172033] px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] shadow-2xs"
           />
         </div>
 
         {/* Date / Time */}
         <div>
-          <label className="block text-[11px] font-mono text-[#858894] uppercase tracking-[1px] mb-1.5">
+          <label className="block text-[10px] font-mono text-[#68758A] uppercase tracking-wider mb-1 font-semibold">
             Transaction Date & Time
           </label>
           <input
             type="datetime-local"
             value={formData.recordedAt}
             onChange={(e) => setFormData({ ...formData, recordedAt: e.target.value })}
-            className="w-full bg-[#121319] border border-[#2b2e38] text-xs text-[#f0f0f4] px-3 py-2 rounded-[7px] focus:outline-none focus:border-[#ad91ff] font-mono"
+            className="w-full bg-[#F8FAFD] border border-[#D5E2F1] text-xs text-[#172033] px-3 py-2 rounded-xl focus:outline-none focus:border-[#2879E8] font-mono shadow-2xs cursor-pointer"
           />
         </div>
 
         {/* Action Controls */}
-        <div className="pt-3 border-t border-[#252834] flex items-center justify-end gap-2">
+        <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-end gap-2.5">
           <Button
             type="button"
-            variant="quiet"
+            variant="default"
+            size="sm"
             onClick={onClose}
             disabled={isSubmitting}
           >
@@ -162,6 +163,7 @@ export default function TripExpenseModal({
           <Button
             type="submit"
             variant="primary"
+            size="sm"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Logging...' : 'Record Expense'}
@@ -171,4 +173,3 @@ export default function TripExpenseModal({
     </Modal>
   );
 }
-

@@ -29,9 +29,9 @@ export default function OperationalExpensesSection({ expenseData }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1c1e25] border border-[#3b354d] p-2 rounded-md shadow-xl text-xs font-mono">
-          <p className="text-[#a7a9b5] text-[10px] uppercase mb-1">{label}</p>
-          <p className="text-[#b49aff] font-bold">
+        <div className="bg-white/95 backdrop-blur-xl border border-white/90 p-3 rounded-xl shadow-liquid-dropdown text-xs font-mono">
+          <p className="text-[#8A97AB] text-[10px] uppercase mb-1 font-semibold">{label}</p>
+          <p className="text-[#2879E8] font-bold text-sm">
             ${payload[0].value.toLocaleString()}
           </p>
         </div>
@@ -40,63 +40,65 @@ export default function OperationalExpensesSection({ expenseData }) {
     return null;
   };
 
+  const PIE_COLORS = ['#2879E8', '#16A36A', '#E7A329', '#0284C7', '#8B5CF6'];
+
   return (
-    <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5 space-y-5">
+    <div className="glass-card rounded-2xl p-6 space-y-5 shadow-liquid-subtle">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#252730]">
+      <div className="flex items-center justify-between pb-3.5 border-b border-[#E2E8F0]">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-0.5">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-0.5 font-bold">
             Module 04
           </p>
-          <h2 className="text-base font-bold text-[#f0f0f4] m-0 flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-[#e5a46e]" /> Monthly Operational Expense Analytics
+          <h2 className="text-base font-black text-[#0B132B] m-0 flex items-center gap-2">
+            <DollarSign className="w-4 h-4 text-[#2879E8]" /> Operational Expenditures & Financial Ledger
           </h2>
         </div>
-        <div className="flex items-center gap-4 text-xs font-mono text-[#858894]">
-          <span>Total: <b className="text-[#f0f0f4]">${totalExpenses.toLocaleString()}</b></span>
-          <span>Cost/km: <b className="text-[#8be0b3]">${costPerKm} / km</b></span>
+        <div className="flex items-center gap-4 text-xs font-mono text-[#475569] font-bold">
+          <span>Total Expenses: <b className="text-[#0B132B]">${totalExpenses.toLocaleString()}</b></span>
+          <span>Cost/km: <b className="text-[#16A36A] font-bold">${costPerKm}</b></span>
         </div>
       </div>
 
-      {/* Visualizations Grid */}
-      <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
-        {/* Monthly Expense Trend (Line) */}
-        <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-mono text-[9px] text-[#858894] uppercase">
-              5-Month Operational Expense Growth ($)
-            </span>
-            <span className="font-mono text-[9px] text-[#80d9a9]">+2.3% Controlled Variance</span>
+      {/* Categories Summary Chips */}
+      <div className="grid grid-cols-4 max-md:grid-cols-2 gap-3.5">
+        {categoryBreakdown.map((cat, idx) => (
+          <div key={cat.category} className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl shadow-2xs">
+            <span className="font-mono text-[9px] text-[#8A97AB] uppercase block font-semibold">{cat.category}</span>
+            <div className="flex items-baseline justify-between mt-1">
+              <span className="text-xl font-black text-[#172033] font-mono">${cat.amount.toLocaleString()}</span>
+              <span className="text-[10px] font-mono text-[#68758A]">{cat.share}%</span>
+            </div>
           </div>
-          <div className="h-52 w-full">
+        ))}
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-4 pt-2">
+        {/* Historical Expenditure Curve */}
+        <div className="col-span-2 max-lg:col-span-1 bg-[#F8FAFD] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+          <span className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-3 font-semibold">
+            Monthly Cost Curve vs Cumulative Telemetry
+          </span>
+          <div className="h-[210px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={historicalTrends} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 5" stroke="#252733" vertical={false} />
-                <XAxis dataKey="month" stroke="#737682" fontSize={8} fontFamily="DM Mono" tickLine={false} axisLine={false} />
-                <YAxis stroke="#686c78" fontSize={8} fontFamily="DM Mono" tickLine={false} axisLine={false} />
+              <LineChart data={historicalTrends} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 5" stroke="#E2E8F0" vertical={false} />
+                <XAxis dataKey="month" stroke="#8A97AB" fontSize={9} fontFamily="DM Mono" tickLine={false} axisLine={false} />
+                <YAxis stroke="#8A97AB" fontSize={9} fontFamily="DM Mono" tickLine={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  dataKey="totalExpenses"
-                  stroke="#e5a46e"
-                  strokeWidth={2.5}
-                  dot={{ r: 4, fill: '#e5a46e', stroke: '#121319', strokeWidth: 2 }}
-                  activeDot={{ r: 6, fill: '#f6c39a' }}
-                />
+                <Line type="monotone" dataKey="amount" stroke="#2879E8" strokeWidth={2.5} dot={{ r: 3, fill: '#2879E8' }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Expense Category Distribution Pie Chart */}
-        <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-mono text-[9px] text-[#858894] uppercase">
-              Expense Allocation by Category
-            </span>
-            <span className="font-mono text-[9px] text-[#b49aff]">Current Billing Cycle</span>
-          </div>
-          <div className="h-44 w-full">
+        {/* Expenses Breakdown Pie */}
+        <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs flex flex-col justify-between">
+          <span className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-2 font-semibold">
+            Expenditure Distribution
+          </span>
+          <div className="h-[150px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -105,61 +107,28 @@ export default function OperationalExpensesSection({ expenseData }) {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  outerRadius={65}
-                  innerRadius={38}
-                  paddingAngle={3}
+                  innerRadius={36}
+                  outerRadius={58}
+                  paddingAngle={4}
                 >
-                  {expensePieData.map((entry, idx) => (
-                    <Cell key={idx} fill={entry.color} />
+                  {expensePieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex flex-wrap items-center justify-around gap-2 text-[9px] font-mono pt-2 border-t border-[#1e2029]">
-            {expensePieData.slice(0, 4).map((item) => (
-              <span key={item.name} className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="text-[#aeb0ba]">{item.name}: {item.percentage}%</span>
+          <div className="flex flex-wrap items-center justify-around gap-2 text-[10px] font-mono text-[#68758A] pt-2 border-t border-[#E2E8F0]">
+            {expensePieData.map((entry, idx) => (
+              <span key={entry.name} className="flex items-center gap-1.5 font-medium">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                {entry.name}
               </span>
             ))}
           </div>
         </div>
       </div>
-
-      {/* Expense Category Breakdown Table */}
-      <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg overflow-x-auto">
-        <h4 className="font-mono text-[9px] text-[#858894] uppercase mb-2">
-          Consolidated Cost Category Ledger
-        </h4>
-        <table className="w-full text-left border-collapse text-[10px] font-mono whitespace-nowrap">
-          <thead>
-            <tr className="border-b border-[#2b2d38] text-[#747783] text-[8px] uppercase">
-              <th className="py-2 px-1">Expense Category</th>
-              <th className="py-2 px-1">Total Allocated</th>
-              <th className="py-2 px-1">Percentage Share</th>
-              <th className="py-2 px-1 text-right">Cost Per Km</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categoryBreakdown.map((row) => (
-              <tr key={row.category} className="border-b border-[#1c1e27] hover:bg-[#1a1c24] transition-colors last:border-0">
-                <td className="py-2 px-1 font-bold text-[#e0e0e7] flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#b49aff]" />
-                  {row.category}
-                </td>
-                <td className="py-2 px-1 text-[#f0f0f4]">${row.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                <td className="py-2 px-1 text-[#8dc8ed]">{row.percentage}%</td>
-                <td className="py-2 px-1 text-right text-[#80d9a9]">
-                  ${((row.amount / 18420) || 0).toFixed(3)} / km
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }
-

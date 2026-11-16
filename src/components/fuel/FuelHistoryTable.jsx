@@ -79,41 +79,47 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
   };
 
   return (
-    <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5 space-y-4">
+    <div className="glass-card border border-white/95 rounded-2xl p-6 shadow-xl space-y-5 text-[#172033]">
       {/* Header and Controls */}
-      <div className="flex items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
+      <div className="flex items-center justify-between gap-4 max-md:flex-col max-md:items-stretch border-b border-[#E2E8F0] pb-4">
         <div>
-          <span className="font-mono text-[9px] text-[#858894] uppercase tracking-wider block">
+          <span className="font-mono text-[10px] text-[#8A97AB] uppercase tracking-wider block font-semibold">
             Digital Fuel Ledger
           </span>
-          <h3 className="text-sm font-bold text-[#f0f0f4] m-0">
+          <h3 className="text-base font-bold text-[#172033] m-0">
             Fuel Purchase Transactions
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <SearchBar
             value={search}
             onChange={setSearch}
             onClear={() => setSearch('')}
             placeholder="Search plate, driver, station..."
-            width="w-[260px] max-md:w-full"
+            width="w-[280px] max-md:w-full"
           />
 
-          <Button variant="primary" size="sm" onClick={onAddRecord} icon={Plus}>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onAddRecord}
+            icon={Plus}
+            className="rounded-xl py-2 px-4 font-bold shadow-md shadow-[#2879E8]/25 active:scale-[0.98]"
+          >
             Record Purchase
           </Button>
         </div>
       </div>
 
       {/* Multi-Dimensional Filters Bar */}
-      <div className="flex items-center justify-between border-b border-[#252730] pb-3 flex-wrap gap-2 text-[10px] font-mono">
+      <div className="flex items-center justify-between pb-3 flex-wrap gap-3 text-xs font-mono">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Vehicle Filter */}
           <select
             value={vehicleFilter}
             onChange={(e) => setVehicleFilter(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1 text-xs text-[#eee] outline-none font-mono cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-mono cursor-pointer font-medium"
           >
             <option value="ALL">All Vehicles</option>
             {vehicles.map((v) => (
@@ -127,7 +133,7 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
           <select
             value={driverFilter}
             onChange={(e) => setDriverFilter(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1 text-xs text-[#eee] outline-none font-sans cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-sans cursor-pointer font-medium"
           >
             <option value="ALL">All Drivers</option>
             {drivers.map((d) => (
@@ -141,7 +147,7 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
           <select
             value={fuelTypeFilter}
             onChange={(e) => setFuelTypeFilter(e.target.value)}
-            className="bg-[#20222a] border border-[#30333d] focus:border-[#b49aff] rounded-[6px] px-2.5 py-1 text-xs text-[#eee] outline-none font-sans cursor-pointer"
+            className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-sans cursor-pointer font-medium"
           >
             <option value="ALL">All Fuel Types</option>
             {FUEL_TYPES.map((ft) => (
@@ -155,10 +161,10 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
           <button
             type="button"
             onClick={() => setAnomalyOnly(!anomalyOnly)}
-            className={`px-2.5 py-1 rounded-[6px] border transition-colors ${
+            className={`px-3 py-1.5 rounded-xl border transition-all text-xs font-medium cursor-pointer ${
               anomalyOnly
-                ? 'bg-red-500/20 text-red-300 border-red-500/40 font-bold'
-                : 'bg-[#20222a] text-[#858894] border-[#30333d] hover:text-white'
+                ? 'bg-[#FEF2F2] text-[#E05252] border-[#FECACA] font-bold shadow-2xs'
+                : 'bg-white text-[#68758A] border-[#D5E2F1] hover:text-[#172033]'
             }`}
           >
             ⚠ Flagged Only
@@ -166,33 +172,33 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
         </div>
 
         {/* Aggregated totals */}
-        <div className="flex items-center gap-3 text-[#858894]">
-          <span>Volume: <b className="text-[#eee]">{totalFilteredVolume.toFixed(1)} L</b></span>
-          <span>Spend: <b className="text-[#8be0b3] font-bold">${totalFilteredCost.toFixed(2)}</b></span>
+        <div className="flex items-center gap-4 text-[#68758A] bg-[#F0F5FC] px-3 py-1.5 rounded-xl border border-[#D5E2F1]">
+          <span>Volume: <b className="text-[#172033]">{totalFilteredVolume.toFixed(1)} L</b></span>
+          <span>Spend: <b className="text-[#16A36A] font-bold">${totalFilteredCost.toFixed(2)}</b></span>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-[11px] whitespace-nowrap font-sans">
+      <div className="overflow-x-auto rounded-xl border border-[#E2E8F0]">
+        <table className="w-full text-left border-collapse text-xs whitespace-nowrap font-sans">
           <thead>
-            <tr className="border-b border-[#30323b] text-[#747783] font-mono text-[8px] uppercase">
-              <th className="py-2.5 px-3">Vehicle</th>
-              <th className="py-2.5 px-3">Operator</th>
-              <th className="py-2.5 px-3">Fuel Station</th>
-              <th className="py-2.5 px-3">Quantity</th>
-              <th className="py-2.5 px-3">Price / L</th>
-              <th className="py-2.5 px-3">Total Amount</th>
-              <th className="py-2.5 px-3">Odometer</th>
-              <th className="py-2.5 px-3">Purchase Date</th>
-              <th className="py-2.5 px-3">Audit</th>
-              <th className="py-2.5 px-3 text-right">Actions</th>
+            <tr className="border-b border-[#E2E8F0] bg-[#F8FAFD] text-[#68758A] font-mono text-[10px] uppercase font-semibold">
+              <th className="py-3 px-4">Vehicle</th>
+              <th className="py-3 px-4">Operator</th>
+              <th className="py-3 px-4">Fuel Station</th>
+              <th className="py-3 px-4">Quantity</th>
+              <th className="py-3 px-4">Price / L</th>
+              <th className="py-3 px-4">Total Amount</th>
+              <th className="py-3 px-4">Odometer</th>
+              <th className="py-3 px-4">Purchase Date</th>
+              <th className="py-3 px-4">Audit</th>
+              <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredRecords.length === 0 ? (
               <tr>
-                <td colSpan={10} className="py-8 text-center text-[#747783]">
+                <td colSpan={10} className="py-12 text-center text-[#68758A] font-mono">
                   No fuel transactions match your criteria.
                 </td>
               </tr>
@@ -200,84 +206,85 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
               filteredRecords.map((rec) => (
                 <tr
                   key={rec.id}
-                  className={`border-b border-[#242633] hover:bg-[#1b1d26] transition-colors last:border-0 ${
-                    rec.isAnomaly ? 'bg-amber-500/[0.04]' : ''
+                  className={`border-b border-[#E2E8F0] hover:bg-[#F8FAFD] transition-colors last:border-0 ${
+                    rec.isAnomaly ? 'bg-[#FEF2F2]/40' : ''
                   }`}
                 >
                   {/* Vehicle */}
-                  <td className="py-3 px-3">
-                    <b className="font-mono text-xs text-[#f0f0f4] block">{rec.vehicleId}</b>
-                    <span className="font-mono text-[8px] text-[#747783]">{rec.id}</span>
+                  <td className="py-3.5 px-4">
+                    <b className="font-mono text-xs text-[#172033] block font-bold">{rec.vehicleId}</b>
+                    <span className="font-mono text-[9px] text-[#8A97AB]">{rec.id}</span>
                   </td>
 
                   {/* Driver */}
-                  <td className="py-3 px-3 text-[#d1d1da]">
+                  <td className="py-3.5 px-4 text-[#172033] font-medium">
                     {rec.driverName}
                   </td>
 
                   {/* Station */}
-                  <td className="py-3 px-3 text-[10px] text-[#aeb0ba]">
-                    <span className="truncate block max-w-xs">{rec.fuelStation}</span>
-                    <span className="text-[8px] font-mono text-[#747783]">{rec.paymentMethod}</span>
+                  <td className="py-3.5 px-4 text-[#68758A]">
+                    <span className="truncate block max-w-xs font-medium text-[#172033]">{rec.fuelStation}</span>
+                    <span className="text-[10px] font-mono text-[#8A97AB]">{rec.paymentMethod}</span>
                   </td>
 
                   {/* Quantity */}
-                  <td className="py-3 px-3 font-mono text-[10px] text-[#eee] font-bold">
+                  <td className="py-3.5 px-4 font-mono text-xs text-[#172033] font-bold">
                     {Number(rec.quantity).toFixed(1)} L
                   </td>
 
                   {/* Price */}
-                  <td className="py-3 px-3 font-mono text-[10px] text-[#aeb0ba]">
+                  <td className="py-3.5 px-4 font-mono text-xs text-[#68758A]">
                     ${Number(rec.pricePerLitre).toFixed(2)}
                   </td>
 
                   {/* Total */}
-                  <td className="py-3 px-3 font-mono text-xs font-bold text-[#8be0b3]">
+                  <td className="py-3.5 px-4 font-mono text-xs font-bold text-[#16A36A]">
                     ${Number(rec.totalAmount).toFixed(2)}
                   </td>
 
                   {/* Odometer */}
-                  <td className="py-3 px-3 font-mono text-[10px] text-[#d1d1da]">
+                  <td className="py-3.5 px-4 font-mono text-xs text-[#172033]">
                     {rec.odometerReading ? rec.odometerReading.toLocaleString() : '—'} km
                   </td>
 
                   {/* Date */}
-                  <td className="py-3 px-3 font-mono text-[9px] text-[#858894]">
+                  <td className="py-3.5 px-4 font-mono text-[10px] text-[#68758A]">
                     {rec.purchaseDate ? rec.purchaseDate.slice(0, 10) : '—'}
                   </td>
 
                   {/* Anomaly Audit */}
-                  <td className="py-3 px-3">
+                  <td className="py-3.5 px-4">
                     {rec.isAnomaly ? (
                       <span
-                        className="font-mono text-[8px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 cursor-pointer"
+                        className="font-mono text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FEF2F2] text-[#E05252] border border-[#FECACA] cursor-pointer shadow-2xs"
                         title={rec.anomalyReason}
                         onClick={onReviewAnomalies}
                       >
                         ⚠ FLAGGED
                       </span>
                     ) : (
-                      <span className="font-mono text-[8px] px-1.5 py-0.5 rounded bg-[#1c302a] text-[#83d7a9] border border-[#2c493d]">
+                      <span className="font-mono text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#DCFCE7] text-[#16A36A] border border-[#BBF7D0]">
                         ✓ OK
                       </span>
                     )}
                   </td>
 
                   {/* Actions */}
-                  <td className="py-3 px-3 text-right">
+                  <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <Button
                         variant="quiet"
                         size="sm"
                         onClick={() => handleDownloadReceipt(rec)}
                         icon={Download}
+                        className="rounded-lg py-1 px-2.5 text-xs"
                       >
                         <span className="max-md:hidden">Receipt</span>
                       </Button>
                       <button
                         type="button"
                         onClick={() => onEditRecord(rec)}
-                        className="p-1.5 rounded text-[#858894] hover:text-[#b49aff] hover:bg-[#20222a] transition-colors"
+                        className="p-1.5 rounded-lg text-[#68758A] hover:text-[#2879E8] hover:bg-[#EAF3FF] transition-colors"
                         title="Edit record"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -285,7 +292,7 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
                       <button
                         type="button"
                         onClick={() => onDeleteRecord(rec)}
-                        className="p-1.5 rounded text-[#858894] hover:text-red-400 hover:bg-[#20222a] transition-colors"
+                        className="p-1.5 rounded-lg text-[#68758A] hover:text-[#E05252] hover:bg-[#FEF2F2] transition-colors"
                         title="Delete record"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -301,4 +308,3 @@ Verification: Verified by Autrail Digital Fuel Ledger.`;
     </div>
   );
 }
-

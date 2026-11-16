@@ -60,10 +60,10 @@ export default function VehicleTable({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
             Your fleet directory
           </p>
-          <h2 className="text-[15px] font-bold tracking-tight text-[#172033] m-0">
+          <h2 className="text-[16px] font-black tracking-tight text-[#0B132B] m-0">
             Fleet Asset Status
           </h2>
         </div>
@@ -126,20 +126,20 @@ export default function VehicleTable({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left whitespace-nowrap">
           <thead>
-            <tr className="border-b border-[#E2E8F0]/80">
-              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
+            <tr className="border-b border-[#E2E8F0]">
+              <th className="text-[#475569] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-bold">
                 Vehicle
               </th>
-              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
+              <th className="text-[#475569] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-bold">
                 Driver
               </th>
-              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
+              <th className="text-[#475569] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-bold">
                 Status
               </th>
-              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
+              <th className="text-[#475569] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-bold">
                 Location
               </th>
-              <th className="text-[#8A97AB] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-semibold">
+              <th className="text-[#475569] font-mono text-[9px] tracking-wider py-3 px-3 uppercase font-bold">
                 Fuel Level
               </th>
               <th className="py-3 px-3 w-8"></th>

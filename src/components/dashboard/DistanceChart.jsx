@@ -39,10 +39,10 @@ export default function DistanceChart({ onPeriodChange }) {
       {/* Panel Heading with Period Selector */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
             Fleet performance
           </p>
-          <h2 className="text-[15px] font-bold tracking-tight text-[#172033] m-0">
+          <h2 className="text-[16px] font-black tracking-tight text-[#0B132B] m-0">
             Distance Travelled
           </h2>
         </div>
@@ -50,7 +50,7 @@ export default function DistanceChart({ onPeriodChange }) {
           value={period}
           onChange={handlePeriodChange}
           aria-label="Chart period"
-          className="bg-[#F8FAFD] text-[#172033] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-semibold outline-none hover:border-[#2879E8]/40 hover:bg-[#F0F5FC] focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
+          className="bg-[#F8FAFD] text-[#0B132B] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-bold outline-none hover:border-[#2879E8]/40 hover:bg-[#F0F5FC] focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
         >
           <option value="week">This week</option>
           <option value="month">This month</option>

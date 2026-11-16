@@ -133,17 +133,17 @@ export default function RoutesPage({ onShowToast }) {
   }, [routes, searchTerm, statusFilter]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4">
+      <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-1">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
             Dispatch & Logistics
           </p>
-          <h1 className="text-[28px] tracking-[-1px] font-bold text-[#f0f0f4] m-0">
-            Routes<span className="text-[#ad91ff]">.</span>
+          <h1 className="text-[28px] tracking-tight font-black text-[#0B132B] m-0">
+            Routes<span className="text-[#2879E8]">.</span>
           </h1>
-          <p className="text-[12px] text-[#898c98] mt-1">
+          <p className="text-[13px] text-[#334155] mt-1 font-semibold">
             Active delivery corridors, waypoint sequencing, and dispatch scheduling.
           </p>
         </div>
@@ -162,16 +162,16 @@ export default function RoutesPage({ onShowToast }) {
           width="w-[320px] max-md:w-full"
         />
 
-        <div className="flex items-center bg-[#20222a] border border-[#30333d] rounded-[6px] p-0.5 text-[10px] font-mono">
+        <div className="flex items-center bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl p-1 text-xs font-mono shadow-2xs">
           {['ALL', 'In Progress', 'Pending', 'Completed'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1 rounded transition-colors ${
+              className={`px-3 py-1 rounded-lg transition-colors font-medium cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-[#40375b] text-[#c4b3ff] font-bold'
-                  : 'text-[#858894] hover:text-[#d1d1da]'
+                  ? 'bg-[#EAF3FF] text-[#2879E8] font-bold shadow-2xs'
+                  : 'text-[#68758A] hover:text-[#172033]'
               }`}
             >
               {st}
@@ -182,37 +182,37 @@ export default function RoutesPage({ onShowToast }) {
 
       {/* Route Cards Grid */}
       {filteredRoutes.length === 0 ? (
-        <div className="bg-[#17191f] border border-[#292c35] p-10 rounded-[10px] text-center text-[#747783]">
-          <RouteIcon className="w-8 h-8 text-[#4a475a] mx-auto mb-2" />
-          <p className="text-sm font-bold text-[#d1d1da]">No corridors found</p>
-          <p className="text-xs text-[#858894]">Try adjusting your search query or status filter.</p>
+        <div className="glass-card p-12 rounded-2xl text-center text-[#8A97AB] shadow-liquid-subtle">
+          <RouteIcon className="w-10 h-10 text-[#CBD5E1] mx-auto mb-2" />
+          <p className="text-sm font-bold text-[#172033]">No corridors found</p>
+          <p className="text-xs text-[#68758A]">Try adjusting your search query or status filter.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-4">
+        <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-5">
           {filteredRoutes.map((rt) => (
             <div
               key={rt.id}
-              className="bg-[#17191f] border border-[#292c35] hover:border-[#383c4a] p-4 rounded-[10px] flex flex-col justify-between transition-colors group"
+              className="glass-card rounded-2xl p-5 flex flex-col justify-between shadow-liquid-subtle hover:border-[#2879E8]/40 transition-all group"
             >
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-[9px] text-[#b49aff] bg-[#24212f] px-2 py-0.5 rounded border border-[#40375b]">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-mono text-[10px] text-[#2879E8] bg-[#EAF3FF] px-2.5 py-0.5 rounded-lg border border-[#D5E6FB] font-bold">
                     {rt.id}
                   </span>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     {rt.status === 'Completed' ? (
-                      <span className="font-mono text-[9px] px-2.5 py-0.5 rounded-full bg-[#142921] text-[#70cbb7] border border-[#20493b] flex items-center gap-1 font-semibold">
-                        <CheckCircle2 className="w-3 h-3 text-[#34d399]" />
+                      <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#E8F7F0] text-[#16A36A] border border-[#C2E8D7] flex items-center gap-1 font-semibold">
+                        <CheckCircle2 className="w-3 h-3 text-[#16A36A]" />
                         <span>Completed</span>
                       </span>
                     ) : rt.status === 'In Progress' ? (
-                      <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#1c302a] text-[#83d7a9] border border-[#2c493d] flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                      <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#EAF3FF] text-[#2879E8] border border-[#D5E6FB] flex items-center gap-1 font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2879E8] animate-pulse" />
                         <span>In Progress</span>
                       </span>
                     ) : (
-                      <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#382c25] text-[#e5a46e] border border-[#523d30] flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#e5a46e]" />
+                      <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#FEF7EA] text-[#E7A329] border border-[#F8DFB4] flex items-center gap-1 font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#E7A329]" />
                         <span>{rt.status || 'Pending'}</span>
                       </span>
                     )}
@@ -220,7 +220,7 @@ export default function RoutesPage({ onShowToast }) {
                     <button
                       type="button"
                       onClick={() => handleDeleteRoute(rt.id)}
-                      className="p-1 rounded text-[#747783] hover:text-red-400 hover:bg-[#20222a] transition-colors"
+                      className="p-1.5 rounded-lg text-[#8A97AB] hover:text-[#E05252] hover:bg-[#FDF2F2] transition-colors cursor-pointer"
                       title="Delete route"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -228,11 +228,11 @@ export default function RoutesPage({ onShowToast }) {
                   </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-[#f0f0f4] mt-2">{rt.name}</h3>
+                <h3 className="text-base font-black text-[#0B132B] tracking-tight">{rt.name}</h3>
 
                 {rt.completedAt && (
-                  <div className="mt-1 flex items-center gap-1 text-[10px] font-mono text-[#70cbb7]">
-                    <Clock className="w-3 h-3 text-[#34d399]" />
+                  <div className="mt-1 flex items-center gap-1 text-[11px] font-mono text-[#16A36A] font-medium">
+                    <Clock className="w-3 h-3 text-[#16A36A]" />
                     <span>
                       Completed:{' '}
                       {new Date(rt.completedAt).toLocaleTimeString([], {
@@ -243,42 +243,42 @@ export default function RoutesPage({ onShowToast }) {
                   </div>
                 )}
 
-                <div className="mt-3 space-y-2 text-xs">
-                  <div className="flex items-center gap-2 text-[#aeb0ba]">
-                    <MapPin className="w-3.5 h-3.5 text-[#858894] shrink-0" />
-                    <span className="truncate">{rt.origin}</span>
+                <div className="mt-3.5 space-y-2 text-xs">
+                  <div className="flex items-center gap-2 text-[#68758A]">
+                    <MapPin className="w-3.5 h-3.5 text-[#8A97AB] shrink-0" />
+                    <span className="truncate font-medium text-[#172033]">{rt.origin}</span>
                   </div>
-                  <div className="flex items-center gap-2 pl-4 text-[#747783]">
+                  <div className="flex items-center gap-2 pl-4 text-[#8A97AB]">
                     <ArrowRight className="w-3 h-3" />
                     <span className="text-[10px] font-mono">{rt.stops} Scheduled Waypoints ({rt.eta})</span>
                   </div>
-                  <div className="flex items-center gap-2 text-[#aeb0ba]">
-                    <MapPin className="w-3.5 h-3.5 text-[#b49aff] shrink-0" />
-                    <span className="truncate">{rt.destination}</span>
+                  <div className="flex items-center gap-2 text-[#68758A]">
+                    <MapPin className="w-3.5 h-3.5 text-[#2879E8] shrink-0" />
+                    <span className="truncate font-medium text-[#172033]">{rt.destination}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#252730] flex items-center justify-between text-[10px]">
+              <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
                 <div>
-                  <span className="font-mono text-[8px] text-[#747783] uppercase block">Assigned Unit</span>
-                  <span className="font-mono text-[#d1d1da]">{rt.assignedVehicle} · {rt.assignedDriver}</span>
+                  <span className="font-mono text-[9px] text-[#8A97AB] uppercase block font-semibold">Assigned Unit</span>
+                  <span className="font-mono text-[#172033] font-medium">{rt.assignedVehicle} · {rt.assignedDriver}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {rt.status === 'Completed' ? (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <Button
-                        variant="quiet"
+                        variant="default"
                         size="sm"
                         disabled
-                        className="opacity-60 cursor-not-allowed bg-[#142921] text-[#70cbb7] border border-[#20493b]"
+                        className="opacity-70 cursor-not-allowed bg-[#E8F7F0] text-[#16A36A] border border-[#C2E8D7]"
                       >
-                        <Check className="w-3 h-3 mr-1 text-[#34d399]" /> Completed
+                        <Check className="w-3 h-3 mr-1 text-[#16A36A]" /> Completed
                       </Button>
                       <button
                         type="button"
                         onClick={() => handleResetTrack(rt.id)}
-                        className="text-[9px] font-mono text-[#858894] hover:text-[#c4b3ff] underline transition-colors cursor-pointer"
+                        className="text-[10px] font-mono text-[#68758A] hover:text-[#2879E8] underline transition-colors cursor-pointer"
                         title="Reset track to In Progress"
                       >
                         Reopen
@@ -294,7 +294,7 @@ export default function RoutesPage({ onShowToast }) {
                       Mark as Completed
                     </Button>
                   ) : (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       <Button
                         variant="default"
                         size="sm"
@@ -309,7 +309,7 @@ export default function RoutesPage({ onShowToast }) {
                         onClick={() => handleMarkCompleted(rt.id)}
                         icon={CheckCircle2}
                       >
-                        Mark as Completed
+                        Complete
                       </Button>
                     </div>
                   )}

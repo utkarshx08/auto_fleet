@@ -99,6 +99,7 @@ export default function Maintenance({
       persistSchedules(updated);
       return updated;
     });
+    setIsDeleteModalOpen(false);
     setDeletingSchedule(null);
   };
 
@@ -107,96 +108,119 @@ export default function Maintenance({
     setIsCompleteModalOpen(true);
   };
 
-  const handleConfirmCompletion = (completedRecord, originalSchedule) => {
-    // 1. Add record to maintenance history
+  const handleConfirmComplete = (completionData) => {
+    const { schedule, ...recordData } = completionData;
+
+    // 1. Create a historical record
+    const newRecord = {
+      ...recordData,
+      id: `REC-${Date.now().toString(36).toUpperCase()}`,
+      createdAt: new Date().toISOString()
+    };
+
     setRecords((prev) => {
-      const updated = [completedRecord, ...prev];
+      const updated = [newRecord, ...prev];
       persistRecords(updated);
       return updated;
     });
 
-    // 2. Automatically advance the schedule to next interval
+    // 2. Advance schedule next due thresholds
     setSchedules((prev) => {
-      const updated = prev.map((sch) => {
-        if (sch.id === originalSchedule.id) {
+      const updated = prev.map((s) => {
+        if (s.id === schedule.id) {
           const nextOdo = calculateNextOdometer(
-            completedRecord.odometerReading,
-            sch.intervalKm
+            completionData.currentOdometer,
+            s.intervalKm
           );
-          const nextDate = calculateNextDate(
-            completedRecord.serviceDate,
-            sch.intervalDays
+          const nextDt = calculateNextDate(
+            completionData.completedDate,
+            s.intervalMonths
           );
+
           return {
-            ...sch,
-            lastServiceDate: completedRecord.serviceDate,
-            lastServiceOdometer: completedRecord.odometerReading,
-            nextServiceOdometer: nextOdo,
-            nextServiceDate: nextDate,
-            status: 'Active'
+            ...s,
+            lastServiceDate: completionData.completedDate,
+            lastServiceOdometer: completionData.currentOdometer,
+            nextDueOdometer: nextOdo || s.nextDueOdometer,
+            nextDueDate: nextDt || s.nextDueDate,
+            status: 'Scheduled',
+            updatedAt: new Date().toISOString()
           };
         }
-        return sch;
+        return s;
       });
       persistSchedules(updated);
       return updated;
     });
 
-    if (onScheduleService) onScheduleService(completedRecord);
+    setIsCompleteModalOpen(false);
     setCompletingSchedule(null);
   };
 
   const handleExportCSV = () => {
-    const headers = ['Record ID', 'Vehicle ID', 'Service Type', 'Date', 'Odometer (km)', 'Cost ($)', 'Facility', 'Technician'];
+    const headers = [
+      'Record ID',
+      'Vehicle ID',
+      'Service Type',
+      'Completed Date',
+      'Odometer (km)',
+      'Service Provider',
+      'Cost ($)',
+      'Notes'
+    ];
     const rows = records.map((r) => [
       r.id,
       r.vehicleId,
-      `"${r.serviceType}"`,
-      r.serviceDate,
-      r.odometerReading || 0,
-      r.serviceCost || 0,
+      r.serviceType,
+      r.completedDate,
+      r.odometerAtService,
       `"${r.serviceProvider || ''}"`,
-      `"${r.technician || ''}"`
+      r.serviceCost,
+      `"${(r.notes || '').replace(/"/g, '""')}"`
     ]);
-    const csvContent = [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
+
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+
+    const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
-    link.href = url;
-    link.download = `autrail-maintenance-records-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.setAttribute('href', encodedUri);
+    link.setAttribute(
+      'download',
+      `autrail_maintenance_ledger_${new Date().toISOString().split('T')[0]}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* Page Header */}
       <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-[9px] tracking-[1.2px] text-[#858894] uppercase">
-              Operational Fleet Care
-            </span>
-            <span className="bg-[#24212f] text-[#c4b3ff] text-[9px] font-mono px-2 py-0.5 rounded border border-[#40375b]">
-              AUTOMATED SCHEDULING ENGINE
-            </span>
-          </div>
-
-          <h1 className="text-[28px] tracking-[-1px] font-bold text-[#f0f0f4] m-0">
-            Maintenance management<span className="text-[#ad91ff]">.</span>
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
+            Preventative Fleet Maintenance & Service Operations
+          </p>
+          <h1 className="text-[28px] tracking-tight font-black text-[#0B132B] m-0">
+            Maintenance Management<span className="text-[#2879E8]">.</span>
           </h1>
-          <p className="text-[12px] text-[#898c98] mt-1 mb-0">
-            Automated service triggers, preventative milestones, work order invoices, and fleet workshop scheduling.
+          <p className="text-[13px] text-[#334155] mt-1 font-semibold">
+            Automated sensor tracking, routine servicing schedules, repair logs, and full shop lifecycle auditing.
           </p>
         </div>
 
-        {/* Global Action Buttons */}
-        <div className="flex items-center gap-2.5 max-md:w-full">
-          <Button variant="quiet" size="sm" onClick={handleExportCSV} icon={Download}>
-            Export log
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="quiet"
+            size="sm"
+            onClick={handleExportCSV}
+            icon={Download}
+          >
+            Export Ledger
           </Button>
+
           <Button
             variant="primary"
             size="sm"
@@ -211,8 +235,8 @@ export default function Maintenance({
         </div>
       </div>
 
-      {/* Sub-navigation Tabs: Dashboard, Service Schedule, Maintenance History, Maintenance Calendar */}
-      <div className="flex items-center gap-2 border-b border-[#252730] pb-1 overflow-x-auto">
+      {/* Sub-navigation Tabs */}
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-1 overflow-x-auto">
         {[
           { id: 'dashboard', label: 'Maintenance Dashboard' },
           { id: 'schedules', label: `Service Schedule (${schedules.length})` },
@@ -223,10 +247,10 @@ export default function Maintenance({
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-xs font-mono rounded-t-lg transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-4 py-2.5 text-xs font-mono rounded-t-xl transition-all whitespace-nowrap cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-[#17191f] text-[#f0f0f4] border-t-2 border-t-[#b49aff] border-x border-[#292c35] font-bold'
-                : 'text-[#858894] hover:text-[#d1d1da] hover:bg-[#15161c]'
+                ? 'bg-white text-[#2879E8] border-t-2 border-t-[#2879E8] border-x border-[#E2E8F0] font-bold shadow-2xs'
+                : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
             }`}
           >
             {tab.label}
@@ -236,7 +260,7 @@ export default function Maintenance({
 
       {/* TAB 1: MAINTENANCE DASHBOARD */}
       {activeTab === 'dashboard' && (
-        <div className="space-y-5 animate-in fade-in">
+        <div className="space-y-6 animate-in fade-in">
           {/* 6 Core Operational KPIs */}
           <MaintenanceKPIGrid
             kpis={kpis}
@@ -252,147 +276,143 @@ export default function Maintenance({
           />
 
           {/* Urgent Triage & Attention Queue */}
-          <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5">
-            <div className="flex items-center justify-between mb-3">
+          <div className="glass-card rounded-2xl p-5 shadow-liquid-subtle">
+            <div className="flex items-center justify-between mb-3.5 border-b border-[#E2E8F0]/80 pb-3">
               <div className="flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-[#e5a46e]" />
-                <h2 className="text-sm font-bold text-[#f0f0f4] m-0">
+                <ShieldAlert className="w-4 h-4 text-[#E7A329]" />
+                <h2 className="text-sm font-bold text-[#172033] m-0">
                   Automated Maintenance Reminders & Urgent Queue
                 </h2>
               </div>
-              <span className="font-mono text-[10px] text-[#858894]">
-                Triggered by odometer & date milestones
+              <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-[#FEF7EA] text-[#E7A329] border border-[#F8DCB0] font-bold">
+                {displayAlerts.length} Attention Required
               </span>
             </div>
 
             {displayAlerts.length === 0 ? (
-              <div className="p-8 text-center bg-[#121319] border border-[#252730] rounded-lg text-[#858894]">
-                <CheckCircle2 className="w-6 h-6 text-[#8be0b3] mx-auto mb-2" />
-                <p className="text-xs">No active maintenance alerts. All vehicles are within operational safety thresholds.</p>
+              <div className="p-8 text-center text-[#68758A] font-mono text-xs">
+                All vehicles operating in optimal condition. No critical service overruns.
               </div>
             ) : (
-              <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-3 mt-3">
-                {displayAlerts.map((alert) => {
-                  const matchingSchedule = schedules.find((s) => s.id === alert.scheduleId);
-                  const isCritical = alert.severity === 'critical' || alert.status === 'Overdue';
-
-                  return (
+              <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-3.5">
+                {displayAlerts.map((alert) => (
+                  <div
+                    key={alert.id}
+                    className="bg-[#F8FAFD] border border-[#E2E8F0] hover:border-[#2879E8]/30 rounded-xl p-3.5 flex items-start gap-3 transition-all shadow-2xs"
+                  >
                     <div
-                      key={alert.id}
-                      className="bg-[#121319] border border-[#2b2e38] hover:border-[#423d54] p-3.5 rounded-[9px] flex flex-col justify-between transition-colors"
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border shadow-2xs ${
+                        alert.type === 'danger' || alert.severity === 'critical'
+                          ? 'bg-[#FDF2F2] text-[#E05252] border-[#F8D7DA]'
+                          : 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]'
+                      }`}
                     >
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span
-                            className={`font-mono text-[9px] px-2 py-0.5 rounded border ${
-                              isCritical
-                                ? 'bg-red-500/20 text-red-300 border-red-500/30'
-                                : 'bg-[#382c25] text-[#e3ac77] border-[#523d30]'
-                            }`}
-                          >
-                            {alert.status || 'SCHEDULE DUE'}
-                          </span>
-                          <span className="font-mono text-[8px] text-[#70737f]">
-                            {alert.timestamp || 'Real-time Telemetry'}
-                          </span>
-                        </div>
-                        <h4 className="text-xs font-bold text-[#f0f0f4]">{alert.title}</h4>
-                        <p className="text-[10px] text-[#999ca7] mt-1 mb-0">{alert.desc}</p>
-                      </div>
+                      <AlertTriangle className="w-4 h-4" />
+                    </div>
 
-                      <div className="flex items-center justify-between mt-4 pt-2.5 border-t border-[#1e2029]">
-                        <span className="font-mono text-[9px] text-[#b49aff]">{alert.vehicleId || alert.vehicle}</span>
-                        <div className="flex items-center gap-1.5">
-                          {matchingSchedule && (
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleOpenComplete(matchingSchedule)}
-                              icon={CheckCircle2}
-                            >
-                              Complete Bay
-                            </Button>
-                          )}
-                          <Button
-                            variant="text"
-                            size="sm"
-                            onClick={() => onResolveAlert && onResolveAlert(alert)}
-                          >
-                            Dismiss
-                          </Button>
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <b className="text-xs text-[#172033] font-bold">
+                          {alert.title}
+                        </b>
+                        <span className="font-mono text-[9px] text-[#8A97AB]">
+                          {alert.timestamp || 'Immediate'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#68758A] my-1 font-medium">
+                        {alert.desc || alert.description}
+                      </p>
+
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => {
+                            const sched = schedules.find(
+                              (s) => s.vehicleId === alert.vehicleId
+                            );
+                            if (sched) {
+                              handleOpenComplete(sched);
+                            } else {
+                              handleOpenEdit({
+                                vehicleId: alert.vehicleId,
+                                serviceType: alert.title
+                              });
+                            }
+                          }}
+                        >
+                          Resolve in shop
+                        </Button>
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Quick Snapshot Matrix of Active Schedules */}
+          {/* Quick Schedule Directory Overview */}
           <MaintenanceScheduleTable
-            schedules={schedules.slice(0, 4)}
-            vehicles={vehicles}
-            onCreateSchedule={() => {
-              setEditingSchedule(null);
-              setIsScheduleModalOpen(true);
-            }}
+            schedules={schedules.slice(0, 5)}
             onEditSchedule={handleOpenEdit}
-            onDeleteSchedule={handleOpenDelete}
             onCompleteSchedule={handleOpenComplete}
+            onDeleteSchedule={handleOpenDelete}
+            onViewAll={() => setActiveTab('schedules')}
+            isCompact={true}
           />
         </div>
       )}
 
-      {/* TAB 2: SERVICE SCHEDULE */}
+      {/* TAB 2: SERVICE SCHEDULES TABLE */}
       {activeTab === 'schedules' && (
         <div className="animate-in fade-in">
           <MaintenanceScheduleTable
             schedules={schedules}
-            vehicles={vehicles}
-            onCreateSchedule={() => {
+            onEditSchedule={handleOpenEdit}
+            onCompleteSchedule={handleOpenComplete}
+            onDeleteSchedule={handleOpenDelete}
+            onAddNew={() => {
               setEditingSchedule(null);
               setIsScheduleModalOpen(true);
             }}
-            onEditSchedule={handleOpenEdit}
-            onDeleteSchedule={handleOpenDelete}
-            onCompleteSchedule={handleOpenComplete}
           />
         </div>
       )}
 
-      {/* TAB 3: MAINTENANCE HISTORY */}
+      {/* TAB 3: MAINTENANCE HISTORY LEDGER */}
       {activeTab === 'history' && (
         <div className="animate-in fade-in">
-          <MaintenanceHistoryTable records={records} vehicles={vehicles} />
+          <MaintenanceHistoryTable
+            records={records}
+            onExportCSV={handleExportCSV}
+          />
         </div>
       )}
 
-      {/* TAB 4: MAINTENANCE CALENDAR */}
+      {/* TAB 4: CALENDAR VIEW */}
       {activeTab === 'calendar' && (
         <div className="animate-in fade-in">
           <MaintenanceCalendarView
             schedules={schedules}
             records={records}
-            vehicles={vehicles}
-            onSelectSchedule={handleOpenComplete}
+            onSelectSchedule={handleOpenEdit}
           />
         </div>
       )}
 
-      {/* Create / Edit Schedule Modal */}
+      {/* Modal: Create / Edit Maintenance Schedule */}
       <MaintenanceScheduleModal
         isOpen={isScheduleModalOpen}
         onClose={() => {
           setIsScheduleModalOpen(false);
           setEditingSchedule(null);
         }}
-        onSaveSchedule={handleSaveSchedule}
-        scheduleToEdit={editingSchedule}
+        schedule={editingSchedule}
         vehicles={vehicles}
+        onSaveSchedule={handleSaveSchedule}
       />
 
-      {/* Complete Maintenance & Invoice Upload Modal */}
+      {/* Modal: Complete Service Workflow */}
       <CompleteServiceModal
         isOpen={isCompleteModalOpen}
         onClose={() => {
@@ -400,15 +420,11 @@ export default function Maintenance({
           setCompletingSchedule(null);
         }}
         schedule={completingSchedule}
-        vehicle={vehicles.find(
-          (v) =>
-            v.plate === completingSchedule?.vehicleId ||
-            v.id === completingSchedule?.vehicleId
-        )}
-        onCompleteService={handleConfirmCompletion}
+        vehicles={vehicles}
+        onCompleteService={handleConfirmComplete}
       />
 
-      {/* Delete Schedule Confirmation Modal */}
+      {/* Modal: Confirm Schedule Decommission */}
       <DeleteScheduleModal
         isOpen={isDeleteModalOpen}
         onClose={() => {

@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import {
   Search,
-  Filter,
-  Shield,
   Circle,
   Square,
   Crosshair,
   Edit2,
   Trash2,
   ToggleLeft,
-  ToggleRight,
-  ShieldAlert,
-  ArrowUpDown
+  ToggleRight
 } from 'lucide-react';
 import { GEOFENCE_ZONE_TYPES } from '../../data/geofenceMockData';
 
@@ -42,16 +38,16 @@ export default function GeofenceListTable({
 
   const getZoneTypeBadge = (type) => {
     const found = GEOFENCE_ZONE_TYPES.find((t) => t.value === type);
-    const color = found?.color || '#b49aff';
+    const color = found?.color || '#2879E8';
     const label = found?.label || type;
 
     return (
       <span
-        className="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold tracking-wider inline-flex items-center gap-1.5"
+        className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold tracking-wider inline-flex items-center gap-1.5 border shadow-2xs"
         style={{
-          backgroundColor: `${color}18`,
+          backgroundColor: `${color}15`,
           color: color,
-          border: `1px solid ${color}33`
+          borderColor: `${color}35`
         }}
       >
         <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
@@ -61,18 +57,18 @@ export default function GeofenceListTable({
   };
 
   return (
-    <div className="bg-[#17191f] border border-[#252730] rounded-xl overflow-hidden shadow-lg flex flex-col">
+    <div className="glass-card rounded-2xl overflow-hidden shadow-liquid-subtle flex flex-col">
       {/* Table Toolbar */}
-      <div className="p-4 border-b border-[#252730] flex flex-wrap items-center justify-between gap-3 bg-[#13141a]">
+      <div className="p-4 border-b border-[#E2E8F0]/80 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-white to-[#F8FAFD]">
         <div className="flex items-center gap-2 flex-1 min-w-[240px]">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-[#71737e] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#8A97AB] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by zone name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#101116] border border-[#252730] rounded-lg pl-9 pr-3 py-1.5 text-xs text-[#f4f3f8] placeholder-[#555] focus:outline-none focus:border-[#b49aff]"
+              className="w-full bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl pl-10 pr-3.5 py-2 text-xs text-[#172033] placeholder-[#8A97AB] focus:outline-none focus:border-[#2879E8] focus:bg-white shadow-2xs transition-all"
             />
           </div>
         </div>
@@ -81,7 +77,7 @@ export default function GeofenceListTable({
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="bg-[#101116] border border-[#252730] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#8b8d98] focus:outline-none focus:border-[#b49aff]"
+            className="bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#172033] focus:outline-none focus:border-[#2879E8] shadow-2xs transition-all cursor-pointer"
           >
             <option value="all">ALL ZONE TYPES</option>
             {GEOFENCE_ZONE_TYPES.map((t) => (
@@ -94,7 +90,7 @@ export default function GeofenceListTable({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#101116] border border-[#252730] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#8b8d98] focus:outline-none focus:border-[#b49aff]"
+            className="bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#172033] focus:outline-none focus:border-[#2879E8] shadow-2xs transition-all cursor-pointer"
           >
             <option value="all">ALL STATUSES</option>
             <option value="active">ACTIVE ONLY</option>
@@ -105,23 +101,23 @@ export default function GeofenceListTable({
 
       {/* Table Element */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs">
+        <table className="w-full text-left text-xs whitespace-nowrap">
           <thead>
-            <tr className="border-b border-[#252730] bg-[#121319] text-[#71737e] font-mono text-[11px]">
-              <th className="py-3 px-4 font-normal">ZONE NAME & DIRECTIVE</th>
-              <th className="py-3 px-3 font-normal">CATEGORY</th>
-              <th className="py-3 px-3 font-normal">GEOMETRY</th>
-              <th className="py-3 px-3 font-normal text-right">SPEED LIMIT</th>
-              <th className="py-3 px-3 font-normal text-right">MAX DWELL</th>
-              <th className="py-3 px-3 font-normal text-center">TRIGGERS</th>
-              <th className="py-3 px-3 font-normal text-center">STATUS</th>
-              <th className="py-3 px-4 font-normal text-right">ACTIONS</th>
+            <tr className="border-b border-[#E2E8F0]/80 bg-[#F8FAFD] text-[#8A97AB] font-mono text-[10px] font-semibold uppercase">
+              <th className="py-3 px-4">ZONE NAME & DIRECTIVE</th>
+              <th className="py-3 px-3">CATEGORY</th>
+              <th className="py-3 px-3">GEOMETRY</th>
+              <th className="py-3 px-3 text-right">SPEED LIMIT</th>
+              <th className="py-3 px-3 text-right">MAX DWELL</th>
+              <th className="py-3 px-3 text-center">TRIGGERS</th>
+              <th className="py-3 px-3 text-center">STATUS</th>
+              <th className="py-3 px-4 text-right">ACTIONS</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#20222a]">
+          <tbody className="divide-y divide-[#F1F5F9]">
             {filteredGeofences.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center py-8 text-[#71737e] font-mono">
+                <td colSpan="8" className="text-center py-8 text-[#68758A] font-mono">
                   No geofence perimeters matching current filters.
                 </td>
               </tr>
@@ -129,20 +125,20 @@ export default function GeofenceListTable({
               filteredGeofences.map((zone) => (
                 <tr
                   key={zone.id}
-                  className="hover:bg-[#1c1e27] transition-colors group cursor-pointer"
+                  className="hover:bg-[#F8FAFD] transition-colors group cursor-pointer"
                   onClick={() => onFocusGeofence && onFocusGeofence(zone)}
                 >
                   {/* Name & Directive */}
                   <td className="py-3 px-4">
-                    <div className="font-bold text-[#f4f3f8] flex items-center gap-2">
+                    <div className="font-bold text-[#172033] flex items-center gap-2">
                       <span
                         className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: zone.color || '#b49aff' }}
+                        style={{ backgroundColor: zone.color || '#2879E8' }}
                       />
                       <span>{zone.name}</span>
                     </div>
                     {zone.description && (
-                      <p className="text-[11px] text-[#71737e] mt-0.5 line-clamp-1 max-w-sm">
+                      <p className="text-[11px] text-[#68758A] mt-0.5 line-clamp-1 max-w-sm">
                         {zone.description}
                       </p>
                     )}
@@ -155,15 +151,15 @@ export default function GeofenceListTable({
 
                   {/* Geometry */}
                   <td className="py-3 px-3">
-                    <div className="flex items-center gap-1.5 font-mono text-[#8b8d98]">
+                    <div className="flex items-center gap-1.5 font-mono text-[#68758A]">
                       {zone.geometryType === 'circle' ? (
                         <>
-                          <Circle className="w-3.5 h-3.5 text-[#b49aff]" />
+                          <Circle className="w-3.5 h-3.5 text-[#2879E8]" />
                           <span>Circle ({zone.radius}m)</span>
                         </>
                       ) : (
                         <>
-                          <Square className="w-3.5 h-3.5 text-[#8be0b3]" />
+                          <Square className="w-3.5 h-3.5 text-[#16A36A]" />
                           <span>Polygon ({zone.coordinates?.length || 4} pts)</span>
                         </>
                       )}
@@ -171,48 +167,58 @@ export default function GeofenceListTable({
                   </td>
 
                   {/* Speed Limit */}
-                  <td className="py-3 px-3 text-right font-mono text-[#f4f3f8]">
+                  <td className="py-3 px-3 text-right font-mono font-bold text-[#172033]">
                     {zone.speedLimit} km/h
                   </td>
 
                   {/* Max Dwell */}
-                  <td className="py-3 px-3 text-right font-mono text-[#8b8d98]">
+                  <td className="py-3 px-3 text-right font-mono text-[#68758A]">
                     {zone.maxDwellMinutes > 0 ? `${zone.maxDwellMinutes}m` : '0m (No Stop)'}
                   </td>
 
-                  {/* Triggers */}
+                  {/* Trigger Types */}
                   <td className="py-3 px-3 text-center">
-                    <div className="flex items-center justify-center gap-1 font-mono text-[10px]">
-                      {zone.entryAlert && (
-                        <span className="px-1.5 py-0.5 rounded bg-[#b49aff]/10 text-[#b49aff] border border-[#b49aff]/20">
-                          ENTRY
+                    <div className="flex items-center justify-center gap-1 font-mono text-[9px]">
+                      {zone.triggerOnEnter && (
+                        <span className="px-1.5 py-0.5 rounded bg-[#E8F7F0] text-[#16A36A] font-bold">
+                          ENT
                         </span>
                       )}
-                      {zone.exitAlert && (
-                        <span className="px-1.5 py-0.5 rounded bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/20">
-                          EXIT
+                      {zone.triggerOnExit && (
+                        <span className="px-1.5 py-0.5 rounded bg-[#FEF7EA] text-[#E7A329] font-bold">
+                          EXT
+                        </span>
+                      )}
+                      {zone.triggerOnDwell && (
+                        <span className="px-1.5 py-0.5 rounded bg-[#EAF3FF] text-[#2879E8] font-bold">
+                          DWL
                         </span>
                       )}
                     </div>
                   </td>
 
-                  {/* Status Toggle */}
+                  {/* Status */}
                   <td className="py-3 px-3 text-center" onClick={(e) => e.stopPropagation()}>
                     <button
                       type="button"
-                      onClick={() => onToggleStatus(zone.id)}
-                      className="inline-flex items-center gap-1 font-mono text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => onToggleStatus && onToggleStatus(zone.id)}
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold uppercase transition-all border ${
+                        zone.isActive
+                          ? 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]'
+                          : 'bg-[#F1F5F9] text-[#8A97AB] border-[#E2E8F0]'
+                      }`}
+                      title={zone.isActive ? 'Deactivate Zone' : 'Activate Zone'}
                     >
                       {zone.isActive ? (
-                        <span className="text-[#8be0b3] flex items-center gap-1">
-                          <ToggleRight className="w-5 h-5 text-[#8be0b3]" />
+                        <>
+                          <ToggleRight className="w-3.5 h-3.5 text-[#16A36A]" />
                           <span>ACTIVE</span>
-                        </span>
+                        </>
                       ) : (
-                        <span className="text-[#71737e] flex items-center gap-1">
-                          <ToggleLeft className="w-5 h-5 text-[#555]" />
+                        <>
+                          <ToggleLeft className="w-3.5 h-3.5 text-[#8A97AB]" />
                           <span>PAUSED</span>
-                        </span>
+                        </>
                       )}
                     </button>
                   </td>
@@ -223,24 +229,24 @@ export default function GeofenceListTable({
                       <button
                         type="button"
                         onClick={() => onFocusGeofence && onFocusGeofence(zone)}
-                        className="p-1.5 text-[#8b8d98] hover:text-[#b49aff] rounded hover:bg-[#252730] transition-colors"
-                        title="Focus on Radar Map"
+                        className="p-1.5 text-[#68758A] hover:text-[#2879E8] hover:bg-[#EAF3FF] rounded-lg transition-colors cursor-pointer"
+                        title="Locate on Radar Map"
                       >
                         <Crosshair className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
-                        onClick={() => onEditGeofence(zone)}
-                        className="p-1.5 text-[#8b8d98] hover:text-white rounded hover:bg-[#252730] transition-colors"
+                        onClick={() => onEditGeofence && onEditGeofence(zone)}
+                        className="p-1.5 text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC] rounded-lg transition-colors cursor-pointer"
                         title="Edit Zone Parameters"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
-                        onClick={() => onDeleteGeofence(zone.id)}
-                        className="p-1.5 text-[#8b8d98] hover:text-[#ef4444] rounded hover:bg-[#252730] transition-colors"
-                        title="Delete Zone"
+                        onClick={() => onDeleteGeofence && onDeleteGeofence(zone.id)}
+                        className="p-1.5 text-[#E05252] hover:bg-[#FDF2F2] rounded-lg transition-colors cursor-pointer"
+                        title="Delete Geofence"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -255,4 +261,3 @@ export default function GeofenceListTable({
     </div>
   );
 }
-

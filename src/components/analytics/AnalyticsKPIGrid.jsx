@@ -18,53 +18,53 @@ export default function AnalyticsKPIGrid({ kpiMetrics }) {
       title: 'TOTAL FLEET DISTANCE',
       data: kpiMetrics.totalDistance,
       icon: Milestone,
-      accentColor: 'text-[#b49aff]',
-      sparkColor: 'bg-[#b49aff]'
+      accentColor: 'text-[#2879E8]',
+      badgeBg: 'bg-[#EAF3FF]'
     },
     {
       id: 'fuel_consumption',
       title: 'AVG FUEL CONSUMPTION',
       data: kpiMetrics.avgFuelConsumption,
       icon: Fuel,
-      accentColor: 'text-[#8dc8ed]',
-      sparkColor: 'bg-[#8dc8ed]'
+      accentColor: 'text-[#0284C7]',
+      badgeBg: 'bg-[#E0F2FE]'
     },
     {
       id: 'fuel_expenses',
       title: 'TOTAL FUEL EXPENSES',
       data: kpiMetrics.totalFuelExpenses,
       icon: DollarSign,
-      accentColor: 'text-[#e5a46e]',
-      sparkColor: 'bg-[#e5a46e]'
+      accentColor: 'text-[#E7A329]',
+      badgeBg: 'bg-[#FEF7EA]'
     },
     {
       id: 'utilization',
       title: 'VEHICLE UTILIZATION RATE',
       data: kpiMetrics.vehicleUtilization,
       icon: Gauge,
-      accentColor: 'text-[#8be0b3]',
-      sparkColor: 'bg-[#8be0b3]'
+      accentColor: 'text-[#16A36A]',
+      badgeBg: 'bg-[#E8F7F0]'
     },
     {
       id: 'operational_expenses',
       title: 'TOTAL OPERATIONAL EXPENSES',
       data: kpiMetrics.totalOperationalExpenses,
       icon: PieChart,
-      accentColor: 'text-[#c4b3ff]',
-      sparkColor: 'bg-[#c4b3ff]'
+      accentColor: 'text-[#2879E8]',
+      badgeBg: 'bg-[#EAF3FF]'
     },
     {
       id: 'cost_per_km',
       title: 'AVERAGE COST PER KILOMETRE',
       data: kpiMetrics.avgCostPerKm,
       icon: TrendingDown,
-      accentColor: 'text-[#80d9a9]',
-      sparkColor: 'bg-[#80d9a9]'
+      accentColor: 'text-[#16A36A]',
+      badgeBg: 'bg-[#E8F7F0]'
     }
   ];
 
   return (
-    <div className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-3.5">
+    <div className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
         const item = card.data;
@@ -73,25 +73,29 @@ export default function AnalyticsKPIGrid({ kpiMetrics }) {
         return (
           <div
             key={card.id}
-            className="bg-[#17191f] border border-[#292c35] hover:border-[#3a3749] rounded-[10px] p-[17px] pb-[14px] min-h-[132px] flex flex-col justify-between transition-all duration-200 group"
+            className="glass-card glass-card-hover rounded-2xl p-5 min-h-[140px] flex flex-col justify-between transition-all duration-300 group"
           >
             {/* Header */}
-            <div className="flex items-center justify-between text-[#8b8e9a] font-mono text-[9px] tracking-[1px] uppercase">
+            <div className="flex items-center justify-between text-[#8A97AB] font-mono text-[10px] tracking-[1.2px] uppercase font-semibold">
               <span>{card.title}</span>
-              <Icon className={`w-4 h-4 ${card.accentColor} group-hover:scale-110 transition-transform`} />
+              <div className={`w-8 h-8 rounded-xl ${card.badgeBg} ${card.accentColor} flex items-center justify-center border border-white/60 shadow-2xs group-hover:scale-105 transition-transform`}>
+                <Icon className="w-4 h-4" />
+              </div>
             </div>
 
             {/* Current Value */}
-            <div className="text-[25px] font-bold tracking-[-0.8px] text-[#f0f0f4] my-2 leading-none font-mono">
+            <div className="text-[28px] font-black tracking-tight text-[#172033] my-2 leading-none font-mono">
               {item.value}
             </div>
 
             {/* Comparison Foot */}
-            <div className="flex items-center justify-between text-[#777b87] text-[9px] pt-1 border-t border-[#22242d] mt-auto">
-              <div className="flex items-center gap-1.5 font-mono">
+            <div className="flex items-center justify-between text-[#68758A] text-[11px] pt-2 border-t border-[#E2E8F0]/80 mt-auto">
+              <div className="flex items-center gap-2 font-mono">
                 <span
-                  className={`flex items-center gap-0.5 text-[10px] font-semibold ${
-                    item.isPositive ? 'text-[#80d9a9]' : 'text-[#e5a46e]'
+                  className={`inline-flex items-center gap-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    item.isPositive
+                      ? 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]'
+                      : 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]'
                   }`}
                 >
                   {item.isPositive ? (
@@ -101,13 +105,13 @@ export default function AnalyticsKPIGrid({ kpiMetrics }) {
                   )}
                   {item.change}
                 </span>
-                <span className="text-[#686c78] font-sans">vs prev ({item.previous})</span>
+                <span className="text-[#8A97AB] text-[10px] font-sans">vs prev ({item.previous})</span>
               </div>
 
               {/* Indicator Pill */}
               <span
                 className={`w-2 h-2 rounded-full ${
-                  item.isPositive ? 'bg-[#75d5a2] shadow-[0_0_6px_#75d5a2]' : 'bg-[#e5a46e] shadow-[0_0_6px_#e5a46e]'
+                  item.isPositive ? 'bg-[#16A36A] shadow-[0_0_6px_#16A36A]' : 'bg-[#E7A329] shadow-[0_0_6px_#E7A329]'
                 }`}
               />
             </div>
@@ -117,4 +121,3 @@ export default function AnalyticsKPIGrid({ kpiMetrics }) {
     </div>
   );
 }
-

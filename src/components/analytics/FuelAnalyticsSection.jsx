@@ -30,9 +30,9 @@ export default function FuelAnalyticsSection({ fuelData }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1c1e25] border border-[#3b354d] p-2 rounded-md shadow-xl text-xs font-mono">
-          <p className="text-[#a7a9b5] text-[10px] uppercase mb-1">{label}</p>
-          <p className="text-[#b49aff] font-bold">
+        <div className="bg-white/95 backdrop-blur-xl border border-white/90 p-3 rounded-xl shadow-liquid-dropdown text-xs font-mono">
+          <p className="text-[#8A97AB] text-[10px] uppercase mb-1 font-semibold">{label}</p>
+          <p className="text-[#2879E8] font-bold text-sm">
             {payload[0].name}: {payload[0].value.toLocaleString()}
           </p>
         </div>
@@ -41,140 +41,111 @@ export default function FuelAnalyticsSection({ fuelData }) {
     return null;
   };
 
+  const PIE_COLORS = ['#2879E8', '#16A36A', '#E7A329', '#0284C7'];
+
   return (
-    <div className="bg-[#17191f] border border-[#292c35] rounded-[10px] p-5 space-y-5">
+    <div className="glass-card rounded-2xl p-6 space-y-5 shadow-liquid-subtle">
       {/* Section Title */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#252730]">
+      <div className="flex items-center justify-between pb-3.5 border-b border-[#E2E8F0]">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#858894] uppercase mb-0.5">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-0.5 font-bold">
             Module 01
           </p>
-          <h2 className="text-base font-bold text-[#f0f0f4] m-0 flex items-center gap-2">
-            <Fuel className="w-4 h-4 text-[#8dc8ed]" /> Fuel Consumption & Efficiency Intelligence
+          <h2 className="text-base font-black text-[#0B132B] m-0 flex items-center gap-2">
+            <Fuel className="w-4 h-4 text-[#2879E8]" /> Fuel & Energy Consumption Analytics
           </h2>
         </div>
-        <div className="flex items-center gap-4 text-xs font-mono text-[#858894]">
-          <span>Total: <b className="text-[#f0f0f4]">{totalConsumed} L</b></span>
-          <span>Spend: <b className="text-[#e5a46e]">${totalCost.toLocaleString()}</b></span>
-          <span>Avg: <b className="text-[#8be0b3]">${avgCostPerLitre} / L</b></span>
+        <div className="flex items-center gap-4 text-xs font-mono text-[#475569] font-bold">
+          <span>Total Fuel: <b className="text-[#0B132B]">{totalConsumed.toLocaleString()} L</b></span>
+          <span>Cost / L: <b className="text-[#16A36A] font-bold">${avgCostPerLitre}</b></span>
         </div>
       </div>
 
-      {/* Visualizations Grid */}
-      <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
-        {/* Chart 1: Monthly Fuel Consumption Trends (Line) */}
-        <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-mono text-[9px] text-[#858894] uppercase">
-              5-Month Consumption Trend (Liters)
-            </span>
-            <span className="font-mono text-[9px] text-[#80d9a9]">↓ 3.1% Monthly Avg</span>
+      {/* Summary Chips */}
+      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-3.5">
+        <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl flex items-center justify-between shadow-2xs">
+          <div>
+            <span className="font-mono text-[9px] text-[#8A97AB] uppercase font-semibold">Total Fuel Volume</span>
+            <p className="text-xl font-black text-[#172033] mt-1 font-mono">{totalConsumed.toLocaleString()} <small className="text-xs font-sans text-[#68758A]">L</small></p>
           </div>
-          <div className="h-52 w-full">
+          <div className="w-8 h-8 rounded-xl bg-[#EAF3FF] text-[#2879E8] flex items-center justify-center border border-[#D5E6FB]">
+            <Fuel className="w-4 h-4" />
+          </div>
+        </div>
+
+        <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl flex items-center justify-between shadow-2xs">
+          <div>
+            <span className="font-mono text-[9px] text-[#8A97AB] uppercase font-semibold">Total Fuel Outlay</span>
+            <p className="text-xl font-black text-[#16A36A] mt-1 font-mono">${totalCost.toLocaleString()}</p>
+          </div>
+          <div className="w-8 h-8 rounded-xl bg-[#E8F7F0] text-[#16A36A] flex items-center justify-center border border-[#C2E8D7]">
+            <DollarSign className="w-4 h-4" />
+          </div>
+        </div>
+
+        <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-3.5 rounded-xl flex items-center justify-between shadow-2xs">
+          <div>
+            <span className="font-mono text-[9px] text-[#8A97AB] uppercase font-semibold">Average Unit Price</span>
+            <p className="text-xl font-black text-[#2879E8] mt-1 font-mono">${avgCostPerLitre} <small className="text-xs font-sans text-[#68758A]">/ L</small></p>
+          </div>
+          <div className="w-8 h-8 rounded-xl bg-[#EAF3FF] text-[#2879E8] flex items-center justify-center border border-[#D5E6FB]">
+            <Gauge className="w-4 h-4" />
+          </div>
+        </div>
+      </div>
+
+      {/* Chart Visualization Grid */}
+      <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-4 pt-2">
+        {/* Monthly Fuel Consumption & Cost Trends */}
+        <div className="col-span-2 max-lg:col-span-1 bg-[#F8FAFD] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+          <span className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-3 font-semibold">
+            Monthly Consumption & Financial Trajectory
+          </span>
+          <div className="h-[210px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={monthlyFuelTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 5" stroke="#252733" vertical={false} />
-                <XAxis dataKey="month" stroke="#737682" fontSize={8} fontFamily="DM Mono" tickLine={false} axisLine={false} />
-                <YAxis stroke="#686c78" fontSize={8} fontFamily="DM Mono" tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 5" stroke="#E2E8F0" vertical={false} />
+                <XAxis dataKey="month" stroke="#8A97AB" fontSize={9} fontFamily="DM Mono" tickLine={false} axisLine={false} />
+                <YAxis stroke="#8A97AB" fontSize={9} fontFamily="DM Mono" tickLine={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  name="Fuel (Liters)"
-                  dataKey="fuelQuantity"
-                  stroke="#b49aff"
-                  strokeWidth={2.5}
-                  dot={{ r: 4, fill: '#b49aff', stroke: '#121319', strokeWidth: 2 }}
-                  activeDot={{ r: 6, fill: '#c4b3ff' }}
-                />
+                <Line type="monotone" dataKey="litres" name="Litres" stroke="#2879E8" strokeWidth={2.5} dot={{ r: 3, fill: '#2879E8' }} />
+                <Line type="monotone" dataKey="cost" name="Cost ($)" stroke="#16A36A" strokeWidth={2.5} dot={{ r: 3, fill: '#16A36A' }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Chart 2: Vehicle-Wise Fuel Consumption (Bar) */}
-        <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-mono text-[9px] text-[#858894] uppercase">
-              Vehicle-Wise Consumption (Liters)
-            </span>
-            <span className="font-mono text-[9px] text-[#b49aff]">By Active Transponder</span>
-          </div>
-          <div className="h-52 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={vehicleConsumptionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 5" stroke="#252733" vertical={false} />
-                <XAxis dataKey="vehicleId" stroke="#737682" fontSize={8} fontFamily="DM Mono" tickLine={false} axisLine={false} />
-                <YAxis stroke="#686c78" fontSize={8} fontFamily="DM Mono" tickLine={false} axisLine={false} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar name="Liters" dataKey="quantity" fill="#8dc8ed" radius={[4, 4, 0, 0]} maxBarSize={36} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      {/* Breakdown Table & Fuel Type Distribution */}
-      <div className="grid grid-cols-[1.5fr_1fr] max-lg:grid-cols-1 gap-4 pt-1">
-        {/* Table */}
-        <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg overflow-x-auto">
-          <h4 className="font-mono text-[9px] text-[#858894] uppercase mb-2">
-            Vehicle Fuel Efficiency & Cost Matrix
-          </h4>
-          <table className="w-full text-left border-collapse text-[10px] font-mono whitespace-nowrap">
-            <thead>
-              <tr className="border-b border-[#2b2d38] text-[#747783] text-[8px] uppercase">
-                <th className="py-2 px-1">Vehicle</th>
-                <th className="py-2 px-1">Fuel Type</th>
-                <th className="py-2 px-1">Quantity</th>
-                <th className="py-2 px-1">Expenditure</th>
-                <th className="py-2 px-1 text-right">Avg Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vehicleConsumptionData.map((row) => (
-                <tr key={row.vehicleId} className="border-b border-[#1c1e27] hover:bg-[#1a1c24] transition-colors last:border-0">
-                  <td className="py-2 px-1 font-bold text-[#e0e0e7]">{row.vehicleId}</td>
-                  <td className="py-2 px-1 text-[#aeb0ba]">{row.fuelType}</td>
-                  <td className="py-2 px-1 text-[#b49aff]">{row.quantity} L</td>
-                  <td className="py-2 px-1 text-[#e5a46e]">${row.cost.toFixed(2)}</td>
-                  <td className="py-2 px-1 text-right text-[#80d9a9]">{row.avgEfficiency} L/100km</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Fuel Type Expenditure Distribution Pie */}
-        <div className="bg-[#121319] border border-[#242630] p-4 rounded-lg flex flex-col justify-between">
-          <h4 className="font-mono text-[9px] text-[#858894] uppercase mb-1">
-            Expenditure Distribution by Fuel Type
-          </h4>
-          <div className="h-40 w-full">
+        {/* Fuel Type Distribution Pie */}
+        <div className="bg-[#F8FAFD] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs flex flex-col justify-between">
+          <span className="font-mono text-[10px] text-[#8A97AB] uppercase block mb-2 font-semibold">
+            Fuel Type Distribution
+          </span>
+          <div className="h-[150px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={fuelTypeDistribution}
-                  dataKey="value"
-                  nameKey="name"
+                  dataKey="percentage"
+                  nameKey="type"
                   cx="50%"
                   cy="50%"
-                  outerRadius={55}
-                  innerRadius={30}
+                  innerRadius={36}
+                  outerRadius={58}
                   paddingAngle={4}
                 >
-                  {fuelTypeDistribution.map((entry, idx) => (
-                    <Cell key={idx} fill={entry.color} />
+                  {fuelTypeDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex items-center justify-around text-[9px] font-mono pt-2 border-t border-[#1e2029]">
-            {fuelTypeDistribution.map((t) => (
-              <span key={t.name} className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: t.color }} />
-                <span className="text-[#aeb0ba]">{t.name}: ${t.value}</span>
+          <div className="flex items-center justify-around text-[10px] font-mono text-[#68758A] pt-2 border-t border-[#E2E8F0]">
+            {fuelTypeDistribution.map((entry, idx) => (
+              <span key={entry.type} className="flex items-center gap-1.5 font-medium">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                {entry.type} ({entry.percentage}%)
               </span>
             ))}
           </div>
@@ -183,4 +154,3 @@ export default function FuelAnalyticsSection({ fuelData }) {
     </div>
   );
 }
-

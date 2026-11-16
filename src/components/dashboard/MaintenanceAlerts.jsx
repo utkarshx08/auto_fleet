@@ -36,12 +36,12 @@ export default function MaintenanceAlerts({
       className={`glass-card glass-card-hover p-6 pb-2.5 flex flex-col justify-between rounded-2xl transition-all duration-300 ${className}`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]/70">
+      <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-0.5 font-semibold">
+          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-0.5 font-bold">
             Stay ahead
           </p>
-          <h2 className="text-[15px] font-bold tracking-tight text-[#172033] m-0">
+          <h2 className="text-[16px] font-black tracking-tight text-[#0B132B] m-0">
             Attention Needed
           </h2>
         </div>

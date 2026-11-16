@@ -212,19 +212,19 @@ export default function CreateGeofenceModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#17191f] border border-[#2b2e38] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/40 backdrop-blur-md animate-fade-in">
+      <div className="glass-card border border-white/90 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col text-[#172033]">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[#252730] sticky top-0 bg-[#17191f] z-10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#b49aff]/10 flex items-center justify-center text-[#b49aff]">
-              <Shield className="w-4 h-4" />
+        <div className="flex items-center justify-between p-5 border-b border-[#E2E8F0] sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] border border-[#2879E8]/20 flex items-center justify-center text-[#2879E8] shadow-sm">
+              <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#f4f3f8]">
+              <h2 className="text-base font-bold text-[#172033]">
                 {initialData ? 'Edit Geofence Boundary' : 'Create New Geofence Zone'}
               </h2>
-              <p className="text-xs text-[#8b8d98]">
+              <p className="text-xs text-[#68758A]">
                 Define circular radius or polygon coordinates with automated breach triggers
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function CreateGeofenceModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-[#8b8d98] hover:text-[#f4f3f8] rounded-lg hover:bg-[#22242d] transition-colors"
+            className="p-2 text-[#94A3B8] hover:text-[#172033] rounded-xl hover:bg-[#F0F5FC] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -241,8 +241,8 @@ export default function CreateGeofenceModal({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {validationError && (
-            <div className="p-3 bg-[#ef4444]/10 border border-[#ef4444]/30 rounded-lg text-xs text-[#fca5a5] flex items-center gap-2 font-mono">
-              <AlertTriangle className="w-4 h-4 shrink-0 text-[#ef4444]" />
+            <div className="p-3 bg-[#FEF2F2] border border-[#FECACA] rounded-xl text-xs text-[#B91C1C] flex items-center gap-2 font-mono">
+              <AlertTriangle className="w-4 h-4 shrink-0 text-[#E05252]" />
               <span>{validationError}</span>
             </div>
           )}
@@ -250,7 +250,7 @@ export default function CreateGeofenceModal({
           {/* Basic Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-mono text-[#8b8d98] mb-1.5">
+              <label className="block text-xs font-mono text-[#68758A] mb-1.5 font-medium">
                 ZONE NAME *
               </label>
               <input
@@ -259,12 +259,12 @@ export default function CreateGeofenceModal({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Brooklyn Navy Yard Fulfillment"
-                className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs text-[#f4f3f8] placeholder-[#555] focus:outline-none focus:border-[#b49aff]"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl px-3.5 py-2.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-[#8b8d98] mb-1.5">
+              <label className="block text-xs font-mono text-[#68758A] mb-1.5 font-medium">
                 ZONE CATEGORY *
               </label>
               <select
@@ -276,7 +276,7 @@ export default function CreateGeofenceModal({
                     setColor('#ef4444');
                   }
                 }}
-                className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl px-3.5 py-2.5 text-xs text-[#172033] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15 transition-all"
               >
                 {GEOFENCE_ZONE_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -288,7 +288,7 @@ export default function CreateGeofenceModal({
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-[#8b8d98] mb-1.5">
+            <label className="block text-xs font-mono text-[#68758A] mb-1.5 font-medium">
               DESCRIPTION / OPERATIONAL DIRECTIVE
             </label>
             <input
@@ -296,23 +296,23 @@ export default function CreateGeofenceModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Primary commercial freight offloading dock; hazmat prohibited"
-              className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs text-[#f4f3f8] placeholder-[#555] focus:outline-none focus:border-[#b49aff]"
+              className="w-full bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl px-3.5 py-2.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15 transition-all"
             />
           </div>
 
           {/* Geometry Mode Toggle */}
           <div>
-            <label className="block text-xs font-mono text-[#8b8d98] mb-2">
+            <label className="block text-xs font-mono text-[#68758A] mb-2 font-medium">
               BOUNDARY GEOMETRY TYPE
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setGeometryType('circle')}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border text-xs font-mono transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-xs font-mono transition-all ${
                   geometryType === 'circle'
-                    ? 'bg-[#b49aff]/10 border-[#b49aff] text-[#b49aff] font-bold shadow-[0_0_12px_rgba(180,154,255,0.2)]'
-                    : 'bg-[#101116] border-[#252730] text-[#71737e] hover:border-[#353945]'
+                    ? 'bg-[#EAF3FF] border-[#2879E8] text-[#2879E8] font-bold shadow-sm'
+                    : 'bg-white border-[#D5E2F1] text-[#68758A] hover:border-[#2879E8]/40 hover:bg-[#F8FAFD]'
                 }`}
               >
                 <Circle className="w-4 h-4" />
@@ -322,10 +322,10 @@ export default function CreateGeofenceModal({
               <button
                 type="button"
                 onClick={() => setGeometryType('polygon')}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border text-xs font-mono transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-xs font-mono transition-all ${
                   geometryType === 'polygon'
-                    ? 'bg-[#b49aff]/10 border-[#b49aff] text-[#b49aff] font-bold shadow-[0_0_12px_rgba(180,154,255,0.2)]'
-                    : 'bg-[#101116] border-[#252730] text-[#71737e] hover:border-[#353945]'
+                    ? 'bg-[#EAF3FF] border-[#2879E8] text-[#2879E8] font-bold shadow-sm'
+                    : 'bg-white border-[#D5E2F1] text-[#68758A] hover:border-[#2879E8]/40 hover:bg-[#F8FAFD]'
                 }`}
               >
                 <Square className="w-4 h-4" />
@@ -336,10 +336,10 @@ export default function CreateGeofenceModal({
 
           {/* Conditional Geometry Inputs */}
           {geometryType === 'circle' ? (
-            <div className="bg-[#101116] border border-[#252730] p-4 rounded-xl space-y-4">
+            <div className="bg-[#F8FAFD] border border-[#D5E2F1] p-4 rounded-xl space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-mono text-[#8b8d98] mb-1">
+                  <label className="block text-[11px] font-mono text-[#68758A] mb-1 font-medium">
                     CENTER LATITUDE
                   </label>
                   <input
@@ -347,11 +347,11 @@ export default function CreateGeofenceModal({
                     step="0.0001"
                     value={centerLat}
                     onChange={(e) => setCenterLat(e.target.value)}
-                    className="w-full bg-[#17191f] border border-[#2b2e38] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                    className="w-full bg-white border border-[#D5E2F1] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#172033] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-mono text-[#8b8d98] mb-1">
+                  <label className="block text-[11px] font-mono text-[#68758A] mb-1 font-medium">
                     CENTER LONGITUDE
                   </label>
                   <input
@@ -359,15 +359,15 @@ export default function CreateGeofenceModal({
                     step="0.0001"
                     value={centerLng}
                     onChange={(e) => setCenterLng(e.target.value)}
-                    className="w-full bg-[#17191f] border border-[#2b2e38] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                    className="w-full bg-white border border-[#D5E2F1] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#172033] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[11px] font-mono text-[#8b8d98]">
-                    PERIMETER RADIUS: <span className="text-[#b49aff] font-bold">{Number(radius) || 0} METERS</span> ({Math.round((Number(radius) || 0) / 100) / 10} km)
+                  <label className="text-[11px] font-mono text-[#68758A] font-medium">
+                    PERIMETER RADIUS: <span className="text-[#2879E8] font-bold">{Number(radius) || 0} METERS</span> ({Math.round((Number(radius) || 0) / 100) / 10} km)
                   </label>
                   <div className="flex gap-1.5">
                     {[500, 1000, 1500, 2500].map((r) => (
@@ -375,7 +375,7 @@ export default function CreateGeofenceModal({
                         key={r}
                         type="button"
                         onClick={() => setRadius(r)}
-                        className="px-2 py-0.5 text-[10px] font-mono bg-[#17191f] border border-[#2b2e38] rounded hover:border-[#b49aff] text-[#8b8d98] hover:text-white"
+                        className="px-2 py-0.5 text-[10px] font-mono bg-white border border-[#D5E2F1] rounded hover:border-[#2879E8] text-[#68758A] hover:text-[#2879E8] transition-colors"
                       >
                         {r >= 1000 ? `${r / 1000}km` : `${r}m`}
                       </button>
@@ -389,14 +389,14 @@ export default function CreateGeofenceModal({
                   step="50"
                   value={Number(radius) || 1200}
                   onChange={(e) => setRadius(e.target.value)}
-                  className="w-full accent-[#b49aff] bg-[#17191f] cursor-pointer"
+                  className="w-full accent-[#2879E8] cursor-pointer"
                 />
               </div>
             </div>
           ) : (
-            <div className="bg-[#101116] border border-[#252730] p-4 rounded-xl space-y-3">
+            <div className="bg-[#F8FAFD] border border-[#D5E2F1] p-4 rounded-xl space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono text-[#8b8d98]">
+                <span className="text-[11px] font-mono text-[#68758A] font-medium">
                   POLYGON VERTICES ({coordinates.length} POINTS)
                 </span>
                 <div className="flex items-center gap-2">
@@ -406,7 +406,7 @@ export default function CreateGeofenceModal({
                       if (t) handleApplyPreset(t);
                     }}
                     defaultValue=""
-                    className="bg-[#17191f] border border-[#2b2e38] rounded px-2 py-1 text-[11px] text-[#8b8d98] font-mono focus:outline-none"
+                    className="bg-white border border-[#D5E2F1] rounded px-2 py-1 text-[11px] text-[#68758A] font-mono focus:outline-none focus:border-[#2879E8]"
                   >
                     <option value="" disabled>Load NYC Preset Boundary...</option>
                     {PRESET_POLYGON_TEMPLATES.map((p) => (
@@ -418,7 +418,7 @@ export default function CreateGeofenceModal({
                   <button
                     type="button"
                     onClick={handleAddVertex}
-                    className="flex items-center gap-1 text-[11px] font-mono text-[#b49aff] bg-[#b49aff]/10 border border-[#b49aff]/20 px-2 py-1 rounded hover:bg-[#b49aff]/20"
+                    className="flex items-center gap-1 text-[11px] font-mono text-[#2879E8] bg-[#EAF3FF] border border-[#2879E8]/30 px-2 py-1 rounded hover:bg-[#2879E8] hover:text-white transition-colors"
                   >
                     <Plus className="w-3 h-3" />
                     <span>Add Vertex</span>
@@ -428,15 +428,15 @@ export default function CreateGeofenceModal({
 
               <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
                 {coordinates.map((coord, idx) => (
-                  <div key={idx} className="flex items-center gap-2 bg-[#17191f] p-2 rounded-lg border border-[#252730]">
-                    <span className="text-[10px] font-mono text-[#555] w-5">#{idx + 1}</span>
+                  <div key={idx} className="flex items-center gap-2 bg-white p-2 rounded-lg border border-[#E2E8F0]">
+                    <span className="text-[10px] font-mono text-[#94A3B8] w-5">#{idx + 1}</span>
                     <input
                       type="number"
                       step="0.0001"
                       value={coord.lat}
                       onChange={(e) => handleUpdateVertex(idx, 'lat', e.target.value)}
                       placeholder="Latitude"
-                      className="w-1/2 bg-[#101116] border border-[#2b2e38] rounded px-2 py-1 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                      className="w-1/2 bg-[#F8FAFD] border border-[#D5E2F1] rounded px-2 py-1 text-xs font-mono text-[#172033] focus:outline-none focus:border-[#2879E8]"
                     />
                     <input
                       type="number"
@@ -444,12 +444,12 @@ export default function CreateGeofenceModal({
                       value={coord.lng}
                       onChange={(e) => handleUpdateVertex(idx, 'lng', e.target.value)}
                       placeholder="Longitude"
-                      className="w-1/2 bg-[#101116] border border-[#2b2e38] rounded px-2 py-1 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                      className="w-1/2 bg-[#F8FAFD] border border-[#D5E2F1] rounded px-2 py-1 text-xs font-mono text-[#172033] focus:outline-none focus:border-[#2879E8]"
                     />
                     <button
                       type="button"
                       onClick={() => handleDeleteVertex(idx)}
-                      className="text-[#71737e] hover:text-[#ef4444] p-1 rounded"
+                      className="text-[#94A3B8] hover:text-[#E05252] p-1 rounded transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -462,7 +462,7 @@ export default function CreateGeofenceModal({
           {/* Operating Rules & Breach Triggers */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-mono text-[#8b8d98] mb-1.5">
+              <label className="block text-xs font-mono text-[#68758A] mb-1.5 font-medium">
                 MAX SPEED LIMIT IN ZONE (KM/H)
               </label>
               <input
@@ -471,12 +471,12 @@ export default function CreateGeofenceModal({
                 max="120"
                 value={speedLimit}
                 onChange={(e) => setSpeedLimit(e.target.value)}
-                className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl px-3 py-2 text-xs font-mono text-[#172033] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-[#8b8d98] mb-1.5">
+              <label className="block text-xs font-mono text-[#68758A] mb-1.5 font-medium">
                 MAX ALLOWED DWELL TIME (MINS)
               </label>
               <input
@@ -485,15 +485,15 @@ export default function CreateGeofenceModal({
                 max="600"
                 value={maxDwellMinutes}
                 onChange={(e) => setMaxDwellMinutes(e.target.value)}
-                className="w-full bg-[#101116] border border-[#2b2e38] rounded-lg px-3 py-2 text-xs font-mono text-[#f4f3f8] focus:outline-none focus:border-[#b49aff]"
+                className="w-full bg-[#F8FAFD] border border-[#D5E2F1] rounded-xl px-3 py-2 text-xs font-mono text-[#172033] focus:outline-none focus:border-[#2879E8] focus:ring-2 focus:ring-[#2879E8]/15"
               />
             </div>
           </div>
 
           {/* Color & Trigger Toggles */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[#252730]">
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-[#E2E8F0]">
             <div>
-              <label className="block text-[11px] font-mono text-[#8b8d98] mb-1.5">
+              <label className="block text-[11px] font-mono text-[#68758A] mb-1.5 font-medium">
                 PERIMETER ACCENT COLOR
               </label>
               <div className="flex items-center gap-2">
@@ -503,7 +503,7 @@ export default function CreateGeofenceModal({
                     type="button"
                     onClick={() => setColor(c)}
                     className={`w-6 h-6 rounded-full transition-transform ${
-                      color === c ? 'scale-125 ring-2 ring-white ring-offset-2 ring-offset-[#17191f]' : ''
+                      color === c ? 'scale-125 ring-2 ring-[#2879E8] ring-offset-2 ring-offset-white' : ''
                     }`}
                     style={{ backgroundColor: c }}
                   />
@@ -511,51 +511,51 @@ export default function CreateGeofenceModal({
               </div>
             </div>
 
-            <div className="flex items-center gap-4 text-xs font-mono text-[#8b8d98]">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className="flex items-center gap-4 text-xs font-mono text-[#68758A]">
+              <label className="flex items-center gap-2 cursor-pointer font-medium">
                 <input
                   type="checkbox"
                   checked={entryAlert}
                   onChange={(e) => setEntryAlert(e.target.checked)}
-                  className="rounded border-[#2b2e38] bg-[#101116] text-[#b49aff] focus:ring-0"
+                  className="rounded border-[#D5E2F1] text-[#2879E8] focus:ring-0"
                 />
                 <span>ENTRY ALERT</span>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 cursor-pointer font-medium">
                 <input
                   type="checkbox"
                   checked={exitAlert}
                   onChange={(e) => setExitAlert(e.target.checked)}
-                  className="rounded border-[#2b2e38] bg-[#101116] text-[#b49aff] focus:ring-0"
+                  className="rounded border-[#D5E2F1] text-[#2879E8] focus:ring-0"
                 />
                 <span>EXIT ALERT</span>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 cursor-pointer font-medium">
                 <input
                   type="checkbox"
                   checked={isActive}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="rounded border-[#2b2e38] bg-[#101116] text-[#8be0b3] focus:ring-0"
+                  className="rounded border-[#D5E2F1] text-[#16A36A] focus:ring-0"
                 />
-                <span className={isActive ? 'text-[#8be0b3]' : 'text-[#71737e]'}>ACTIVE</span>
+                <span className={isActive ? 'text-[#16A36A] font-bold' : 'text-[#94A3B8]'}>ACTIVE</span>
               </label>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#252730]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E2E8F0]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-[#2b2e38] text-xs font-mono text-[#8b8d98] hover:text-white hover:bg-[#22242d] transition-colors"
+              className="px-4 py-2 rounded-xl border border-[#D5E2F1] text-xs font-mono text-[#68758A] hover:text-[#172033] hover:bg-[#F8FAFD] transition-colors"
             >
               CANCEL
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-[#b49aff] hover:bg-[#a384fa] text-[#17131f] text-xs font-bold font-mono transition-all shadow-[0_0_16px_rgba(180,154,255,0.35)] flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl bg-[#2879E8] hover:bg-[#1765CC] text-white text-xs font-bold font-mono transition-all shadow-md shadow-[#2879E8]/25 flex items-center gap-2 active:scale-[0.98]"
             >
               <CheckCircle className="w-4 h-4" />
               <span>{initialData ? 'SAVE CHANGES' : 'CREATE GEOFENCE'}</span>
