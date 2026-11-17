@@ -64,7 +64,8 @@ export default function CompleteServiceModal({
       description: formData.description,
       invoiceUrl: formData.invoiceFileName,
       status: 'Completed',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      schedule: schedule
     };
 
     onCompleteService(completedRecord, schedule);

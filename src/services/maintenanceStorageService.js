@@ -19,14 +19,21 @@ export const getSchedules = () => {
     storageService.setItem(SCHEDULES_KEY, initialMaintenanceSchedules);
     return initialMaintenanceSchedules;
   }
-  return parsed;
+  // Defensive filter: eliminate nulls, non-objects, and records without id
+  const valid = parsed.filter((s) => s && typeof s === 'object' && s.id);
+  if (valid.length === 0) {
+    storageService.setItem(SCHEDULES_KEY, initialMaintenanceSchedules);
+    return initialMaintenanceSchedules;
+  }
+  return valid;
 };
 
 /**
  * Saves current schedules array to storageService
  */
 export const persistSchedules = (schedules) => {
-  return storageService.setItem(SCHEDULES_KEY, schedules);
+  const safe = (schedules || []).filter((s) => s && typeof s === 'object' && s.id);
+  return storageService.setItem(SCHEDULES_KEY, safe);
 };
 
 /**
@@ -38,14 +45,21 @@ export const getRecords = () => {
     storageService.setItem(RECORDS_KEY, initialMaintenanceRecords);
     return initialMaintenanceRecords;
   }
-  return parsed;
+  // Defensive filter: eliminate nulls, non-objects, and records without id
+  const valid = parsed.filter((r) => r && typeof r === 'object' && r.id);
+  if (valid.length === 0) {
+    storageService.setItem(RECORDS_KEY, initialMaintenanceRecords);
+    return initialMaintenanceRecords;
+  }
+  return valid;
 };
 
 /**
  * Saves current records array to storageService
  */
 export const persistRecords = (records) => {
-  return storageService.setItem(RECORDS_KEY, records);
+  const safe = (records || []).filter((r) => r && typeof r === 'object' && r.id);
+  return storageService.setItem(RECORDS_KEY, safe);
 };
 
 /**

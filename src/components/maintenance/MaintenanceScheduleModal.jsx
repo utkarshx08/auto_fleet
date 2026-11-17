@@ -10,17 +10,22 @@ export default function MaintenanceScheduleModal({
   onClose,
   onSaveSchedule,
   scheduleToEdit = null,
+  schedule = null,
   vehicles = []
 }) {
-  const isEditing = Boolean(scheduleToEdit);
+  const activeSchedule = scheduleToEdit || schedule;
+  const isEditing = Boolean(activeSchedule);
+
+  const safeVehicles = (vehicles || []).filter((v) => v && typeof v === 'object');
+  const defaultVehicle = safeVehicles[0];
 
   const [formData, setFormData] = useState({
-    vehicleId: vehicles[0]?.plate || 'RST-291',
+    vehicleId: defaultVehicle?.plate || 'RST-291',
     maintenanceType: MAINTENANCE_CATEGORIES[0],
     intervalKm: 10000,
     intervalDays: 180,
     lastServiceDate: new Date().toISOString().split('T')[0],
-    lastServiceOdometer: 10000,
+    lastServiceOdometer: defaultVehicle?.odometer || 10000,
     reminderKm: 1000,
     reminderDays: 14,
     serviceCenter: SERVICE_CENTERS[0],
@@ -30,28 +35,27 @@ export default function MaintenanceScheduleModal({
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (scheduleToEdit) {
+    if (activeSchedule) {
       setFormData({
-        vehicleId: scheduleToEdit.vehicleId,
-        maintenanceType: scheduleToEdit.maintenanceType,
-        intervalKm: scheduleToEdit.intervalKm,
-        intervalDays: scheduleToEdit.intervalDays,
-        lastServiceDate: scheduleToEdit.lastServiceDate,
-        lastServiceOdometer: scheduleToEdit.lastServiceOdometer,
-        reminderKm: scheduleToEdit.reminderKm || 1000,
-        reminderDays: scheduleToEdit.reminderDays || 14,
-        serviceCenter: scheduleToEdit.serviceCenter || SERVICE_CENTERS[0],
-        priority: scheduleToEdit.priority || 'Medium'
+        vehicleId: activeSchedule.vehicleId || defaultVehicle?.plate || 'RST-291',
+        maintenanceType: activeSchedule.maintenanceType || MAINTENANCE_CATEGORIES[0],
+        intervalKm: activeSchedule.intervalKm || 10000,
+        intervalDays: activeSchedule.intervalDays || 180,
+        lastServiceDate: activeSchedule.lastServiceDate || new Date().toISOString().split('T')[0],
+        lastServiceOdometer: activeSchedule.lastServiceOdometer || 10000,
+        reminderKm: activeSchedule.reminderKm || 1000,
+        reminderDays: activeSchedule.reminderDays || 14,
+        serviceCenter: activeSchedule.serviceCenter || SERVICE_CENTERS[0],
+        priority: activeSchedule.priority || 'Medium'
       });
     } else {
-      const selectedVehicle = vehicles[0];
       setFormData({
-        vehicleId: selectedVehicle?.plate || 'RST-291',
+        vehicleId: defaultVehicle?.plate || 'RST-291',
         maintenanceType: MAINTENANCE_CATEGORIES[0],
         intervalKm: 10000,
         intervalDays: 180,
         lastServiceDate: new Date().toISOString().split('T')[0],
-        lastServiceOdometer: selectedVehicle?.odometer || 12000,
+        lastServiceOdometer: defaultVehicle?.odometer || 12000,
         reminderKm: 1000,
         reminderDays: 14,
         serviceCenter: SERVICE_CENTERS[0],
@@ -59,7 +63,7 @@ export default function MaintenanceScheduleModal({
       });
     }
     setErrors({});
-  }, [scheduleToEdit, isOpen, vehicles]);
+  }, [activeSchedule, defaultVehicle, isOpen]);
 
   // When vehicle changes in Add mode, default last odometer to vehicle current odometer
   const handleVehicleChange = (plate) => {
@@ -95,11 +99,11 @@ export default function MaintenanceScheduleModal({
       intervalKm: Number(formData.intervalKm),
       intervalDays: Number(formData.intervalDays),
       lastServiceOdometer: Number(formData.lastServiceOdometer),
-      id: isEditing ? scheduleToEdit.id : `SCH-${Math.floor(100 + Math.random() * 899)}`,
+      id: isEditing ? (activeSchedule?.id || `SCH-${Math.floor(100 + Math.random() * 899)}`) : `SCH-${Math.floor(100 + Math.random() * 899)}`,
       nextServiceOdometer: computedNextOdo,
       nextServiceDate: computedNextDate,
-      status: isEditing ? scheduleToEdit.status : 'Active',
-      createdAt: isEditing ? scheduleToEdit.createdAt : new Date().toISOString()
+      status: isEditing ? (activeSchedule?.status || 'Active') : 'Active',
+      createdAt: isEditing ? (activeSchedule?.createdAt || new Date().toISOString()) : new Date().toISOString()
     };
 
     onSaveSchedule(payload);
@@ -126,9 +130,9 @@ export default function MaintenanceScheduleModal({
               onChange={(e) => handleVehicleChange(e.target.value)}
               className="w-full bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-2 text-[#172033] outline-none font-mono text-xs cursor-pointer shadow-2xs"
             >
-              {vehicles.map((v) => (
-                <option key={v.id || v.plate} value={v.plate}>
-                  {v.plate} ({v.model})
+              {(vehicles || []).filter((v) => v && (v.id || v.plate)).map((v, idx) => (
+                <option key={v.id || v.plate || `veh-${idx}`} value={v.plate || v.id}>
+                  {v.plate || v.id} {v.model ? `(${v.model})` : ''}
                 </option>
               ))}
             </select>

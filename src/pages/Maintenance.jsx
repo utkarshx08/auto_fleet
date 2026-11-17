@@ -68,15 +68,20 @@ export default function Maintenance({
     return generateMaintenanceAlerts(schedules, vehicles);
   }, [schedules, vehicles]);
 
-  // Combined alerts (urgent queue)
-  const displayAlerts = automatedAlerts.length > 0 ? automatedAlerts : parentAlerts;
+  // Combined alerts (urgent queue) — sanitized to prevent undefined access
+  const displayAlerts = useMemo(() => {
+    const raw = automatedAlerts && automatedAlerts.length > 0 ? automatedAlerts : (parentAlerts || []);
+    return (raw || []).filter((a) => a && typeof a === 'object' && a.id);
+  }, [automatedAlerts, parentAlerts]);
 
   // Handlers
   const handleSaveSchedule = (scheduleData) => {
+    if (!scheduleData) return;
     setSchedules((prev) => {
+      const safePrev = (prev || []).filter((s) => s && s.id);
       const updated = editingSchedule
-        ? prev.map((s) => (s.id === scheduleData.id ? scheduleData : s))
-        : [scheduleData, ...prev];
+        ? safePrev.map((s) => (s && s.id === scheduleData.id ? scheduleData : s))
+        : [scheduleData, ...safePrev];
       persistSchedules(updated);
       return updated;
     });
@@ -84,18 +89,21 @@ export default function Maintenance({
   };
 
   const handleOpenEdit = (schedule) => {
+    if (!schedule) return;
     setEditingSchedule(schedule);
     setIsScheduleModalOpen(true);
   };
 
   const handleOpenDelete = (schedule) => {
+    if (!schedule) return;
     setDeletingSchedule(schedule);
     setIsDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = (scheduleId) => {
+    if (!scheduleId) return;
     setSchedules((prev) => {
-      const updated = prev.filter((s) => s.id !== scheduleId);
+      const updated = (prev || []).filter((s) => s && s.id !== scheduleId);
       persistSchedules(updated);
       return updated;
     });
@@ -104,46 +112,58 @@ export default function Maintenance({
   };
 
   const handleOpenComplete = (schedule) => {
+    if (!schedule) return;
     setCompletingSchedule(schedule);
     setIsCompleteModalOpen(true);
   };
 
-  const handleConfirmComplete = (completionData) => {
-    const { schedule, ...recordData } = completionData;
+  const handleConfirmComplete = (completionData, maybeSchedule) => {
+    const targetSchedule = maybeSchedule || completionData?.schedule || completingSchedule;
+    if (!targetSchedule) return;
 
     // 1. Create a historical record
+    const { schedule, ...recordData } = completionData || {};
     const newRecord = {
       ...recordData,
-      id: `REC-${Date.now().toString(36).toUpperCase()}`,
+      id: recordData.id || `REC-${Date.now().toString(36).toUpperCase()}`,
+      vehicleId: recordData.vehicleId || targetSchedule.vehicleId,
+      scheduleId: targetSchedule.id,
+      serviceType: recordData.serviceType || targetSchedule.maintenanceType,
+      serviceDate: recordData.serviceDate || new Date().toISOString().split('T')[0],
       createdAt: new Date().toISOString()
     };
 
     setRecords((prev) => {
-      const updated = [newRecord, ...prev];
+      const updated = [newRecord, ...(prev || []).filter((r) => r && r.id)];
       persistRecords(updated);
       return updated;
     });
 
     // 2. Advance schedule next due thresholds
     setSchedules((prev) => {
-      const updated = prev.map((s) => {
-        if (s.id === schedule.id) {
+      const updated = (prev || []).map((s) => {
+        if (s && s.id === targetSchedule.id) {
+          const completedOdo = Number(
+            completionData.odometerReading || completionData.currentOdometer || s.nextServiceOdometer || 0
+          );
+          const completedDate =
+            completionData.serviceDate || completionData.completedDate || new Date().toISOString().split('T')[0];
           const nextOdo = calculateNextOdometer(
-            completionData.currentOdometer,
-            s.intervalKm
+            completedOdo,
+            s.intervalKm || 10000
           );
           const nextDt = calculateNextDate(
-            completionData.completedDate,
-            s.intervalMonths
+            completedDate,
+            s.intervalDays || 180
           );
 
           return {
             ...s,
-            lastServiceDate: completionData.completedDate,
-            lastServiceOdometer: completionData.currentOdometer,
-            nextDueOdometer: nextOdo || s.nextDueOdometer,
-            nextDueDate: nextDt || s.nextDueDate,
-            status: 'Scheduled',
+            lastServiceDate: completedDate,
+            lastServiceOdometer: completedOdo,
+            nextServiceOdometer: nextOdo,
+            nextServiceDate: nextDt,
+            status: 'Active',
             updatedAt: new Date().toISOString()
           };
         }
@@ -152,6 +172,10 @@ export default function Maintenance({
       persistSchedules(updated);
       return updated;
     });
+
+    if (onScheduleService) {
+      onScheduleService(newRecord);
+    }
 
     setIsCompleteModalOpen(false);
     setCompletingSchedule(null);
@@ -295,14 +319,14 @@ export default function Maintenance({
               </div>
             ) : (
               <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-3.5">
-                {displayAlerts.map((alert) => (
+                {displayAlerts.map((alert, idx) => (
                   <div
-                    key={alert.id}
+                    key={alert?.id || `alert-${idx}`}
                     className="bg-[#F8FAFD] border border-[#E2E8F0] hover:border-[#2879E8]/30 rounded-xl p-3.5 flex items-start gap-3 transition-all shadow-2xs"
                   >
                     <div
                       className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border shadow-2xs ${
-                        alert.type === 'danger' || alert.severity === 'critical'
+                        alert?.type === 'danger' || alert?.severity === 'critical'
                           ? 'bg-[#FDF2F2] text-[#E05252] border-[#F8D7DA]'
                           : 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]'
                       }`}
@@ -313,14 +337,14 @@ export default function Maintenance({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <b className="text-xs text-[#172033] font-bold">
-                          {alert.title}
+                          {alert?.title || 'Maintenance Alert'}
                         </b>
                         <span className="font-mono text-[9px] text-[#8A97AB]">
-                          {alert.timestamp || 'Immediate'}
+                          {alert?.timestamp || 'Immediate'}
                         </span>
                       </div>
                       <p className="text-[11px] text-[#68758A] my-1 font-medium">
-                        {alert.desc || alert.description}
+                        {alert?.desc || alert?.description || 'Service check recommended.'}
                       </p>
 
                       <div className="flex items-center gap-2 mt-2">
@@ -328,15 +352,15 @@ export default function Maintenance({
                           variant="primary"
                           size="sm"
                           onClick={() => {
-                            const sched = schedules.find(
-                              (s) => s.vehicleId === alert.vehicleId
+                            const sched = (schedules || []).find(
+                              (s) => s && s.vehicleId === alert?.vehicleId
                             );
                             if (sched) {
                               handleOpenComplete(sched);
                             } else {
                               handleOpenEdit({
-                                vehicleId: alert.vehicleId,
-                                serviceType: alert.title
+                                vehicleId: alert?.vehicleId,
+                                maintenanceType: alert?.title || 'Inspection'
                               });
                             }
                           }}
@@ -354,6 +378,7 @@ export default function Maintenance({
           {/* Quick Schedule Directory Overview */}
           <MaintenanceScheduleTable
             schedules={schedules.slice(0, 5)}
+            vehicles={vehicles}
             onEditSchedule={handleOpenEdit}
             onCompleteSchedule={handleOpenComplete}
             onDeleteSchedule={handleOpenDelete}
@@ -368,6 +393,7 @@ export default function Maintenance({
         <div className="animate-in fade-in">
           <MaintenanceScheduleTable
             schedules={schedules}
+            vehicles={vehicles}
             onEditSchedule={handleOpenEdit}
             onCompleteSchedule={handleOpenComplete}
             onDeleteSchedule={handleOpenDelete}
@@ -384,6 +410,7 @@ export default function Maintenance({
         <div className="animate-in fade-in">
           <MaintenanceHistoryTable
             records={records}
+            vehicles={vehicles}
             onExportCSV={handleExportCSV}
           />
         </div>
@@ -395,6 +422,7 @@ export default function Maintenance({
           <MaintenanceCalendarView
             schedules={schedules}
             records={records}
+            vehicles={vehicles}
             onSelectSchedule={handleOpenEdit}
           />
         </div>
@@ -408,6 +436,7 @@ export default function Maintenance({
           setEditingSchedule(null);
         }}
         schedule={editingSchedule}
+        scheduleToEdit={editingSchedule}
         vehicles={vehicles}
         onSaveSchedule={handleSaveSchedule}
       />
@@ -420,6 +449,9 @@ export default function Maintenance({
           setCompletingSchedule(null);
         }}
         schedule={completingSchedule}
+        vehicle={(vehicles || []).find(
+          (v) => v && (v.plate === completingSchedule?.vehicleId || v.id === completingSchedule?.vehicleId)
+        )}
         vehicles={vehicles}
         onCompleteService={handleConfirmComplete}
       />

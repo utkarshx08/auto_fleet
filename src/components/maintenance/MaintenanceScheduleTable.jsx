@@ -29,9 +29,14 @@ export default function MaintenanceScheduleTable({
 
   // Compute live evaluation for each schedule
   const enrichedSchedules = useMemo(() => {
-    return schedules.map((sch) => {
-      const vehicle = vehicles.find((v) => v.plate === sch.vehicleId || v.id === sch.vehicleId);
-      const currentOdo = vehicle ? vehicle.odometer : sch.lastServiceOdometer;
+    const safeSchedules = (schedules || []).filter((s) => s && typeof s === 'object');
+    const safeVehicles = (vehicles || []).filter((v) => v && typeof v === 'object');
+
+    return safeSchedules.map((sch) => {
+      const vehicle = safeVehicles.find(
+        (v) => (v.plate && v.plate === sch.vehicleId) || (v.id && v.id === sch.vehicleId)
+      );
+      const currentOdo = vehicle ? vehicle.odometer : (sch.lastServiceOdometer || 0);
       const evaluation = evaluateScheduleStatus(sch, currentOdo);
       return {
         ...sch,
@@ -178,14 +183,14 @@ export default function MaintenanceScheduleTable({
                 </td>
               </tr>
             ) : (
-              filteredSchedules.map((sch) => (
+              filteredSchedules.map((sch, idx) => (
                 <tr
-                  key={sch.id}
+                  key={sch?.id || `sch-${idx}`}
                   className="border-b border-[#F1F5F9] hover:bg-[#F0F5FC]/60 transition-colors last:border-0"
                 >
                   {/* Vehicle */}
                   <td className="py-3.5 px-3.5">
-                    <b className="font-mono text-xs text-[#172033] font-bold block">{sch.vehicleId}</b>
+                    <b className="font-mono text-xs text-[#172033] font-bold block">{sch.vehicleId || 'N/A'}</b>
                     <span className="font-mono text-[10px] text-[#8A97AB]">
                       Current: {sch.currentVehicleOdo?.toLocaleString() || 0} km
                     </span>
@@ -195,23 +200,23 @@ export default function MaintenanceScheduleTable({
                   <td className="py-3.5 px-3.5">
                     <div className="flex items-center gap-2 text-[#172033] font-medium">
                       <Wrench className="w-3.5 h-3.5 text-[#2879E8] shrink-0" />
-                      <span>{sch.maintenanceType}</span>
+                      <span>{sch.maintenanceType || 'General Service'}</span>
                     </div>
                   </td>
 
                   {/* Interval */}
                   <td className="py-3.5 px-3.5 font-mono text-[11px] text-[#68758A]">
-                    <span>{sch.intervalKm.toLocaleString()} km</span>
+                    <span>{(Number(sch.intervalKm) || 10000).toLocaleString()} km</span>
                     <span className="text-[#CBD5E1] mx-1">/</span>
-                    <span>{sch.intervalDays} days</span>
+                    <span>{sch.intervalDays || 180} days</span>
                   </td>
 
                   {/* Next Threshold */}
                   <td className="py-3.5 px-3.5 font-mono text-[11px]">
                     <span className="text-[#16A36A] font-bold block">
-                      {sch.nextServiceOdometer.toLocaleString()} km
+                      {(Number(sch.nextServiceOdometer) || 0).toLocaleString()} km
                     </span>
-                    <span className="text-[#8A97AB] text-[10px]">{sch.nextServiceDate}</span>
+                    <span className="text-[#8A97AB] text-[10px]">{sch.nextServiceDate || 'Scheduled'}</span>
                   </td>
 
                   {/* Live Status */}
@@ -221,7 +226,7 @@ export default function MaintenanceScheduleTable({
                         sch.liveStatus
                       )}`}
                     >
-                      ● {sch.liveStatus.toUpperCase()} ({sch.liveLabel})
+                      ● {(sch.liveStatus || 'ACTIVE').toUpperCase()} ({sch.liveLabel || 'Nominal'})
                     </span>
                   </td>
 

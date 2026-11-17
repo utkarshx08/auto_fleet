@@ -18,7 +18,8 @@ export default function MaintenanceHistoryTable({ records = [], vehicles = [] })
 
   const filteredRecords = useMemo(() => {
     const term = (search || '').toLowerCase();
-    return records.filter((rec) => {
+    const safeRecords = (records || []).filter((r) => r && typeof r === 'object');
+    return safeRecords.filter((rec) => {
       const matchSearch =
         (rec.id || '').toLowerCase().includes(term) ||
         (rec.vehicleId || '').toLowerCase().includes(term) ||
@@ -89,9 +90,9 @@ Verification: Signed & Archived in Autrail Telemetry Cloud.`;
             className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-mono cursor-pointer shadow-2xs"
           >
             <option value="ALL">All Fleet Vehicles</option>
-            {vehicles.map((v) => (
-              <option key={v.id || v.plate} value={v.plate}>
-                {v.plate} ({v.model})
+            {(vehicles || []).filter((v) => v && (v.id || v.plate)).map((v, idx) => (
+              <option key={v.id || v.plate || `veh-${idx}`} value={v.plate || v.id}>
+                {v.plate || v.id} {v.model ? `(${v.model})` : ''}
               </option>
             ))}
           </select>
@@ -131,14 +132,14 @@ Verification: Signed & Archived in Autrail Telemetry Cloud.`;
                 </td>
               </tr>
             ) : (
-              filteredRecords.map((rec) => (
+              filteredRecords.map((rec, idx) => (
                 <tr
-                  key={rec.id}
+                  key={rec?.id || `rec-${idx}`}
                   className="border-b border-[#F1F5F9] hover:bg-[#F0F5FC]/60 transition-colors last:border-0"
                 >
                   {/* Order ID */}
                   <td className="py-3.5 px-3.5 font-mono text-xs text-[#2879E8] font-bold">
-                    {rec.id}
+                    {rec.id || 'N/A'}
                   </td>
 
                   {/* Vehicle */}

@@ -46,40 +46,42 @@ export default function MaintenanceCalendarView({
   // Consolidate events (both schedules due dates & completed records)
   const allEvents = useMemo(() => {
     const list = [];
+    const safeSchedules = (schedules || []).filter((s) => s && typeof s === 'object');
+    const safeRecords = (records || []).filter((r) => r && typeof r === 'object');
 
     // 1. Schedules nextServiceDate
-    schedules.forEach((sch) => {
+    safeSchedules.forEach((sch, idx) => {
       const matchVehicle = selectedVehicle === 'ALL' || sch.vehicleId === selectedVehicle;
       const matchCategory = selectedCategory === 'ALL' || sch.maintenanceType === selectedCategory;
 
       if (matchVehicle && matchCategory && sch.nextServiceDate) {
         list.push({
-          id: `sch-${sch.id}`,
+          id: `sch-${sch.id || idx}`,
           dateStr: sch.nextServiceDate,
           type: sch.status === 'Overdue' ? 'overdue' : sch.status === 'Due' ? 'due' : 'scheduled',
-          title: `${sch.vehicleId}: ${sch.maintenanceType}`,
-          category: sch.maintenanceType,
-          vehicleId: sch.vehicleId,
-          meta: `Target: ${sch.nextServiceOdometer.toLocaleString()} km · Bay: ${sch.serviceCenter || 'Depot'}`,
+          title: `${sch.vehicleId || 'Vehicle'}: ${sch.maintenanceType || 'Inspection'}`,
+          category: sch.maintenanceType || 'Inspection',
+          vehicleId: sch.vehicleId || 'N/A',
+          meta: `Target: ${(Number(sch.nextServiceOdometer) || 0).toLocaleString()} km · Bay: ${sch.serviceCenter || 'Depot'}`,
           original: sch
         });
       }
     });
 
     // 2. Completed maintenance records
-    records.forEach((rec) => {
+    safeRecords.forEach((rec, idx) => {
       const matchVehicle = selectedVehicle === 'ALL' || rec.vehicleId === selectedVehicle;
       const matchCategory = selectedCategory === 'ALL' || rec.serviceType === selectedCategory;
 
       if (matchVehicle && matchCategory && rec.serviceDate) {
         list.push({
-          id: `rec-${rec.id}`,
+          id: `rec-${rec.id || idx}`,
           dateStr: rec.serviceDate,
           type: 'completed',
-          title: `COMPLETED: ${rec.vehicleId} · ${rec.serviceType}`,
-          category: rec.serviceType,
-          vehicleId: rec.vehicleId,
-          meta: `Cost: $${Number(rec.serviceCost).toFixed(2)} · Tech: ${rec.technician}`,
+          title: `COMPLETED: ${rec.vehicleId || 'Vehicle'} · ${rec.serviceType || 'Service'}`,
+          category: rec.serviceType || 'Service',
+          vehicleId: rec.vehicleId || 'N/A',
+          meta: `Cost: $${(Number(rec.serviceCost) || 0).toFixed(2)} · Tech: ${rec.technician || 'Technician'}`,
           original: rec
         });
       }
@@ -148,9 +150,9 @@ export default function MaintenanceCalendarView({
             className="bg-[#F8FAFD] border border-[#D5E2F1] focus:border-[#2879E8] rounded-xl px-3 py-1.5 text-xs text-[#172033] outline-none font-mono cursor-pointer shadow-2xs"
           >
             <option value="ALL">All Vehicles</option>
-            {vehicles.map((v) => (
-              <option key={v.id || v.plate} value={v.plate}>
-                {v.plate}
+            {(vehicles || []).filter((v) => v && (v.id || v.plate)).map((v, idx) => (
+              <option key={v.id || v.plate || `veh-${idx}`} value={v.plate || v.id}>
+                {v.plate || v.id}
               </option>
             ))}
           </select>
