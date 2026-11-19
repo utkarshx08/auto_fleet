@@ -177,7 +177,15 @@ export default defineConfig({
     port: 3000,
     open: false
   },
+  resolve: {
+    dedupe: ['react', 'react-dom', 'react-router-dom'],
+    alias: {
+      react: path.resolve(__dirname, 'node_modules/react'),
+      'react-dom': path.resolve(__dirname, 'node_modules/react-dom')
+    }
+  },
   optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js', 'lucide-react'],
     exclude: ['maplibre-gl', 'maplibre-gl/dist/maplibre-gl-worker.mjs']
   },
   build: {

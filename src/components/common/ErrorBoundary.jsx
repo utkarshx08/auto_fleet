@@ -22,6 +22,18 @@ export default class ErrorBoundary extends React.Component {
   }
 
   handleReset = () => {
+    const errMsg = this.state.error?.message || this.state.error?.toString() || '';
+    // If runtime encountered an invalid hook call or desynced module bundle, trigger full window reload
+    if (
+      errMsg.includes('useState') ||
+      errMsg.includes('Invalid hook call') ||
+      errMsg.includes('reading \'useState\'') ||
+      errMsg.includes('Failed to fetch dynamically imported module') ||
+      errMsg.includes('loading chunk')
+    ) {
+      window.location.reload();
+      return;
+    }
     this.setState({ hasError: false, error: null, errorInfo: null });
     if (this.props.onReset) {
       this.props.onReset();

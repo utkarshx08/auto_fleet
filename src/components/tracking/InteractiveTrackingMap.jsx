@@ -121,7 +121,7 @@ export default function InteractiveTrackingMap({
       console.warn('Error setting map style:', e);
     }
   }, [basemapMode]);
-2000000
+
   // Sync Vehicle Markers on Map
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
