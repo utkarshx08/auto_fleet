@@ -81,12 +81,12 @@ export default {
         }
       },
       boxShadow: {
-        'liquid-card': '0 12px 35px rgba(43, 73, 116, 0.08), 0 3px 10px rgba(43, 73, 116, 0.04), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(218,230,247,0.65)',
-        'liquid-card-hover': '0 18px 45px rgba(43, 73, 116, 0.12), 0 6px 14px rgba(43, 73, 116, 0.05), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(218,230,247,0.85)',
-        'liquid-float': '0 20px 48px rgba(43, 73, 116, 0.12), 0 8px 18px rgba(43, 73, 116, 0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
-        'liquid-dropdown': '0 16px 36px rgba(43, 73, 116, 0.14), 0 4px 12px rgba(43, 73, 116, 0.06), inset 0 1px 0 rgba(255,255,255,1)',
-        'liquid-btn': '0 6px 18px rgba(40, 121, 232, 0.28), inset 0 1px 0 rgba(255,255,255,0.4)',
-        'liquid-subtle': '0 4px 14px rgba(43, 73, 116, 0.05), inset 0 1px 0 rgba(255,255,255,0.8)',
+        'liquid-card': '0 8px 24px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(226,232,240,0.5)',
+        'liquid-card-hover': '0 14px 34px rgba(15, 23, 42, 0.07), 0 4px 10px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(203,213,225,0.6)',
+        'liquid-float': '0 16px 36px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
+        'liquid-dropdown': '0 14px 32px rgba(15, 23, 42, 0.10), 0 4px 10px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255,255,255,1)',
+        'liquid-btn': '0 4px 14px rgba(40, 121, 232, 0.22), inset 0 1px 0 rgba(255,255,255,0.35)',
+        'liquid-subtle': '0 2px 8px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
       },
       fontFamily: {
         sans: ['Manrope', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'sans-serif'],

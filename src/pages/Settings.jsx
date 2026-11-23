@@ -39,29 +39,15 @@ export default function Settings({ onSaveSettings }) {
   return (
     <div className="space-y-6 max-w-4xl pb-10">
       {/* Header */}
-      <div className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-[#E2E8F0] pb-5">
+      <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-slate-200/90 pb-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
             System Preferences
-          </p>
-          <div className="-ml-3 py-0.5">
-            <TrueFocus
-              sentence="System Configuration"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2}
-              focusScale={1.03}
-              cornerSize={14}
-              borderWidth={2.5}
-              frameGap={8}
-              fontSize="1.6rem"
-              wordClassName="text-[#0B132B] font-black tracking-tight"
-            />
+          </span>
+          <div className="py-0.5">
+            <TrueFocus sentence="System Configuration" />
           </div>
-          <p className="text-xs text-[#334155] mt-1 font-semibold">
+          <p className="text-xs text-slate-500 mt-1 mb-0">
             Manage organization workspace parameters, alert channels, theme aesthetics, and database telemetry.
           </p>
         </div>

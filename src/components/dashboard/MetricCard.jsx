@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * MetricCard - Commercial Fleet KPI Card
+ * Clean, high-density, authoritative presentation with tabular numerals and calm telemetry trend bars.
+ */
 export default function MetricCard({
   title,
   symbol,
@@ -7,93 +11,88 @@ export default function MetricCard({
   value,
   unit,
   changeText,
-  changeType = 'positive', // 'positive' or 'warning'
+  changeType = 'positive', // 'positive', 'warning', 'neutral'
   comparisonText,
   sparkline = [],
-  sparklineTheme = 'purple', // 'purple', 'teal', 'violet', 'steps'
+  sparklineTheme = 'purple',
   className = ''
 }) {
-  const getThemeBarColor = (theme) => {
-    switch (theme) {
-      case 'teal':
-        return 'bg-gradient-to-t from-[#0D9488] to-[#2DD4BF]';
-      case 'violet':
-        return 'bg-gradient-to-t from-[#6366F1] to-[#818CF8]';
-      case 'orange':
-      case 'warning':
-      case 'steps':
-        return 'bg-gradient-to-t from-[#D97706] to-[#F59E0B]';
-      case 'purple':
-      default:
-        return 'bg-gradient-to-t from-[#2879E8] to-[#60A5FA]';
-    }
-  };
+  const isPositive = changeType === 'positive';
+  const isWarning = changeType === 'warning' || isSymbolWarning;
 
   return (
     <article
-      className={`glass-card glass-card-hover p-5 pb-4 min-h-[142px] flex flex-col justify-between rounded-2xl transition-all duration-300 group ${className}`}
+      className={`glass-card glass-card-hover p-4 sm:p-5 flex flex-col justify-between min-h-[136px] transition-all duration-200 ${className}`}
     >
-      {/* Metric Top */}
-      <div className="flex items-center justify-between text-[#68758A] font-mono text-[10px] tracking-[1.2px] uppercase font-semibold">
-        <span>{title}</span>
+      {/* Top Header Row */}
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-medium text-slate-600 truncate">{title}</span>
         {isSymbolWarning ? (
-          <span className="bg-[#FEF7EA] text-[#E7A329] border border-[#F8DCB0] rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs leading-none shadow-2xs">
+          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-bold">
             !
           </span>
-        ) : (
-          <span className="w-6 h-6 rounded-full bg-[#EAF3FF] text-[#2879E8] border border-[#D5E6FB] flex items-center justify-center font-bold text-xs leading-none shadow-2xs group-hover:scale-105 transition-transform">
+        ) : symbol && symbol !== '↗' ? (
+          <span className="text-xs font-medium text-slate-400">
             {symbol}
           </span>
-        )}
+        ) : null}
       </div>
 
-      {/* Metric Value */}
-      <div className="text-[30px] font-black tracking-[-1px] text-[#172033] my-2.5 leading-none flex items-baseline gap-2">
-        <span>{value}</span>
+      {/* Primary KPI Value */}
+      <div className="my-2.5 flex items-baseline gap-1.5">
+        <span className="text-2xl sm:text-[28px] font-bold tracking-tight text-slate-900 tabular-nums leading-none">
+          {value}
+        </span>
         {unit && (
-          <small className="text-[12px] tracking-normal text-[#68758A] font-medium font-sans">
+          <span className="text-xs font-medium text-slate-500">
             {unit}
-          </small>
+          </span>
         )}
       </div>
 
-      {/* Metric Foot with Sparkline */}
-      <div className="flex items-center justify-between text-[11px] gap-2 mt-auto pt-1">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span
-            className={`font-mono text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-              changeType === 'warning'
-                ? 'bg-[#FEF7EA] text-[#E7A329] border-[#F8DCB0]'
-                : 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7]'
-            }`}
-          >
-            {changeText}
-          </span>
-          <span className="text-[#68758A] text-[10px]">{comparisonText}</span>
+      {/* Trend & Telemetry Footer */}
+      <div className="flex items-center justify-between gap-3 pt-1 border-t border-slate-100/80 mt-auto">
+        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+          {changeText && (
+            <span
+              className={`inline-flex items-center text-[11px] font-medium px-1.5 py-0.5 rounded ${
+                isWarning
+                  ? 'bg-amber-50 text-amber-800 border border-amber-200/80'
+                  : isPositive
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
+                  : 'bg-slate-100 text-slate-700 border border-slate-200'
+              }`}
+            >
+              {changeText}
+            </span>
+          )}
+          {comparisonText && (
+            <span className="text-[11px] text-slate-500 truncate">
+              {comparisonText}
+            </span>
+          )}
         </div>
 
-        {/* Mini Bars Sparkline */}
-        {sparklineTheme === 'steps' ? (
-          <div className="ml-auto flex items-end gap-[3px] h-[24px]">
-            {sparkline.map((h, i) => (
-              <span
-                key={i}
-                style={{ height: `${Math.max(h, 6)}px` }}
-                className="w-[5px] rounded-t-[3px] bg-gradient-to-t from-[#D97706] to-[#F59E0B] shadow-2xs"
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="ml-auto flex items-end gap-[3px] h-[24px]">
-            {sparkline.map((h, i) => (
-              <i
-                key={i}
-                style={{ height: `${Math.max(h, 15)}%` }}
-                className={`w-[5px] rounded-t-[3px] shadow-2xs ${getThemeBarColor(
-                  sparklineTheme
-                )}`}
-              />
-            ))}
+        {/* Clean Neutral Telemetry Bars (Current Point Accented) */}
+        {Array.isArray(sparkline) && sparkline.length > 0 && (
+          <div className="flex items-end gap-[3px] h-5 shrink-0 pl-1" aria-hidden="true">
+            {sparkline.map((h, i) => {
+              const isLast = i === sparkline.length - 1;
+              const heightPct = Math.max(Math.min(h, 100), 12);
+              return (
+                <span
+                  key={i}
+                  style={{ height: `${heightPct}%` }}
+                  className={`w-1 rounded-xs transition-colors duration-150 ${
+                    isLast
+                      ? isWarning
+                        ? 'bg-amber-500'
+                        : 'bg-[#2879E8]'
+                      : 'bg-slate-200'
+                  }`}
+                />
+              );
+            })}
           </div>
         )}
       </div>

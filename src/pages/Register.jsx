@@ -112,20 +112,7 @@ export default function Register() {
             A
           </div>
           <div className="py-1">
-            <TrueFocus
-              sentence="New Fleet Operator Profile"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2}
-              focusScale={1.03}
-              cornerSize={12}
-              borderWidth={2}
-              fontSize="1.25rem"
-              wordClassName="text-[#172033] font-bold tracking-tight"
-            />
+            <TrueFocus sentence="Operator Registration" />
           </div>
           <p className="text-xs text-[#68758A] mt-1 font-sans">
             Create an independent operator profile with role-based dispatch privileges.

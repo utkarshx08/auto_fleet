@@ -197,6 +197,13 @@
       "skillPath": "skills/test-driven-development/SKILL.md",
       "computedHash": "37cc05dea2a455d5d3ff252f14a7323ef378536603cce8cd2c758dc8fac790e6"
     },
+    "unslop": {
+      "source": "heydamir/unslop",
+      "commit": "620163eedb3529d9cd23a3994ed8d287d06f760d",
+      "sourceType": "github",
+      "skillPath": "skills/unslop/SKILL.md",
+      "computedHash": "34b16270083f9892424a0b41dec4d5f25a73709c9cffa7702e57c723000e6df5"
+    },
     "using-agent-skills": {
       "source": "addyosmani/agent-skills",
       "commit": "39b723ceebf81474d0557c1fecd01eddab585563",

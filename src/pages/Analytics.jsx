@@ -37,13 +37,13 @@ export default function Analytics() {
       {/* Page Header */}
       <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
             Performance Intelligence & Business Insights
-          </p>
-          <h1 className="text-[28px] tracking-tight font-black text-[#0B132B] m-0">
-            Fleet Analytics<span className="text-[#2879E8]">.</span>
+          </span>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 m-0">
+            Fleet Analytics
           </h1>
-          <p className="text-[13px] text-[#334155] mt-1 font-semibold">
+          <p className="text-xs text-slate-500 mt-1">
             Holistic telemetry analysis across fuel efficiency, operating mileage, asset utilization, and financial expenditures.
           </p>
         </div>

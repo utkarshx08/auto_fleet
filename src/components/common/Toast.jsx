@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { CheckCircle2, AlertCircle, AlertOctagon, Info, X } from 'lucide-react';
 
 /**
- * Enhanced AutoFleet Toast Notification & Queue Stack
- * Supports single toast mode (backward compatible) and multi-toast stacked queue.
+ * Solid Liquid Glass Toast Notification & Stack
  */
 export default function Toast({
   message,
@@ -21,7 +20,7 @@ export default function Toast({
       <div
         role="region"
         aria-live="polite"
-        className="fixed right-6 bottom-6 z-[70] flex flex-col-reverse gap-2.5 max-w-sm pointer-events-none"
+        className="fixed right-4 sm:right-6 bottom-4 sm:bottom-6 z-[70] flex flex-col-reverse gap-2 max-w-sm w-full pointer-events-none px-2 sm:px-0"
       >
         {toasts.map((t) => {
           const toastType = t.type || 'info';
@@ -29,21 +28,21 @@ export default function Toast({
             <div
               key={t.id}
               role="status"
-              className="pointer-events-auto flex items-center justify-between gap-3 bg-white/95 border border-[#E2E8F0] hover:border-[#2879E8]/40 text-[#172033] px-4 py-3 rounded-2xl shadow-liquid-dropdown backdrop-blur-xl transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
+              className="pointer-events-auto flex items-center justify-between gap-3 bg-white border border-slate-200/90 text-slate-800 px-3.5 py-2.5 rounded-xl shadow-lg transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                {toastType === 'success' && <CheckCircle2 className="w-4 h-4 text-[#16A36A] shrink-0" />}
-                {toastType === 'warning' && <AlertCircle className="w-4 h-4 text-[#E7A329] shrink-0" />}
+                {toastType === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
+                {toastType === 'warning' && <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />}
                 {(toastType === 'danger' || toastType === 'error') && (
-                  <AlertOctagon className="w-4 h-4 text-[#E05252] shrink-0" />
+                  <AlertOctagon className="w-4 h-4 text-rose-600 shrink-0" />
                 )}
                 {toastType === 'info' && <Info className="w-4 h-4 text-[#2879E8] shrink-0" />}
-                <span className="font-medium text-[#172033] break-words">{t.message}</span>
+                <span className="font-medium text-slate-800 break-words">{t.message}</span>
               </div>
               {onDismiss && (
                 <button
                   onClick={() => onDismiss(t.id)}
-                  className="text-[#8A97AB] hover:text-[#172033] p-1 rounded-lg hover:bg-[#F0F5FC] transition-colors shrink-0"
+                  className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-100 transition-colors shrink-0"
                   aria-label="Dismiss notification"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -56,25 +55,27 @@ export default function Toast({
     );
   }
 
-  // Fallback to legacy single-toast mode
+  // Single-toast fallback
   if (!visible) return null;
 
   return (
     <div
       role="status"
-      className="fixed right-6 bottom-6 z-[70] flex items-center gap-2.5 bg-white/95 border border-[#E2E8F0] hover:border-[#2879E8]/40 text-[#172033] px-4 py-3 rounded-2xl shadow-liquid-dropdown backdrop-blur-xl transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2"
+      className="fixed right-4 sm:right-6 bottom-4 sm:bottom-6 z-[70] flex items-center justify-between gap-3 bg-white border border-slate-200/90 text-slate-800 px-3.5 py-2.5 rounded-xl shadow-lg transition-all duration-200 text-xs animate-in fade-in slide-in-from-bottom-2 max-w-sm"
     >
-      {type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#16A36A] shrink-0" />}
-      {type === 'warning' && <AlertCircle className="w-4 h-4 text-[#E7A329] shrink-0" />}
-      {(type === 'danger' || type === 'error') && (
-        <AlertOctagon className="w-4 h-4 text-[#E05252] shrink-0" />
-      )}
-      {type === 'info' && <Info className="w-4 h-4 text-[#2879E8] shrink-0" />}
-      <span className="font-medium text-[#172033] break-words">{message}</span>
+      <div className="flex items-center gap-2.5 min-w-0">
+        {type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
+        {type === 'warning' && <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />}
+        {(type === 'danger' || type === 'error') && (
+          <AlertOctagon className="w-4 h-4 text-rose-600 shrink-0" />
+        )}
+        {type === 'info' && <Info className="w-4 h-4 text-[#2879E8] shrink-0" />}
+        <span className="font-medium text-slate-800 break-words">{message}</span>
+      </div>
       {onClose && (
         <button
           onClick={onClose}
-          className="ml-2 text-[#8A97AB] hover:text-[#172033] p-1 rounded-lg hover:bg-[#F0F5FC] transition-colors"
+          className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-100 transition-colors shrink-0 ml-2"
           aria-label="Dismiss notification"
         >
           <X className="w-3.5 h-3.5" />

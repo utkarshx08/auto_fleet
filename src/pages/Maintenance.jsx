@@ -224,20 +224,20 @@ export default function Maintenance({
       {/* Page Header */}
       <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
             Preventative Fleet Maintenance & Service Operations
-          </p>
-          <h1 className="text-[28px] tracking-tight font-black text-[#0B132B] m-0">
-            Maintenance Management<span className="text-[#2879E8]">.</span>
+          </span>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 m-0">
+            Maintenance Management
           </h1>
-          <p className="text-[13px] text-[#334155] mt-1 font-semibold">
-            Automated sensor tracking, routine servicing schedules, repair logs, and full shop lifecycle auditing.
+          <p className="text-xs text-slate-500 mt-1">
+            Automated sensor tracking, routine servicing schedules, repair logs, and shop lifecycle auditing.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <Button
-            variant="quiet"
+            variant="default"
             size="sm"
             onClick={handleExportCSV}
             icon={Download}
@@ -260,7 +260,7 @@ export default function Maintenance({
       </div>
 
       {/* Sub-navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-1 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-1 overflow-x-auto">
         {[
           { id: 'dashboard', label: 'Maintenance Dashboard' },
           { id: 'schedules', label: `Service Schedule (${schedules.length})` },
@@ -271,10 +271,10 @@ export default function Maintenance({
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2.5 text-xs font-mono rounded-t-xl transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2 text-xs rounded-lg transition-all whitespace-nowrap cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-white text-[#2879E8] border-t-2 border-t-[#2879E8] border-x border-[#E2E8F0] font-bold shadow-2xs'
-                : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
+                ? 'bg-blue-50 text-[#2879E8] font-semibold border border-blue-200/60 shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium'
             }`}
           >
             {tab.label}

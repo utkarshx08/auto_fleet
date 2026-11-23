@@ -47,37 +47,23 @@ export default function Reports({
   return (
     <div className="space-y-6 pb-10">
       {/* Header */}
-      <div className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-[#E2E8F0] pb-5">
+      <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-slate-200/90 pb-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
             Telemetry & Compliance Auditing
-          </p>
-          <div className="-ml-3 py-0.5">
-            <TrueFocus
-              sentence="Reports & Compliance"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2}
-              focusScale={1.03}
-              cornerSize={14}
-              borderWidth={2.5}
-              frameGap={8}
-              fontSize="1.6rem"
-              wordClassName="text-[#0B132B] font-black tracking-tight"
-            />
+          </span>
+          <div className="py-0.5">
+            <TrueFocus sentence="Reports & Compliance" />
           </div>
-          <p className="text-xs text-[#334155] mt-1 font-semibold">
+          <p className="text-xs text-slate-500 mt-1 mb-0">
             Generate and export consolidated operational metrics, fuel efficiency, and compliance audits.
           </p>
         </div>
         <Button
           variant="primary"
+          size="md"
           onClick={onExportCSV}
           icon={Download}
-          className="rounded-xl py-2.5 px-5 font-bold shadow-md shadow-[#2879E8]/25 active:scale-[0.98]"
         >
           Export full report (CSV)
         </Button>
@@ -88,11 +74,11 @@ export default function Reports({
         {reportMetrics.map((m, idx) => (
           <div
             key={idx}
-            className="glass-card border border-white/95 p-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+            className="glass-card glass-card-hover p-4.5 rounded-xl flex flex-col justify-between"
           >
-            <span className="font-mono text-[10px] text-[#475569] uppercase font-bold">{m.label}</span>
-            <p className="text-2xl font-black text-[#0B132B] mt-2 mb-0 font-mono tracking-tight">{m.value}</p>
-            <span className="font-mono text-[11px] text-[#16A36A] font-bold flex items-center gap-1 mt-1.5">
+            <span className="text-xs font-medium text-slate-500">{m.label}</span>
+            <p className="text-2xl font-bold text-slate-900 mt-2 mb-0 tabular-nums">{m.value}</p>
+            <span className="text-xs text-emerald-700 font-medium flex items-center gap-1 mt-1.5">
               <ArrowUpRight className="w-3.5 h-3.5" />
               {m.change} vs prior period
             </span>

@@ -154,25 +154,11 @@ export default function DriverPortal({ onShowToast }) {
     <div className="max-w-2xl mx-auto space-y-6 pb-12 text-[#172033]">
       {/* Header */}
       <div className="text-center py-2">
-        <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
-          Mobile Command Console
-        </p>
-        <div className="flex justify-center -ml-2 py-0.5">
-          <TrueFocus
-            sentence="Driver Dispatch Portal"
-            manualMode={false}
-            focusStyle="brackets"
-            easing="smooth"
-            borderColor="#2879E8"
-            glowColor="rgba(40, 121, 232, 0.35)"
-            blurAmount={2}
-            focusScale={1.03}
-            cornerSize={14}
-            borderWidth={2.5}
-            frameGap={8}
-            fontSize="1.5rem"
-            wordClassName="text-[#172033] font-bold tracking-tight"
-          />
+        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
+          Mobile Dispatch Console
+        </span>
+        <div className="flex justify-center py-0.5">
+          <TrueFocus sentence="Driver Portal" />
         </div>
       </div>
 

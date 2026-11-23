@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
@@ -12,6 +12,7 @@ export default function MainLayout({
   onOpenCommandPalette,
   children
 }) {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,25 +36,27 @@ export default function MainLayout({
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F4F7FB] text-[#172033] font-sans relative selection:bg-[#EAF3FF] selection:text-[#2879E8] autrail-layout-shell transition-colors duration-300">
-      {/* Ambient Subtle Radial Blue Lighting */}
+    <div className="flex min-h-screen bg-[#F4F7FB] text-slate-800 font-sans relative selection:bg-blue-100 selection:text-[#2879E8] autrail-layout-shell transition-colors duration-200">
+      {/* Subtle Specular Top Reflection */}
       <div
-        className="fixed top-0 left-0 w-full h-[520px] pointer-events-none z-0 opacity-70"
+        className="fixed top-0 left-0 w-full h-96 pointer-events-none z-0 opacity-60"
         style={{
-          background: 'radial-gradient(ellipse 80% 50% at 20% -10%, rgba(40, 121, 232, 0.08) 0%, rgba(234, 243, 255, 0) 70%)'
+          background: 'radial-gradient(ellipse 70% 40% at 25% -5%, rgba(40, 121, 232, 0.04) 0%, transparent 65%)'
         }}
       />
 
-      {/* Sidebar */}
+      {/* Sidebar (Desktop static + Mobile slide-over drawer) */}
       <Sidebar
         vehicleCount={vehicleCount}
         maintenanceAlert={maintenanceAlert}
         onOpenHelp={onOpenHelp}
+        mobileOpen={mobileNavOpen}
+        onCloseMobile={() => setMobileNavOpen(false)}
       />
 
-      {/* Main Container */}
+      {/* Main Viewport Container */}
       <div className="flex-1 flex flex-col min-w-0 relative z-10">
-        <div className="max-w-[1600px] w-full mx-auto px-8 max-lg:px-6 max-md:px-4 flex-1 flex flex-col">
+        <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col">
           {/* Top Navbar */}
           <Navbar
             currentSection={getSectionTitle()}
@@ -61,23 +64,34 @@ export default function MainLayout({
             onNotificationsClick={onOpenNotifications}
             onProfileClick={() => navigate('/settings')}
             onOpenCommandPalette={onOpenCommandPalette}
+            onToggleMobileNav={() => setMobileNavOpen((prev) => !prev)}
           />
 
-          {/* Page Body */}
-          <main className="flex-1 py-5">
+          {/* Page Viewport Body */}
+          <main className="flex-1 py-5 sm:py-6">
             {children}
           </main>
 
-          {/* Liquid Glass Footer */}
-          <footer className="py-5 border-t border-[#E2E8F0]/80 flex flex-wrap items-center justify-between text-[11px] text-[#68758A] mt-auto">
+          {/* Solid Liquid Glass Fleet Footer */}
+          <footer className="py-4 border-t border-slate-200/80 flex flex-wrap items-center justify-between text-xs text-slate-500 mt-auto gap-3">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#16A36A] shadow-[0_0_8px_#16A36A]/40" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
               <span>AUTRAIL Fleet Intelligence Engine • v2.4</span>
             </div>
-            <div className="flex items-center gap-4 text-[#8A97AB]">
-              <span className="hover:text-[#2879E8] transition-colors cursor-pointer" onClick={() => navigate('/settings')}>Settings</span>
+            <div className="flex items-center gap-3.5 text-slate-400">
+              <span
+                className="hover:text-[#2879E8] transition-colors cursor-pointer"
+                onClick={() => navigate('/settings')}
+              >
+                Settings
+              </span>
               <span>•</span>
-              <span className="hover:text-[#2879E8] transition-colors cursor-pointer" onClick={() => navigate('/reports')}>Compliance</span>
+              <span
+                className="hover:text-[#2879E8] transition-colors cursor-pointer"
+                onClick={() => navigate('/reports')}
+              >
+                Compliance
+              </span>
               <span>•</span>
               <span>© {new Date().getFullYear()} AUTRAIL Inc.</span>
             </div>

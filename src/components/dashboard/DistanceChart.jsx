@@ -23,10 +23,10 @@ export default function DistanceChart({ onPeriodChange }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white/95 backdrop-blur-xl border border-white/90 p-2.5 rounded-xl shadow-liquid-dropdown text-xs font-mono">
-          <p className="text-[#8A97AB] text-[10px] uppercase mb-1 font-semibold">{label}</p>
-          <p className="text-[#2879E8] font-bold text-sm">
-            {payload[0].value.toLocaleString()} <span className="text-[#68758A] font-normal text-xs">km</span>
+        <div className="bg-white/98 backdrop-blur-xl border border-slate-200 p-2.5 rounded-xl shadow-lg text-xs">
+          <p className="text-slate-400 text-[10px] uppercase font-medium mb-0.5">{label}</p>
+          <p className="text-[#2879E8] font-bold text-sm tabular-nums">
+            {payload[0].value.toLocaleString()} <span className="text-slate-500 font-normal text-xs">km</span>
           </p>
         </div>
       );
@@ -35,14 +35,14 @@ export default function DistanceChart({ onPeriodChange }) {
   };
 
   return (
-    <article className="glass-card glass-card-hover p-6 rounded-2xl flex flex-col justify-between transition-all duration-300">
+    <article className="glass-card glass-card-hover p-5 sm:p-6 rounded-2xl flex flex-col justify-between transition-all duration-200">
       {/* Panel Heading with Period Selector */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
-            Fleet performance
-          </p>
-          <h2 className="text-[16px] font-black tracking-tight text-[#0B132B] m-0">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
+            Fleet Performance
+          </span>
+          <h2 className="text-base font-bold tracking-tight text-slate-900 m-0">
             Distance Travelled
           </h2>
         </div>
@@ -50,7 +50,7 @@ export default function DistanceChart({ onPeriodChange }) {
           value={period}
           onChange={handlePeriodChange}
           aria-label="Chart period"
-          className="bg-[#F8FAFD] text-[#0B132B] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-[11px] font-bold outline-none hover:border-[#2879E8]/40 hover:bg-[#F0F5FC] focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
+          className="bg-white text-slate-800 border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-medium outline-none hover:border-slate-300 focus:border-[#2879E8] transition-all cursor-pointer shadow-2xs"
         >
           <option value="week">This week</option>
           <option value="month">This month</option>
@@ -59,11 +59,11 @@ export default function DistanceChart({ onPeriodChange }) {
       </div>
 
       {/* Chart Summary */}
-      <div className="flex items-center gap-3 my-4">
-        <strong className="text-[26px] font-black tracking-tight text-[#172033]">
-          {currentData.total} <small className="text-[11px] text-[#68758A] font-medium font-sans">km</small>
-        </strong>
-        <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#E8F7F0] text-[#16A36A] border border-[#C2E8D7]">
+      <div className="flex items-center gap-2.5 my-3">
+        <span className="text-2xl font-bold tracking-tight text-slate-900 tabular-nums">
+          {currentData.total} <span className="text-xs text-slate-500 font-normal">km</span>
+        </span>
+        <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/80">
           {currentData.change}
         </span>
       </div>
@@ -77,7 +77,7 @@ export default function DistanceChart({ onPeriodChange }) {
           >
             <defs>
               <linearGradient id="blueDistanceGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2879E8" stopOpacity={0.25} />
+                <stop offset="0%" stopColor="#2879E8" stopOpacity={0.2} />
                 <stop offset="100%" stopColor="#2879E8" stopOpacity={0.01} />
               </linearGradient>
             </defs>
@@ -88,17 +88,15 @@ export default function DistanceChart({ onPeriodChange }) {
             />
             <XAxis
               dataKey="label"
-              stroke="#8A97AB"
-              fontSize={9}
-              fontFamily="DM Mono"
+              stroke="#94A3B8"
+              fontSize={10}
               tickLine={false}
               axisLine={false}
               dy={6}
             />
             <YAxis
-              stroke="#8A97AB"
-              fontSize={9}
-              fontFamily="DM Mono"
+              stroke="#94A3B8"
+              fontSize={10}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => (v >= 1000 ? `${v / 1000}k` : v)}
@@ -108,14 +106,14 @@ export default function DistanceChart({ onPeriodChange }) {
               type="monotone"
               dataKey="value"
               stroke="#2879E8"
-              strokeWidth={2.5}
+              strokeWidth={2}
               fillOpacity={1}
               fill="url(#blueDistanceGradient)"
               activeDot={{
-                r: 5,
+                r: 4.5,
                 fill: '#2879E8',
-                stroke: '#EAF3FF',
-                strokeWidth: 4
+                stroke: '#FFFFFF',
+                strokeWidth: 2.5
               }}
             />
           </AreaChart>
@@ -123,12 +121,12 @@ export default function DistanceChart({ onPeriodChange }) {
       </div>
 
       {/* Chart Legend */}
-      <div className="flex items-center justify-between text-[#8A97AB] text-[10px] pt-3 border-t border-[#E2E8F0]/80 mt-3 font-mono">
-        <span className="flex items-center gap-1.5 font-sans font-medium text-[#68758A]">
-          <i className="w-2 h-2 rounded-full bg-[#2879E8] inline-block not-italic shadow-[0_0_6px_#2879E8]" />
+      <div className="flex items-center justify-between text-slate-400 text-xs pt-3 border-t border-slate-100 mt-2">
+        <span className="flex items-center gap-1.5 font-medium text-slate-600">
+          <span className="w-2 h-2 rounded-full bg-[#2879E8] shrink-0" />
           Fleet Trajectory (km)
         </span>
-        <span>Updated 10 min ago</span>
+        <span className="text-[11px] text-slate-400">Updated 10 min ago</span>
       </div>
     </article>
   );

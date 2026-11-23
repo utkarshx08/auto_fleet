@@ -207,15 +207,15 @@ export default function Trips({
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <section className="flex items-end justify-between py-6 max-md:flex-col max-md:items-start max-md:gap-4 max-md:py-4">
+      <section className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-2 font-bold">
-            DISPATCH OPERATIONS <span className="text-[#2879E8] px-1 font-bold">•</span> JOURNEY TRACKING & SCHEDULING
-          </p>
-          <h1 className="text-[30px] tracking-tight font-black text-[#0B132B] m-0 leading-tight">
-            Trip & Dispatch Management<span className="text-[#2879E8]">.</span>
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
+            Dispatch Operations & Scheduling
+          </span>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight m-0">
+            Trip & Dispatch Management
           </h1>
-          <p className="text-[13px] text-[#334155] mt-1.5 mb-0 font-medium">
+          <p className="text-xs text-slate-500 mt-1 mb-0">
             Monitor active journeys, assign drivers & vehicles, manage intermediate waypoints, and control trip expenses.
           </p>
         </div>

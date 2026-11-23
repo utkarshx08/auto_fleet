@@ -2,18 +2,16 @@ import React, { useState, useMemo } from 'react';
 import SearchBar from '../components/common/SearchBar';
 import Button from '../components/common/Button';
 import TrueFocus from '../components/common/TrueFocus';
+import EmptyState from '../components/common/EmptyState';
 import AddDriverModal from '../components/drivers/AddDriverModal';
 import {
   Users,
   Plus,
-  Phone,
-  Mail,
   ShieldCheck,
   Star,
   Truck,
   Calendar,
-  AlertCircle,
-  MoreHorizontal
+  AlertCircle
 } from 'lucide-react';
 import { initialDrivers, initialVehicles } from '../data/mockData';
 
@@ -63,37 +61,23 @@ export default function Drivers({
   return (
     <div className="space-y-6 pb-10">
       {/* Page Header */}
-      <div className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-[#E2E8F0] pb-5">
+      <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-slate-200/90 pb-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#8A97AB] uppercase mb-1 font-semibold">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
             Personnel Directory & Safety Roster
-          </p>
-          <div className="-ml-3 py-0.5">
-            <TrueFocus
-              sentence="Fleet Operators"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2}
-              focusScale={1.03}
-              cornerSize={14}
-              borderWidth={2.5}
-              frameGap={8}
-              fontSize="1.6rem"
-              wordClassName="text-[#0B132B] font-black tracking-tight"
-            />
+          </span>
+          <div className="py-0.5">
+            <TrueFocus sentence="Fleet Operators" />
           </div>
-          <p className="text-xs text-[#334155] mt-1 font-semibold">
+          <p className="text-xs text-slate-500 mt-1">
             Monitor operator credentials, duty status, safety compliance, and assignments.
           </p>
         </div>
         <Button
           variant="primary"
+          size="md"
           onClick={() => setIsAddDriverOpen(true)}
           icon={Plus}
-          className="rounded-xl py-2.5 px-5 font-bold shadow-md shadow-[#2879E8]/25 active:scale-[0.98]"
         >
           Add driver
         </Button>
@@ -101,44 +85,44 @@ export default function Drivers({
 
       {/* Summary Stat Cards */}
       <div className="grid grid-cols-4 max-md:grid-cols-2 gap-4">
-        <div className="glass-card border border-white/95 p-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5">
-          <span className="font-mono text-[10px] text-[#475569] uppercase font-bold">Total Operators</span>
-          <p className="text-2xl font-black text-[#0B132B] mt-2 mb-0 font-mono tracking-tight">{drivers.length}</p>
+        <div className="glass-card glass-card-hover p-4.5 rounded-xl flex flex-col justify-between">
+          <span className="text-xs font-medium text-slate-500">Total Operators</span>
+          <p className="text-2xl font-bold text-slate-900 mt-2 mb-0 tabular-nums">{drivers.length}</p>
         </div>
-        <div className="glass-card border border-white/95 p-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5">
-          <span className="font-mono text-[10px] text-[#16A36A] uppercase font-bold">On Duty</span>
-          <p className="text-2xl font-black text-[#16A36A] mt-2 mb-0 font-mono tracking-tight">{onDutyCount}</p>
+        <div className="glass-card glass-card-hover p-4.5 rounded-xl flex flex-col justify-between">
+          <span className="text-xs font-medium text-emerald-700">On Duty</span>
+          <p className="text-2xl font-bold text-emerald-600 mt-2 mb-0 tabular-nums">{onDutyCount}</p>
         </div>
-        <div className="glass-card border border-white/95 p-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5">
-          <span className="font-mono text-[10px] text-[#2879E8] uppercase font-bold">Available</span>
-          <p className="text-2xl font-black text-[#2879E8] mt-2 mb-0 font-mono tracking-tight">{availableCount}</p>
+        <div className="glass-card glass-card-hover p-4.5 rounded-xl flex flex-col justify-between">
+          <span className="text-xs font-medium text-[#2879E8]">Available</span>
+          <p className="text-2xl font-bold text-[#2879E8] mt-2 mb-0 tabular-nums">{availableCount}</p>
         </div>
-        <div className="glass-card border border-white/95 p-5 rounded-2xl shadow-xl transition-all duration-200 hover:-translate-y-0.5">
-          <span className="font-mono text-[10px] text-[#D97706] uppercase font-bold">Fleet Safety Score</span>
-          <p className="text-2xl font-black text-[#D97706] mt-2 mb-0 font-mono tracking-tight">98.4%</p>
+        <div className="glass-card glass-card-hover p-4.5 rounded-xl flex flex-col justify-between">
+          <span className="text-xs font-medium text-amber-700">Fleet Safety Score</span>
+          <p className="text-2xl font-bold text-amber-600 mt-2 mb-0 tabular-nums">98.4%</p>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="glass-card border border-white/95 p-4 rounded-2xl shadow-md flex items-center justify-between gap-4 max-md:flex-col max-md:items-stretch">
+      <div className="glass-card p-3 rounded-xl flex items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <SearchBar
           value={searchTerm}
           onChange={setSearchTerm}
           onClear={() => setSearchTerm('')}
           placeholder="Search by driver name, license or vehicle..."
-          width="w-[360px] max-md:w-full"
+          width="w-[340px] max-md:w-full"
         />
 
-        <div className="flex items-center bg-[#F0F5FC] border border-[#D5E2F1] rounded-xl p-1 text-xs">
-          {['ALL', 'On Duty', 'Available', 'In Service'].map((st) => (
+        <div className="flex items-center bg-slate-100 p-0.5 rounded-lg text-xs font-medium">
+          {['ALL', 'On Duty', 'Available'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`px-3.5 py-1.5 rounded-lg font-sans transition-all duration-150 font-medium ${
+              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-white text-[#2879E8] font-bold shadow-xs'
-                  : 'text-[#68758A] hover:text-[#172033]'
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {st}
@@ -148,99 +132,111 @@ export default function Drivers({
       </div>
 
       {/* Drivers Grid */}
-      <div className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-5">
-        {filteredDrivers.map((driver) => {
-          const isExpiringSoon = new Date(driver.licenseExpiry) < new Date('2026-12-31');
-          return (
-            <div
-              key={driver.id}
-              className="glass-card border border-white/95 rounded-2xl p-5 shadow-xl flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl group"
-            >
-              <div>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-2xl bg-[#EAF3FF] border border-[#2879E8]/30 text-[#2879E8] font-black text-sm flex items-center justify-center shrink-0 shadow-xs">
-                      {driver.avatar}
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black text-[#0B132B] group-hover:text-[#2879E8] transition-colors leading-tight m-0">
-                        {driver.name}
-                      </h3>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="flex items-center gap-1 text-[11px] text-[#D97706] font-mono font-bold">
-                          <Star className="w-3.5 h-3.5 fill-[#D97706] text-[#D97706]" />
-                          {driver.rating}
-                        </span>
-                        <span className="text-[#D5E2F1]">•</span>
-                        <span className="text-[11px] text-[#68758A] font-mono">
-                          {driver.tripsCompleted} trips
-                        </span>
+      {filteredDrivers.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="No drivers found"
+          description={`No operators match "${searchTerm || statusFilter}".`}
+          actionLabel="Reset filters"
+          onAction={() => {
+            setSearchTerm('');
+            setStatusFilter('ALL');
+          }}
+        />
+      ) : (
+        <div className="grid grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-4">
+          {filteredDrivers.map((driver) => {
+            const isExpiringSoon = new Date(driver.licenseExpiry) < new Date('2026-12-31');
+            return (
+              <div
+                key={driver.id}
+                className="glass-card glass-card-hover rounded-xl p-4.5 flex flex-col justify-between transition-all duration-200 group"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200/60 text-[#2879E8] font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                        {driver.avatar}
+                      </div>
+                      <div className="min-w-0 truncate">
+                        <h3 className="text-sm font-bold text-slate-900 group-hover:text-[#2879E8] transition-colors leading-tight truncate">
+                          {driver.name}
+                        </h3>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="flex items-center gap-1 text-[11px] text-amber-600 font-semibold">
+                            <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                            {driver.rating}
+                          </span>
+                          <span className="text-slate-300">•</span>
+                          <span className="text-[11px] text-slate-500 tabular-nums">
+                            {driver.tripsCompleted} trips
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleToggleDuty(driver.id)}
-                    title="Click to toggle duty status"
-                    className={`font-mono text-[10px] font-semibold px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
-                      driver.status === 'On Duty'
-                        ? 'bg-[#DCFCE7] text-[#16A36A] border-[#BBF7D0] hover:bg-[#BBF7D0]'
-                        : driver.status === 'Available'
-                        ? 'bg-[#EAF3FF] text-[#2879E8] border-[#2879E8]/30 hover:bg-[#D5E2F1]'
-                        : 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'
-                    }`}
-                  >
-                    ● {driver.status}
-                  </button>
-                </div>
-
-                <div className="mt-4 pt-3.5 border-t border-[#E2E8F0] space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[#68758A] flex items-center gap-1.5">
-                      <Truck className="w-3.5 h-3.5 text-[#8A97AB]" /> Assigned Vehicle:
-                    </span>
-                    <b className="font-mono text-[#2879E8] bg-[#EAF3FF] px-2 py-0.5 rounded-md border border-[#2879E8]/20 font-bold">
-                      {driver.vehicleAssigned}
-                    </b>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[#68758A] flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#8A97AB]" /> License No:
-                    </span>
-                    <span className="font-mono text-[#172033] font-medium">{driver.license}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[#68758A] flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#8A97AB]" /> Expires:
-                    </span>
-                    <span
-                      className={`font-mono flex items-center gap-1 font-medium ${
-                        isExpiringSoon ? 'text-[#D97706]' : 'text-[#68758A]'
+                    <button
+                      type="button"
+                      onClick={() => handleToggleDuty(driver.id)}
+                      title="Click to toggle duty status"
+                      className={`text-xs font-medium px-2 py-0.5 rounded-full border transition-all cursor-pointer ${
+                        driver.status === 'On Duty'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80 hover:bg-emerald-100/80'
+                          : driver.status === 'Available'
+                          ? 'bg-blue-50 text-[#2879E8] border-blue-200/80 hover:bg-blue-100/80'
+                          : 'bg-amber-50 text-amber-800 border-amber-200/80'
                       }`}
                     >
-                      {isExpiringSoon && <AlertCircle className="w-3.5 h-3.5" />}
-                      {driver.licenseExpiry}
-                    </span>
+                      ● {driver.status}
+                    </button>
+                  </div>
+
+                  <div className="mt-3.5 pt-3 border-t border-slate-100 space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        <Truck className="w-3.5 h-3.5 text-slate-400" /> Assigned Vehicle:
+                      </span>
+                      <span className="font-mono text-xs font-semibold text-[#2879E8] bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/50">
+                        {driver.vehicleAssigned}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        <ShieldCheck className="w-3.5 h-3.5 text-slate-400" /> License:
+                      </span>
+                      <span className="font-mono text-slate-800 font-medium">{driver.license}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" /> Expires:
+                      </span>
+                      <span
+                        className={`font-medium flex items-center gap-1 tabular-nums ${
+                          isExpiringSoon ? 'text-amber-700' : 'text-slate-600'
+                        }`}
+                      >
+                        {isExpiringSoon && <AlertCircle className="w-3.5 h-3.5 text-amber-600" />}
+                        {driver.licenseExpiry}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-4 pt-3.5 border-t border-[#E2E8F0] flex items-center justify-between">
-                <span className="text-[11px] text-[#68758A] font-mono">{driver.phone}</span>
-                <Button
-                  variant="quiet"
-                  size="sm"
-                  onClick={() => handleToggleDuty(driver.id)}
-                  className="rounded-xl py-1 px-3 text-xs"
-                >
-                  {driver.status === 'On Duty' ? 'Set Off Duty' : 'Set On Duty'}
-                </Button>
+                <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-mono">{driver.phone}</span>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => handleToggleDuty(driver.id)}
+                  >
+                    {driver.status === 'On Duty' ? 'Set Off Duty' : 'Set On Duty'}
+                  </Button>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       <AddDriverModal
         isOpen={isAddDriverOpen}

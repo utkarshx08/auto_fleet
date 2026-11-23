@@ -130,42 +130,28 @@ export default function Fuel({
   return (
     <div className="space-y-6 pb-10">
       {/* Page Header */}
-      <div className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-[#E2E8F0] pb-5">
+      <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4 border-b border-slate-200/90 pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase font-bold">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
               Energy & Financial Operations
             </span>
-            <span className="bg-[#DCFCE7] text-[#16A36A] text-[10px] font-mono px-2 py-0.5 rounded-md border border-[#BBF7D0] font-bold">
-              ANOMALY AUDIT ACTIVE
+            <span className="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-md border border-emerald-200/60">
+              Audit System Active
             </span>
           </div>
 
-          <div className="-ml-3 py-0.5">
-            <TrueFocus
-              sentence="Fuel & Energy Management"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2}
-              focusScale={1.03}
-              cornerSize={14}
-              borderWidth={2.5}
-              frameGap={8}
-              fontSize="1.6rem"
-              wordClassName="text-[#0B132B] font-black tracking-tight"
-            />
+          <div className="py-0.5">
+            <TrueFocus sentence="Fuel & Energy Management" />
           </div>
-          <p className="text-xs text-[#334155] mt-1 mb-0 font-semibold">
-            Monitor refueling transactions, fuel cards, station expenses, true consumption rates, and suspicious purchase flags.
+          <p className="text-xs text-slate-500 mt-1 mb-0">
+            Monitor refueling transactions, fuel cards, station expenses, consumption rates, and purchase flags.
           </p>
         </div>
 
         {/* Header Action Buttons */}
-        <div className="flex items-center gap-3 max-md:w-full">
-          <Button variant="quiet" size="sm" onClick={handleExportCSV} icon={Download} className="rounded-xl py-2 px-4">
+        <div className="flex items-center gap-2.5 max-md:w-full">
+          <Button variant="default" size="sm" onClick={handleExportCSV} icon={Download}>
             Export ledger
           </Button>
           <Button
@@ -176,7 +162,6 @@ export default function Fuel({
               setIsPurchaseModalOpen(true);
             }}
             icon={Plus}
-            className="rounded-xl py-2 px-4 font-bold shadow-md shadow-[#2879E8]/25 active:scale-[0.98]"
           >
             Add fuel purchase
           </Button>
@@ -184,7 +169,7 @@ export default function Fuel({
       </div>
 
       {/* Sub-navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-1 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-1 overflow-x-auto">
         {[
           { id: 'dashboard', label: 'Fuel Dashboard' },
           { id: 'history', label: `Purchase History (${fuelRecords.length})` },
@@ -194,10 +179,10 @@ export default function Fuel({
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2.5 text-xs font-mono rounded-xl transition-all whitespace-nowrap cursor-pointer font-medium ${
+            className={`px-3.5 py-2 text-xs rounded-lg transition-all whitespace-nowrap cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-[#EAF3FF] text-[#2879E8] border border-[#2879E8]/30 font-bold shadow-xs'
-                : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F8FAFD]'
+                ? 'bg-blue-50 text-[#2879E8] font-semibold border border-blue-200/60 shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium'
             }`}
           >
             {tab.label}
@@ -210,10 +195,10 @@ export default function Fuel({
             setEditingRecord(null);
             setIsPurchaseModalOpen(true);
           }}
-          className="ml-auto px-3.5 py-1.5 text-xs font-mono text-[#2879E8] bg-[#EAF3FF] hover:bg-[#2879E8] hover:text-white rounded-xl border border-[#2879E8]/20 flex items-center gap-1.5 transition-all cursor-pointer font-bold"
+          className="ml-auto px-3 py-1.5 text-xs text-[#2879E8] bg-blue-50 hover:bg-[#2879E8] hover:text-white rounded-lg border border-blue-200/60 flex items-center gap-1.5 transition-all cursor-pointer font-semibold"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>New Entry Form</span>
+          <span>New Entry</span>
         </button>
       </div>
 

@@ -12,15 +12,11 @@ import MobileGpsBroadcasterModal from '../components/tracking/MobileGpsBroadcast
 import Button from '../components/common/Button';
 import {
   Radio,
-  Play,
-  RotateCw,
   SlidersHorizontal,
   ShieldAlert,
   History,
-  AlertTriangle,
   Navigation,
   Info,
-  CheckCircle2,
   Smartphone
 } from 'lucide-react';
 
@@ -35,7 +31,6 @@ export default function Tracking() {
     setSelectedVehicleId,
     alerts,
     geofences,
-    isDemoMode,
     liveSimulationActive,
     setLiveSimulationActive,
     speedLimit,
@@ -55,7 +50,6 @@ export default function Tracking() {
     setPlaybackDate,
 
     // Actions
-    startPlayback,
     startPlaybackForVehicle,
     resumePlayback,
     pausePlayback,
@@ -81,31 +75,30 @@ export default function Tracking() {
       <div className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase font-bold">
-              GPS Command Center
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              GPS Telematics
             </span>
-            <span className="bg-[#EAF3FF] text-[#2879E8] text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border border-[#D5E6FB]">
-              SIMULATION ACTIVE
+            <span className="bg-blue-50 text-[#2879E8] text-[10px] font-semibold px-2 py-0.5 rounded-md border border-blue-200/60">
+              Live Feed Active
             </span>
           </div>
 
-          <h1 className="text-[28px] tracking-tight font-black text-[#0B132B] m-0">
-            Live Tracking<span className="text-[#2879E8]">.</span>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 m-0">
+            Live Tracking
           </h1>
-          <p className="text-[13px] text-[#334155] mt-1 font-semibold">
-            Continuous satellite telemetry, directional heading monitoring, and journey replay across active fleet corridors.
+          <p className="text-xs text-slate-500 mt-1">
+            Continuous satellite telemetry, directional heading, and route replay across active fleet corridors.
           </p>
         </div>
 
         {/* Global Controls & Simulator Toggles */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Phone / Browser Real GPS Transponder */}
           <Button
             variant="default"
             size="sm"
             onClick={() => setIsMobileBroadcasterOpen(true)}
             icon={Smartphone}
-            className="text-[#16A36A] border-[#C2E8D7] hover:border-[#16A36A] hover:bg-[#E8F7F0]"
           >
             Phone GPS Transponder
           </Button>
@@ -117,66 +110,66 @@ export default function Tracking() {
             onClick={() => setIsIngestionTesterOpen(true)}
             icon={Radio}
           >
-            Ingestion API (POST)
+            Ingestion API
           </Button>
 
           {/* Pause / Resume Live Simulation Button */}
           <button
             type="button"
             onClick={() => setLiveSimulationActive(!liveSimulationActive)}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-mono border transition-all cursor-pointer font-bold shadow-2xs ${
+            className={`flex items-center gap-2 h-8 px-3 rounded-lg text-xs border transition-all cursor-pointer font-medium shadow-2xs ${
               liveSimulationActive
-                ? 'bg-[#E8F7F0] text-[#16A36A] border-[#C2E8D7] hover:bg-[#D5EFE3]'
-                : 'bg-[#F8FAFD] text-[#68758A] border-[#E2E8F0] hover:bg-[#F0F5FC]'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80 hover:bg-emerald-100/80'
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
             }`}
           >
             <span
-              className={`w-2 h-2 rounded-full ${
-                liveSimulationActive ? 'bg-[#16A36A] beacon-pulse' : 'bg-[#94A3B8]'
+              className={`w-1.5 h-1.5 rounded-full ${
+                liveSimulationActive ? 'bg-emerald-500' : 'bg-slate-400'
               }`}
             />
-            {liveSimulationActive ? 'STREAMING (3s)' : 'STREAM PAUSED'}
+            {liveSimulationActive ? 'Streaming (3s)' : 'Stream paused'}
           </button>
 
           {/* Speed Limit Config Button */}
           <button
             type="button"
             onClick={() => setShowConfig(!showConfig)}
-            className="p-2 text-[#68758A] hover:text-[#172033] bg-[#F8FAFD] border border-[#E2E8F0] hover:bg-[#F0F5FC] rounded-xl transition-all cursor-pointer shadow-2xs"
+            className="h-8 w-8 flex items-center justify-center text-slate-500 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-all cursor-pointer shadow-2xs"
             title="Configure speed thresholds"
           >
-            <SlidersHorizontal className="w-4 h-4" />
+            <SlidersHorizontal className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Explicit DEMO MODE Explanation & Transparency Banner */}
-      <div className="glass-card p-3.5 rounded-2xl flex items-center justify-between text-xs font-mono text-[#68758A] shadow-liquid-subtle">
+      {/* Transparent Telemetry Source Banner */}
+      <div className="glass-card p-3 rounded-xl flex items-center justify-between text-xs text-slate-600">
         <div className="flex items-center gap-2.5">
           <Info className="w-4 h-4 text-[#2879E8] shrink-0" />
-          <span className="text-[11px] leading-relaxed">
-            <b className="text-[#172033]">DEMO SIMULATION ACTIVE:</b> Coordinates are generated by the Fleet Corridor Simulation Engine (source: <code className="text-[#2879E8] font-bold">simulator</code>). When physical GPS transponders emit telemetry to <code className="text-[#16A36A] font-bold">POST /api/tracking/location</code>, stream automatically routes hardware ingestion.
+          <span className="text-xs leading-relaxed">
+            <span className="font-semibold text-slate-800">Telemetry Source:</span> Fleet corridor simulation engine is actively generating telemetry coordinates. Hardware transponders can stream directly via <code className="text-[#2879E8] font-semibold bg-blue-50 px-1 py-0.5 rounded text-[11px]">POST /api/tracking/location</code>.
           </span>
         </div>
       </div>
 
       {/* Speed Limit Threshold Banner if Open */}
       {showConfig && (
-        <div className="glass-card p-3.5 rounded-2xl flex items-center justify-between text-xs font-mono animate-in fade-in shadow-liquid-subtle">
-          <div className="flex items-center gap-2 text-[#172033]">
-            <ShieldAlert className="w-4 h-4 text-[#E7A329]" />
-            <span>Configured Fleet Speed Limit: <b>{speedLimit} km/h</b></span>
+        <div className="glass-card p-3 rounded-xl flex items-center justify-between text-xs animate-in fade-in">
+          <div className="flex items-center gap-2 text-slate-800">
+            <ShieldAlert className="w-4 h-4 text-amber-600" />
+            <span>Configured Fleet Speed Limit: <b className="font-semibold">{speedLimit} km/h</b></span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {[60, 70, 80, 90, 100].map((lim) => (
               <button
                 key={lim}
                 type="button"
                 onClick={() => setSpeedLimit(lim)}
-                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
                   speedLimit === lim
-                    ? 'bg-[#2879E8] text-white shadow-2xs'
-                    : 'bg-[#F8FAFD] text-[#68758A] hover:text-[#172033] border border-[#E2E8F0]'
+                    ? 'bg-[#2879E8] text-white'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
                 }`}
               >
                 {lim} km/h
@@ -187,27 +180,27 @@ export default function Tracking() {
       )}
 
       {/* Sub-navigation Tabs: Live Tracking vs Journey History */}
-      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-1 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-1 overflow-x-auto">
         <button
           type="button"
           onClick={() => setActiveTrackingTab('live')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-mono rounded-t-xl transition-all whitespace-nowrap cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-2 text-xs rounded-lg transition-all whitespace-nowrap cursor-pointer ${
             activeTrackingTab === 'live'
-              ? 'bg-white text-[#2879E8] border-t-2 border-t-[#2879E8] border-x border-[#E2E8F0] font-bold shadow-2xs'
-              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
+              ? 'bg-blue-50 text-[#2879E8] font-semibold border border-blue-200/60 shadow-2xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium'
           }`}
         >
-          <Navigation className="w-3.5 h-3.5 text-[#16A36A]" />
+          <Navigation className="w-3.5 h-3.5 text-emerald-600" />
           <span>Live Tracking Map</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTrackingTab('history')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-mono rounded-t-xl transition-all whitespace-nowrap cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-2 text-xs rounded-lg transition-all whitespace-nowrap cursor-pointer ${
             activeTrackingTab === 'history'
-              ? 'bg-white text-[#2879E8] border-t-2 border-t-[#2879E8] border-x border-[#E2E8F0] font-bold shadow-2xs'
-              : 'text-[#68758A] hover:text-[#172033] hover:bg-[#F0F5FC]'
+              ? 'bg-blue-50 text-[#2879E8] font-semibold border border-blue-200/60 shadow-2xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium'
           }`}
         >
           <History className="w-3.5 h-3.5 text-[#2879E8]" />
@@ -218,7 +211,7 @@ export default function Tracking() {
       {/* TAB 1: LIVE TRACKING */}
       {activeTrackingTab === 'live' && (
         <div className="space-y-4 animate-in fade-in">
-          {/* Summary KPI Cards Grid (Total, Moving, Stopped, Offline, Distance Today, Alerts) */}
+          {/* Summary KPI Cards Grid */}
           <TrackingKPIGrid
             telemetryList={telemetryList}
             alerts={alerts}

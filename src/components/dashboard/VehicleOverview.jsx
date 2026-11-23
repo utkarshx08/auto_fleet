@@ -22,75 +22,72 @@ export default function VehicleOverview({
   };
 
   return (
-    <article className="glass-card glass-card-hover p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden transition-all duration-300">
-      {/* Ambient Top Light Reflection */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#2879E8]/30 to-transparent" />
-
+    <article className="glass-card glass-card-hover p-5 sm:p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden transition-all duration-200">
       {/* Panel Heading */}
       <div className="flex items-center justify-between mb-2">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1 font-bold">
-            Fleet spotlight
-          </p>
-          <h2 className="text-[16px] font-black tracking-tight text-[#0B132B] m-0">
-            Vehicle Overview
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">
+            Fleet Spotlight
+          </span>
+          <h2 className="text-base font-bold tracking-tight text-slate-900 m-0">
+            Vehicle Telemetry
           </h2>
         </div>
         <button
           type="button"
           onClick={onMoreActions}
-          className="text-[#64748B] hover:text-[#0B132B] p-1.5 rounded-xl hover:bg-[#F0F5FC] border border-transparent hover:border-[#E2E8F0] transition-all cursor-pointer"
+          className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
           aria-label="Spotlight options"
         >
-          <MoreHorizontal className="w-5 h-5" />
+          <MoreHorizontal className="w-4 h-4" />
         </button>
       </div>
 
       {/* Feature Section */}
-      <div className="flex items-center min-h-[200px] relative overflow-hidden my-1">
+      <div className="flex items-center min-h-[190px] relative overflow-hidden my-1">
         {/* Left Copy */}
-        <div className="z-10 w-[52%] max-md:w-[60%] pt-2 flex flex-col">
+        <div className="z-10 w-[52%] max-md:w-[60%] pt-1 flex flex-col">
           <StatusBadge status={current.status} type="pill" className="w-fit" />
 
-          <h3 className="text-[25px] font-black tracking-tight text-[#0B132B] mt-3 mb-0.5 leading-tight">
+          <h3 className="text-2xl font-bold tracking-tight text-slate-900 mt-2.5 mb-0.5 leading-tight font-mono">
             {current.plate}
           </h3>
-          <p className="text-[12px] text-[#334155] m-0 font-semibold truncate">
+          <p className="text-xs text-slate-600 m-0 font-medium truncate">
             {current.model}
           </p>
 
-          <div className="grid grid-cols-2 gap-4 mt-4 bg-white/70 backdrop-blur-md p-3 rounded-xl border border-white/80 shadow-2xs">
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="font-mono text-[9px] tracking-[0.8px] text-[#475569] uppercase font-bold">
+          <div className="grid grid-cols-2 gap-3 mt-3.5 bg-slate-50/90 border border-slate-200/80 p-2.5 rounded-xl shadow-2xs">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
                 Driver
               </span>
-              <b className="text-[11px] font-bold text-[#0B132B] truncate">
+              <span className="text-xs font-semibold text-slate-800 truncate mt-0.5">
                 {current.driver}
-              </b>
+              </span>
             </div>
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="font-mono text-[9px] tracking-[0.8px] text-[#475569] uppercase font-bold">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
                 Location
               </span>
-              <b className="text-[11px] font-bold text-[#0B132B] truncate">
+              <span className="text-xs font-semibold text-slate-800 truncate mt-0.5">
                 {current.location}
-              </b>
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 text-[#172033] font-mono text-[10px] mt-3">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#EAF3FF] text-[#2879E8] font-semibold">
+          <div className="flex items-center gap-2.5 text-xs font-medium mt-3">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-[#2879E8] border border-blue-200/60 tabular-nums">
               <Gauge className="w-3.5 h-3.5" />
               {current.odometer ? current.odometer.toLocaleString() : '12,840'} km
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#E8F7F0] text-[#16A36A] font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60 tabular-nums">
               <Fuel className="w-3.5 h-3.5" />
               {current.fuel}% fuel
             </span>
           </div>
         </div>
 
-        {/* 3D Automotive Van Scene */}
+        {/* Automotive Van Scene */}
         <div className="van-scene max-md:opacity-80">
           <div className="van-shadow" />
           <div className="van">
@@ -101,26 +98,26 @@ export default function VehicleOverview({
             <div className="van-wheel wheel-two" />
             <div className="van-light" />
           </div>
-          <span className="scene-tag font-mono text-[10px] font-semibold text-[#8A97AB] absolute bottom-2 right-3 bg-white/80 px-2 py-0.5 rounded-md border border-[#E2E8F0]">
+          <span className="font-mono text-[10px] font-medium text-slate-500 absolute bottom-2 right-3 bg-white/90 px-2 py-0.5 rounded border border-slate-200 shadow-2xs tabular-nums">
             {String(currentIndex).padStart(2, '0')} / {String(totalVehicles).padStart(2, '0')}
           </span>
         </div>
       </div>
 
       {/* Vehicle Footer */}
-      <div className="border-t border-[#E2E8F0]/80 pt-3.5 mt-2 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-2">
-        <div className="flex flex-col gap-0.5">
-          <span className="font-mono text-[9px] tracking-[0.8px] text-[#8A97AB] uppercase font-medium">
+      <div className="border-t border-slate-100 pt-3 mt-2 flex items-center justify-between max-md:flex-col max-md:items-start max-md:gap-2">
+        <div className="flex flex-col">
+          <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
             Next scheduled service
           </span>
-          <b className="text-[11px] font-bold text-[#172033]">
+          <span className="text-xs font-semibold text-slate-800 mt-0.5">
             {current.nextService}
-          </b>
+          </span>
         </div>
         <button
           type="button"
           onClick={() => onViewDetails && onViewDetails(current)}
-          className="text-[#2879E8] hover:text-[#1765CC] text-[11px] font-semibold flex items-center gap-1.5 transition-colors group cursor-pointer px-3 py-1.5 rounded-xl hover:bg-[#EAF3FF]"
+          className="text-[#2879E8] hover:text-[#1765CC] text-xs font-semibold flex items-center gap-1 transition-colors group cursor-pointer px-2.5 py-1 rounded-lg hover:bg-blue-50"
         >
           <span>View vehicle telemetry</span>
           <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

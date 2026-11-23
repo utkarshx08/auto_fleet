@@ -24,58 +24,40 @@ export default function Dashboard({
   const totalCount = vehicles.length;
   const spotlightVehicle = vehicles[0];
   const { profile } = useAuth();
-  const operatorGreetingName = profile?.fullName ? profile.fullName.split(' ')[0].toUpperCase() : 'SURYANSH';
+  const operatorGreetingName = profile?.fullName ? profile.fullName.split(' ')[0] : 'Operator';
 
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric'
-  }).format(new Date()).toUpperCase();
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'GOOD MORNING';
-    if (hour < 18) return 'GOOD AFTERNOON';
-    return 'GOOD EVENING';
-  };
+  }).format(new Date());
 
   return (
     <div className="space-y-6">
       {/* Page Heading */}
-      <section className="flex items-end justify-between py-4 max-md:flex-col max-md:items-start max-md:gap-4">
+      <section className="flex items-end justify-between py-2 max-md:flex-col max-md:items-start max-md:gap-4">
         <div>
-          <p className="font-mono text-[10px] tracking-[1.2px] text-[#475569] uppercase mb-1.5 font-bold">
-            {formattedDate} <span className="text-[#2879E8] px-1 font-bold">•</span> {getGreeting()}, {operatorGreetingName}
+          <p className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-2">
+            <span>{formattedDate}</span>
+            <span className="text-slate-300">•</span>
+            <span>Welcome back, {operatorGreetingName}</span>
           </p>
-          <div className="-ml-3 py-1">
+          <div className="py-0.5">
             <TrueFocus
-              sentence="Fleet Command Intelligence"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2.5}
-              focusScale={1.04}
-              cornerSize={14}
-              borderWidth={2.5}
-              frameGap={8}
-              animationDuration={0.5}
-              pauseBetweenAnimations={1.4}
-              fontSize="1.85rem"
-              wordClassName="text-[#0B132B] font-black tracking-tight"
+              sentence="Fleet Command & Intelligence"
             />
           </div>
-          <p className="text-[13px] text-[#334155] mt-1 mb-0 font-semibold">
+          <p className="text-xs text-slate-600 mt-1 mb-0 font-normal">
             Real-time telemetry, asset utilization and operational intelligence across active logistics.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 max-md:w-full">
+        <div className="flex items-center gap-2.5 max-md:w-full">
           <Button
-            variant="quiet"
+            variant="default"
+            size="md"
             onClick={onExportReport}
             icon={Download}
             className="max-md:flex-1"
@@ -84,6 +66,7 @@ export default function Dashboard({
           </Button>
           <Button
             variant="primary"
+            size="md"
             onClick={onAddVehicle}
             icon={Plus}
             className="max-md:flex-1"
@@ -96,51 +79,43 @@ export default function Dashboard({
       {/* 4 Metric Cards Grid */}
       <section className="grid grid-cols-4 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-4">
         <MetricCard
-          title="ACTIVE VEHICLES"
-          symbol="↗"
+          title="Active Vehicles"
           value={`${activeCount}`}
           unit={`/ ${totalCount} assets`}
-          changeText="↑ 8.2%"
+          changeText="+8.2%"
           changeType="positive"
           comparisonText="vs. last month"
-          sparklineTheme="purple"
           sparkline={[35, 48, 42, 60, 55, 78, 90]}
         />
 
         <MetricCard
-          title="TOTAL DISTANCE"
-          symbol="⌁"
+          title="Total Distance"
           value="18,420"
           unit="km"
-          changeText="↑ 12.4%"
+          changeText="+12.4%"
           changeType="positive"
           comparisonText="vs. last month"
-          sparklineTheme="teal"
           sparkline={[45, 30, 54, 47, 68, 60, 90]}
         />
 
         <MetricCard
-          title="FUEL EFFICIENCY"
-          symbol="◉"
+          title="Fuel Efficiency"
           value="8.4"
           unit="L/100km"
-          changeText="↓ 3.1%"
+          changeText="-3.1%"
           changeType="positive"
           comparisonText="vs. last month"
-          sparklineTheme="violet"
           sparkline={[80, 70, 64, 58, 50, 42, 35]}
         />
 
         <MetricCard
-          title="MAINTENANCE DUE"
-          symbol="!"
+          title="Maintenance Due"
           isSymbolWarning={true}
           value="03"
           unit="vehicles"
           changeText="Attention needed"
           changeType="warning"
           comparisonText="Next 7 days"
-          sparklineTheme="steps"
           sparkline={[8, 13, 19, 8, 13, 8, 8]}
         />
       </section>

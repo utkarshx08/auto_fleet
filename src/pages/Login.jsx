@@ -94,23 +94,7 @@ export default function Login({ onLoginSuccess }) {
             A
           </div>
           <div className="py-1">
-            <TrueFocus
-              sentence="AUTRAIL Fleet Command"
-              manualMode={false}
-              focusStyle="brackets"
-              easing="smooth"
-              order="sequential"
-              borderColor="#2879E8"
-              glowColor="rgba(40, 121, 232, 0.35)"
-              blurAmount={2}
-              focusScale={1.03}
-              cornerSize={12}
-              borderWidth={2}
-              animationDuration={0.5}
-              pauseBetweenAnimations={1.5}
-              fontSize="1.25rem"
-              wordClassName="text-[#172033] font-bold tracking-tight"
-            />
+            <TrueFocus sentence="AUTRAIL Fleet Command" />
           </div>
           <p className="text-xs text-[#68758A] mt-1 font-sans">
             Sign in with authorized administrator or fleet operator credentials.

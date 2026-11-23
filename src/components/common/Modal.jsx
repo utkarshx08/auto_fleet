@@ -41,20 +41,20 @@ export default function Modal({
         aria-modal="true"
         className={`relative w-full ${maxWidth} glass-card p-6 sm:p-7 z-10 text-[#172033] animate-in fade-in zoom-in-95 duration-200 my-auto`}
       >
-        <div className="flex items-start justify-between pb-4 border-b border-[#E2E8F0]">
+        <div className="flex items-start justify-between pb-3.5 border-b border-slate-100">
           <div>
             {subtitle && (
-              <p className="font-mono text-[10px] text-[#2879E8] tracking-widest uppercase font-semibold mb-1">
+              <p className="text-xs font-semibold text-[#2879E8] mb-0.5">
                 {subtitle}
               </p>
             )}
-            <h3 className="text-base font-bold text-[#172033] tracking-tight">{title}</h3>
+            <h3 className="text-base font-bold text-slate-900 tracking-tight">{title}</h3>
           </div>
           {showClose && (
             <button
               type="button"
               onClick={onClose}
-              className="text-[#94A3B8] hover:text-[#172033] p-1.5 rounded-xl hover:bg-[#F0F5FC] transition-colors -mr-1"
+              className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 transition-colors -mr-1"
               aria-label="Close dialog"
             >
               <X className="w-4 h-4" />
