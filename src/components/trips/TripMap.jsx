@@ -12,42 +12,20 @@ import {
   Radio,
   AlertCircle
 } from 'lucide-react';
-
-const DARK_MAP_STYLE = {
-  version: 8,
-  sources: {
-    'carto-dark': {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors, © CARTO'
-    }
-  },
-  layers: [
-    {
-      id: 'carto-dark-layer',
-      type: 'raster',
-      source: 'carto-dark',
-      minzoom: 0,
-      maxzoom: 19
-    }
-  ]
-};
+import { getMapStyle, CARTO_API_KEY } from '../../config/mapConfig.js';
 
 export default function TripMap({
   trip,
   vehicle = null,
   height = '420px',
-  className = ''
+  className = '',
+  initialBasemap = 'voyager'
 }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [basemapMode, setBasemapMode] = useState(initialBasemap);
 
   // Extract Coordinates: Origin, Stops, Destination
   const pickup = trip?.pickupCoords || { lat: 40.6413, lng: -73.7781 };
@@ -66,7 +44,7 @@ export default function TripMap({
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: DARK_MAP_STYLE,
+      style: getMapStyle(basemapMode),
       center: [pickup.lng, pickup.lat],
       zoom: 11,
       attributionControl: false
@@ -78,6 +56,11 @@ export default function TripMap({
       if (!isMounted) return;
       setMapLoaded(true);
       map.resize();
+    });
+
+    map.on('style.load', () => {
+      if (!isMounted) return;
+      setMapLoaded(true);
     });
 
     // Auto-resize observer
@@ -107,6 +90,16 @@ export default function TripMap({
       mapRef.current = null;
     };
   }, []);
+
+  // Update style when basemapMode changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+    try {
+      mapRef.current.setStyle(getMapStyle(basemapMode));
+    } catch (e) {
+      console.warn('Error applying CARTO style in TripMap:', e);
+    }
+  }, [basemapMode]);
 
   // Plot Route Line and Waypoints
   useEffect(() => {
@@ -258,6 +251,24 @@ export default function TripMap({
           <Radio className="w-3 h-3 text-[#10b981]" />
           <span>Telemetry: {trip?.status === 'In Progress' ? 'Broadcasting' : 'Standby'}</span>
         </span>
+      </div>
+
+      {/* Top Right: CARTO Basemap Switcher */}
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 bg-[#17191f]/90 border border-[#2b2e38] p-1 rounded-lg backdrop-blur-md shadow-xl">
+        <button
+          type="button"
+          onClick={() => setBasemapMode((prev) => (prev === 'voyager' ? 'dark' : 'voyager'))}
+          className={`p-1.5 rounded transition-colors text-xs font-mono flex items-center gap-1.5 ${
+            basemapMode === 'voyager'
+              ? 'text-[#2879E8] bg-[#EAF3FF]'
+              : 'text-[#a7a9b5] hover:text-white hover:bg-[#22242d]'
+          }`}
+          title={basemapMode === 'voyager' ? 'Switch to CARTO Dark Matter' : 'Switch to CARTO Voyager'}
+          aria-label="Toggle CARTO basemap"
+        >
+          <Layers className="w-3.5 h-3.5" />
+          <span>{basemapMode === 'voyager' ? 'CARTO Voyager' : 'CARTO Dark'}</span>
+        </button>
       </div>
 
       {/* Bottom Right: Route Waypoint Chips */}

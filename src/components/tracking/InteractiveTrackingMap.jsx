@@ -11,32 +11,7 @@ import {
 } from 'lucide-react';
 import { TRACKING_CONFIG, initialGeofences } from '../../data/trackingMockData';
 import { createGeoJsonFeature, getGeofenceZones } from '../../services/geofenceService.js';
-
-// Carto Dark Matter Style Specification (Free, open-source, no API key required)
-const DARK_MAP_STYLE = {
-  version: 8,
-  sources: {
-    'carto-dark': {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors, © CARTO'
-    }
-  },
-  layers: [
-    {
-      id: 'carto-dark-layer',
-      type: 'raster',
-      source: 'carto-dark',
-      minzoom: 0,
-      maxzoom: 19
-    }
-  ]
-};
+import { getMapStyle, CARTO_API_KEY, CARTO_VOYAGER_BASE_URL } from '../../config/mapConfig.js';
 
 export default function InteractiveTrackingMap({
   vehicles = [],
@@ -45,13 +20,15 @@ export default function InteractiveTrackingMap({
   historicalPath = [],
   showGeofences = true,
   showRouteLine = true,
-  geofences = null
+  geofences = null,
+  initialBasemap = 'voyager'
 }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef({});
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
+  const [basemapMode, setBasemapMode] = useState(initialBasemap);
 
   const activeZones = geofences || getGeofenceZones();
 
@@ -63,7 +40,7 @@ export default function InteractiveTrackingMap({
     try {
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
-        style: DARK_MAP_STYLE,
+        style: getMapStyle(basemapMode),
         center: [TRACKING_CONFIG.MAP_DEFAULT_CENTER[1], TRACKING_CONFIG.MAP_DEFAULT_CENTER[0]], // [lng, lat]
         zoom: TRACKING_CONFIG.MAP_DEFAULT_ZOOM,
         attributionControl: false,
@@ -76,6 +53,11 @@ export default function InteractiveTrackingMap({
         if (!isMounted) return;
         setMapLoaded(true);
         map.resize();
+      });
+
+      map.on('style.load', () => {
+        if (!isMounted) return;
+        setMapLoaded(true);
       });
 
       map.on('error', (e) => {
@@ -110,6 +92,16 @@ export default function InteractiveTrackingMap({
       setMapError(true);
     }
   }, []);
+
+  // Update style when basemapMode changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+    try {
+      mapRef.current.setStyle(getMapStyle(basemapMode));
+    } catch (e) {
+      console.warn('Error applying CARTO style:', e);
+    }
+  }, [basemapMode]);
 
   // Sync Vehicle Markers on Map
   useEffect(() => {
@@ -403,6 +395,19 @@ export default function InteractiveTrackingMap({
       <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 bg-[#17191f]/90 border border-[#2b2e38] p-1 rounded-lg backdrop-blur-md shadow-xl">
         <button
           type="button"
+          onClick={() => setBasemapMode((prev) => (prev === 'voyager' ? 'dark' : 'voyager'))}
+          className={`p-1.5 rounded transition-colors ${
+            basemapMode === 'voyager'
+              ? 'text-[#2879E8] bg-[#EAF3FF]'
+              : 'text-[#a7a9b5] hover:text-white hover:bg-[#22242d]'
+          }`}
+          title={basemapMode === 'voyager' ? 'Switch to CARTO Dark Matter' : 'Switch to CARTO Voyager'}
+          aria-label="Toggle CARTO basemap"
+        >
+          <Layers className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
           onClick={handleZoomIn}
           className="p-1.5 text-[#a7a9b5] hover:text-white rounded hover:bg-[#22242d] transition-colors"
           title="Zoom in"
@@ -434,7 +439,7 @@ export default function InteractiveTrackingMap({
       {/* Bottom Map Status Bar */}
       <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between text-[9px] font-mono pointer-events-none">
         <div className="bg-[#17191f]/90 border border-[#2b2e38] px-2.5 py-1 rounded backdrop-blur-md text-[#858894] pointer-events-auto flex items-center gap-3">
-          <span>TILE SOURCE: CARTO DARK MATTER (VECTOR GL)</span>
+          <span>TILE SOURCE: CARTO {basemapMode.toUpperCase()} (API KEY: cb1_59iy...)</span>
           <span className="text-[#555]">•</span>
           <span className="text-[#8be0b3]">HDOP: 0.8m ACCURACY</span>
         </div>

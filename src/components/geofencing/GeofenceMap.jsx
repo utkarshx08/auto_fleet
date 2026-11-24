@@ -11,31 +11,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { haversineDistanceMeters, createGeoJsonFeature } from '../../services/geofenceService.js';
-
-const DARK_MAP_STYLE = {
-  version: 8,
-  sources: {
-    'carto-dark': {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors, © CARTO'
-    }
-  },
-  layers: [
-    {
-      id: 'carto-dark-layer',
-      type: 'raster',
-      source: 'carto-dark',
-      minzoom: 0,
-      maxzoom: 19
-    }
-  ]
-};
+import { getMapStyle, CARTO_API_KEY } from '../../config/mapConfig.js';
 
 export default function GeofenceMap({
   geofences = [],
@@ -43,7 +19,8 @@ export default function GeofenceMap({
   selectedGeofenceId = null,
   onSelectGeofence = null,
   focusCoordinate = null,
-  height = '500px'
+  height = '500px',
+  initialBasemap = 'voyager'
 }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -51,6 +28,7 @@ export default function GeofenceMap({
   const popupRef = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showVehicles, setShowVehicles] = useState(true);
+  const [basemapMode, setBasemapMode] = useState(initialBasemap);
 
   // Initialize MapLibre
   useEffect(() => {
@@ -60,7 +38,7 @@ export default function GeofenceMap({
     try {
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
-        style: DARK_MAP_STYLE,
+        style: getMapStyle(basemapMode),
         center: [-73.975, 40.735], // [lng, lat] NYC Center
         zoom: 11.2,
         attributionControl: false,
@@ -73,6 +51,11 @@ export default function GeofenceMap({
         if (!isMounted) return;
         setMapLoaded(true);
         map.resize();
+      });
+
+      map.on('style.load', () => {
+        if (!isMounted) return;
+        setMapLoaded(true);
       });
 
       const ro = new ResizeObserver(() => {
@@ -102,6 +85,16 @@ export default function GeofenceMap({
       console.error('Failed to initialize Geofence MapLibre instance:', err);
     }
   }, []);
+
+  // Update style when basemapMode changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+    try {
+      mapRef.current.setStyle(getMapStyle(basemapMode));
+    } catch (e) {
+      console.warn('Error applying CARTO style in GeofenceMap:', e);
+    }
+  }, [basemapMode]);
 
   // Render Geofence Polygons and Circles
   useEffect(() => {
@@ -293,6 +286,19 @@ export default function GeofenceMap({
 
       {/* Controls Overlay */}
       <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 bg-[#17191f]/90 border border-[#2b2e38] p-1 rounded-lg backdrop-blur-md shadow-xl">
+        <button
+          type="button"
+          onClick={() => setBasemapMode((prev) => (prev === 'voyager' ? 'dark' : 'voyager'))}
+          className={`p-1.5 rounded transition-colors ${
+            basemapMode === 'voyager'
+              ? 'text-[#2879E8] bg-[#EAF3FF]'
+              : 'text-[#a7a9b5] hover:text-white hover:bg-[#22242d]'
+          }`}
+          title={basemapMode === 'voyager' ? 'Switch to CARTO Dark Matter' : 'Switch to CARTO Voyager'}
+          aria-label="Toggle CARTO basemap"
+        >
+          <Layers className="w-4 h-4" />
+        </button>
         <button
           type="button"
           onClick={handleZoomIn}
